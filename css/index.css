@@ -1,0 +1,24 @@
+﻿@import "_global.css";
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+#bodyContent {
+    flex: 1 0 0;
+    width: 100%;
+    height: 100%;
+}
+
+.navbar {
+    flex: 0 0 auto;
+}
+
+#bodyContent {
+    background: repeating-radial-gradient(#a65a08, #326c85 50px);
+}

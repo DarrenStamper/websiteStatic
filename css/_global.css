@@ -1,0 +1,259 @@
+﻿/*
+  greys
+    30, 30, 30
+    37, 37, 37
+    60, 60, 60
+    71, 71, 71
+
+  greens
+    000, 128, 000
+    000, 229, 000
+    127, 255, 127
+
+  OnePlus 3T - 450x800
+*/
+
+/* VARIABLES */
+
+:root {
+
+    /* font */
+
+    font-size: 16px;
+    font-family: monospace, Arial, Helvetica, sans-serif;
+    color: var(--colour-5);
+
+    /* spacing */
+
+    --spacer-1: 0.25rem;
+    --spacer-2: 0.50rem;
+    --spacer-3: 0.75rem;
+    --spacer-4: 1.00rem;
+    --spacer-5: 1.25rem;
+
+    --bodyContent-padding: var(--spacer-5);
+
+    --flex-gap: var(--spacer-5);
+
+    --select-arrow-background-width: calc(100% - var(--spacer-1) - 1rem - var(--spacer-1)); /* 100% - pad + 1rem + pad */
+
+    /* theme */
+
+    --colour-0: rgb(000,000,000); /* field-background                                   */
+    --colour-1: rgb(030,030,030); /* page                                               */
+    --colour-2: rgb(037,037,037); /* section         , nav            ,                 */
+    --colour-3: rgb(060,060,060); /* button          , field-border   , nav hover       */
+    --colour-4: rgb(071,071,071); /* Hover           , button-selected                  */
+    --colour-5: rgb(000,128,000); /* text            , section-border , field-selected  */
+}
+
+/* GENERAL */
+
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit; /* you can use content-box or padding-box (where supported) at will, without worrying about a universal selector overriding your CSS, children inherit from custom set parent */
+    color: inherit;
+}
+
+body {
+    margin: 0px;
+    background-color: var(--colour-1);
+}
+
+/* GENERAL - LAYOUT - FLEX */
+
+.flex-gap {
+    --gap: 20px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
+    width: calc(100% + var(--gap));
+}
+
+.flex-gap > * {
+    margin: var(--gap) 0 0 var(--gap);
+}
+
+/* GENERAL - LAYOUT - PHONES */
+
+@media only screen and (max-width: 1310px) { /* 1290 + 20 [nav links + scrollbar] */
+
+    .navbar a {
+        width: 100%;
+    }
+
+    h1, h2 {
+        font-size: large;
+    }
+
+    /* scrollbar */
+
+    :root {
+        /* firefox */
+        scrollbar-width: none;
+    }
+    :root::-webkit-scrollbar {
+        /* chrome, safari and opera */
+        display: none;
+    }
+}
+
+/* GENERAL - STYLE */
+
+button, label, input, textarea, p {
+    width: 100%;
+    padding: var(--spacer-1);
+}
+
+/* GENERAL - STYLE - BUTTON */
+
+input[type="submit"], input[type="reset"], button {
+    border: none;
+    background-color: var(--colour-3);
+}
+
+input[type="submit"]:hover, input[type="reset"]:hover, button:hover {
+    background-color: var(--colour-4);
+    cursor: pointer;
+}
+
+/* GENERAL - STYLE - HEADINGS */
+
+h1, h2 {
+    margin: 0px 0px 20px 0px;
+    text-align: center;
+}
+
+/* GENERAL - STYLE - INPUT */
+
+input {
+    background-color: var(--colour-3);
+    border-color: var(--colour-4);
+}
+
+/* GENERAL - STYLE - INPUT - TEXT */
+
+input[type="text"], input[type="number"] {
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-3);
+}
+
+input[type="text"]:hover, input[type="number"]:hover {
+    border-color: var(--colour-4);
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-color: var(--colour-4);
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* GENERAL - STYLE - LABEL */
+
+label {
+    text-align: right;
+}
+
+/* GENERAL - STYLE - LIST */
+
+.ul-options {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+.ul-options li {
+    background-color: var(--colour-2);
+    margin-bottom: 1px;
+    padding: var(--spacer-1);
+}
+.ul-options li:last-child {
+    margin-bottom: 0px;
+}
+.ul-options li:hover {
+    background-color: var(--colour-4);
+}
+.ul-options li:active {
+    background-color: var(--colour-3);
+}
+
+/* GENERAL - STYLE - SELECT */
+
+select {
+    display: block;
+    border: 1px solid var(--colour-3);
+    cursor: pointer;
+
+    -moz-appearance: none;
+    -webkit-appearance: none;
+
+    background: 
+        url(/svg/chevron_down.svg),
+        linear-gradient(to right, var(--colour-0) var(--select-arrow-background-width), var(--colour-3) var(--select-arrow-background-width));
+    background-position: right var(--spacer-1) top 50%, left;
+    background-size: auto 1rem, 100% 100%;
+    background-repeat: no-repeat;
+}
+
+select:hover {
+    border: 1px solid var(--colour-4);
+    background: 
+        url(/svg/chevron_down.svg),
+        linear-gradient(to right, var(--colour-0) var(--select-arrow-background-width), var(--colour-3) var(--select-arrow-background-width));
+    background-position: right var(--spacer-1) top 50%, left;
+    background-size: auto 1rem, 100% 100%;
+    background-repeat: no-repeat;
+}
+
+select > option {
+    background-color: var(--colour-0);
+}
+
+/* GENERAL - STYLE - TEXT AREA */
+
+textarea {
+    resize: none;
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-3);
+}
+
+textarea:read-only:hover {
+    cursor: default;
+}
+
+textarea:read-write:hover {
+    border-color: var(--colour-4);
+}
+
+textarea:read-write:focus {
+    border-color: var(--colour-4);
+}
+
+/* NAVBAR */
+
+.navbar {
+    overflow: hidden;
+    background-color: var(--colour-2);
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: var(--colour-5);
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: var(--colour-3);
+}
+
+/* CONTENT */
+
+#bodyContent {
+    padding: var(--bodyContent-padding);
+}

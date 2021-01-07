@@ -1,0 +1,301 @@
+﻿@import "_global.css";
+
+/* GENERAL */
+
+* {
+    /* select */
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+html, body {
+    height: 100%;
+    scrollbar-width: none;
+    font-family: monospace;
+    min-width:unset;
+    user-select: none;
+
+}
+
+/* GENERAL - FONTS */
+
+/* GENERAL - ICONS */
+
+.drenga-settings-icon, .drenga-info-icon, .drenga-reset-icon {
+    width: 3vw;
+    fill: rgb(060,060,060);
+}
+
+svg:hover {
+    fill: rgb(071,071,071);
+}
+
+/* GENERAL - LAYOUT */
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar {
+    flex: 0 0 auto;
+}
+
+#bodyContent {
+    flex: 1 0 0;
+    padding: 1vw;
+    width: 100%;
+    height: 100%;
+}
+
+.drenga-grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 20px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+}
+
+[class*="grid-row-"] {
+    width: 100%;
+}
+
+/* HEADER */
+
+.drenga-grid-row-1 {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+h1 {
+    font-size: 4vw;
+    font-weight: 100;
+    position: relative;
+    left: 3.3vw; /* What is this ghetto measurement you ask? well, although the h1 element is aligned perfectly relative to the viewport, the title itself doesn't appear central */
+    z-index: -1;
+}
+
+.drenga-controls {
+    justify-self: right;
+}
+
+/* POP UPS - GENERAL */
+
+.drenga-settings-background, .drenga-info-background, .drenga-passiveRulesPopUp-background {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.drenga-settings-container, .drenga-info-container, .drenga-passiveRulesPopUp-container {
+    background-color: rgb(037,037,037);
+    position: relative;
+    margin: auto;
+    width: 30vw;
+    height: 30vw;
+    padding: 20px 0px;
+}
+
+.drenga-settings-container:before, .drenga-info-container:before {
+    /* scroll text fade top */
+    content: "";
+    display: block;
+    position: absolute;
+    width: inherit;
+    height: 20px;
+    top: 20px;
+    background-image: linear-gradient(to bottom, rgba(037,037,037, 1) 0%, rgba(037,037,037, 0) 100%);
+    pointer-events: none;
+}
+
+.drenga-settings-container:after, .drenga-info-container:after {
+    /* scroll text fade bottom */
+    content: "";
+    display: block;
+    position: absolute;
+    width: inherit;
+    height: 20px;
+    bottom: 20px;
+    background-image: linear-gradient(to top, rgba(037,037,037, 1) 0%, rgba(037,037,037, 0) 100%);
+    pointer-events: none;
+}
+
+.drenga-settings-content, .drenga-info-content, .drenga-passiveRulesPopUp-content {
+    height: 100%;
+    padding: 0px 20px 20px 20px;
+    overflow-y: scroll;
+}
+
+.drenga-settings-content h4, drenga-passiveRulesPopUp-description {
+    font-size: 1.5vw;
+    float: left;
+    font-weight: normal;
+    font-family: monospace;
+}
+
+/* POP UPS - SETTINGS */
+
+.drenga-settings-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+}
+
+.drenga-settings-content p {
+    margin: 0px;
+    text-decoration: underline;
+}
+
+.drenga-settings-content button {
+    display: inline;
+    margin: 0px;
+    padding: 20px;
+    height: 4.7vw;
+}
+
+.drenga-settings-content button:hover {
+    background-color: rgb(071,071,071);
+}
+
+.drenga-settings-content button.active {
+    background-color: rgb(071,071,071);
+}
+
+.drenga-settings-content button svg {
+    fill: rgb(000,128,000);
+    height: 100%;
+    float: left;
+    padding-right: 1vw;
+}
+
+.drenga-settings-content button p {
+    text-decoration: none;
+    font-style: italic;
+    font-size: 0.9vw;
+    float: left;
+    font-family: monospace;
+}
+
+.ghetto-pad {
+    height: 1px;
+}
+
+/* POP UPS - INFO */
+
+ul {
+    list-style-type: square;
+    list-style-position: inside;
+    padding-left: 0px;
+}
+
+span {
+    text-decoration: underline;
+}
+
+/* POP UPS - PASSIVE RULES */
+
+.drenga-passiveRulesPopUp-container {
+    height: auto;
+}
+
+.drenga-passiveRulesPopUp-content {
+    overflow: hidden;
+    height: auto;
+    padding-bottom: 0px;
+}
+
+.drenga-passiveRulesPopUp-content div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.drenga-passiveRulesPopUp-content div svg {
+    height: 3vw;
+    fill: rgb(000, 128, 000);
+}
+
+.drenga-passiveRulesPopUp-content div h3 {
+    display: inline-block;
+    text-align: center;
+    position: relative;
+    left: -1.5vw;
+}
+
+.drenga-passiveRulesPopUp-content h4 {
+    margin-top: 1.5vw;
+    font-size: 1.5vw;
+}
+
+/* BODY */
+
+.drenga-grid-row-2 {
+    height: 100%;
+    text-align: center;
+}
+
+h2 {
+    font-size: 5vw;
+    margin: 20px 0px 0px 0px;
+    font-weight: normal;
+    text-align: left;
+}
+
+/* FOOTER */
+
+.drenga-grid-row-3 {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 1vw;
+    align-items: end;
+}
+
+input[type="number"].drenga-input { /* id to override input element style precedence */
+    border: none;
+    background-color: transparent;
+    color: transparent;
+    text-shadow: 0 0 0 rgb(000,128,000);
+    font-family: monospace;
+    font-style: italic;
+    font-size: 4vw;
+    height: auto;
+}
+
+.drenga-status {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto;
+    grid-gap: 1vw;
+    align-items: center;
+}
+
+h3, .drenga-bricks-moved {
+    font-weight: normal;
+    font-size: 2.5vw;
+    margin: 0px;
+    padding: 0;
+    text-align: left;
+}
+
+h4 {
+    font-size: 1vw;
+    margin: 0px;
+    font-weight: normal;
+}
+
+p {
+    text-align: justify;
+}
