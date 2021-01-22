@@ -11,7 +11,7 @@
 
 'use strict';
 
-import { randInt } from "../js/_global.js";
+import { includeHTML, randInt } from "./global.js";
 
 //adjective
 var tone = ["agreeable", "animated", "bright", "clever", "encouraging", "fresh", "gentle", "hopeful", "kind", "loving", "open", "pleased", "supportive", "sympathetic", "warm", "annoyed", "bitter", "disgruntled", "disgusted", "evil", "guilty", "hostile", "hurtful", "nasty", "obnoxious", "oppressive", "overbearing", "resentful", "sarcastic", "sardonic", "ambivalent", "anxious", "bashful", "candid", "cautious", "horrified", "intelligent", "mysterious", "pragmatic", "political", "quizzical", "religious", "secretive", "secular", "strong"];
@@ -32,6 +32,9 @@ var term;
 var monitorName;
 
 window.onload = function() {
+
+    //load common html
+    includeHTML();
 
     //button event
     document.getElementById("button").addEventListener("click", generateMonitorName);

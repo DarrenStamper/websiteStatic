@@ -1,3 +1,6 @@
 {
-  "Ambush": "Everyone drinks three"
+    "Ruleset Name": "passive",
+    "Ruleset List": {
+        "Ambush": "Everyone drinks three"
+    }
 }

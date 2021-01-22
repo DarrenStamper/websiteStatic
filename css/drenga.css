@@ -1,4 +1,4 @@
-﻿@import "_global.css";
+﻿@import "global.css";
 
 /* GENERAL */
 
@@ -181,12 +181,24 @@ h1 {
     padding-right: 1vw;
 }
 
+.drenga-settings-content button h5 {
+    text-decoration: none;
+    font-style: italic;
+    font-weight: unset;
+    font-size: 0.9vw;
+    float: left;
+    margin: 0;
+    font-family: monospace;
+    white-space: nowrap;
+}
+
 .drenga-settings-content button p {
     text-decoration: none;
     font-style: italic;
     font-size: 0.9vw;
     float: left;
     font-family: monospace;
+    white-space: nowrap;
 }
 
 .ghetto-pad {

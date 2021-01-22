@@ -24,6 +24,7 @@ var color5 = "rgb(000,128,000)";
 
 var addressPrefix = "";
 
+//load common html
 function includeHTML() {
     var z, i, elmnt, fileName, xhttp;
     /* Loop through a collection of all HTML elements: */
@@ -52,6 +53,28 @@ function includeHTML() {
     }
 }
 
+//get
+function xhttpRequest_get(url, callback) {
+
+    const xhttp = new XMLHttpRequest();
+
+    // success
+    xhttp.addEventListener("load", function (event) {
+        callback(xhttp);
+    });
+
+    // failure
+    xhttp.addEventListener("error", function (event) {
+        alert('Oops! Something went wrong.');
+    });
+
+    // create request
+    xhttp.open("GET", url);
+
+    // send
+    xhttp.send();
+}
+
 //random int
 function randInt(min, max) { //inclusive, exclusive
     min = Math.ceil(min);
@@ -59,4 +82,4 @@ function randInt(min, max) { //inclusive, exclusive
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-export { randInt };
+export { includeHTML, xhttpRequest_get, randInt };

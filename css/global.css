@@ -61,6 +61,7 @@ html {
 body {
     margin: 0px;
     background-color: var(--colour-1);
+    opacity: 1;
 }
 
 /* GENERAL - LAYOUT - FLEX */

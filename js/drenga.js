@@ -1,13 +1,13 @@
 ﻿'use strict';
 
-import { xhttprequest_get, randInt } from "../js/_global.js";
+import { includeHTML, xhttpRequest_get, randInt } from "./global.js";
 
 let ruleset_list_nameList = ["legacy", "casual", "retards"];
-let ruleset_list = [];
+let ruleset_list = [null, null, null];
 
-let ruleset_passive = [];
-var ruleset_passive_minTime = 90;
-var ruleset_passive_maxTime = 180;
+let ruleset_passive = null;
+var ruleset_passive_minTime = 3; //default: 90
+var ruleset_passive_maxTime = 3; //default 180
 
 //default settings
 var ruleset_ruleMode = 1; //random, numbered
@@ -16,13 +16,18 @@ var ruleset_passive_active = false;
 
 //game state
 var menuOpen = false;
+var passiveRuleVisible = false;
 var bricksMoved = 0;
 var ruleset_passive_timerSet = false;
 
 //script variables
-var addressPrefix = "/Home/DrengaRules?ruleset=";
+var addressPrefix = "json/drenga/rules_";
+var addressSuffix = ".json"
 
 window.onload = function () {
+
+    //load common html
+    includeHTML();
 
     //input event
     window.onkeydown = input;
@@ -56,16 +61,15 @@ window.onload = function () {
 
     //load rulesets
     for (var i = 0; i < ruleset_list_nameList.length; i++) {
-        var ruleset = xhttpRequest_get(addressPrefix + ruleset_list_nameList[i], addRules);
-        ruleset_list.push(ruleset);
+        xhttpRequest_get(addressPrefix + ruleset_list_nameList[i] + addressSuffix, addRules);
     }
 
     //load passive ruleset
-    ruleset_passive = xhhtpRequest_get(addressPrefix + "passive", addRules);
+    xhttpRequest_get(addressPrefix + "passive" + addressSuffix, addRules);
 
     //set active settings
 
-    if (ruleMode == 0) document.getElementById("random").classList = "active";
+    if (ruleset_ruleMode == 0) document.getElementById("random").classList = "active";
     else document.getElementById("numbered").classList = "active";
 
     document.getElementById(ruleset_list_nameList[ruleset_list_index]).classList = "active";
@@ -73,34 +77,39 @@ window.onload = function () {
     if (ruleset_passive_active) document.getElementById("passiveRules").classList = "active";
 }
 
-function addRules(xhttp, passiveRules) {
+function addRules(xhttp) {
 
     var json = JSON.parse(xhttp.response);
+    var jsonRuleset = json["Ruleset List"];
 
     var ruleset = [];
 
-    for (var key in json) {
-        if (json.hasOwnProperty(key)) {
+    //get ruleset
+    for (var key in jsonRuleset) {
+        if (jsonRuleset.hasOwnProperty(key)) {
 
             //same name, same description
-            if (typeof json[key] == "string") ruleset.push({ title: key, description: json[key] });
+            if (typeof jsonRuleset[key] == "string") ruleset.push({ title: key, description: jsonRuleset[key] });
 
             //same name, multiple descriptions
-            else if (typeof json[key] == "object") {
-                for (var description = 0; description < json[key].length; description++) ruleset.push({ title: key, description: json[key][description] });
+            else if (typeof jsonRuleset[key] == "object") {
+                for (var description = 0; description < jsonRuleset[key].length; description++) ruleset.push({ title: key, description: jsonRuleset[key][description] });
             }
         }
     }
 
-    return ruleset;
+    //store ruleset
+    var ruleset_name = json["Ruleset Name"];
+    if (ruleset_name == "passive") ruleset_passive = ruleset;
+    else  for (var i = 0; i < ruleset_list_nameList.length; i++) if (ruleset_list_nameList[i] == ruleset_name) ruleset_list[i] = ruleset;
 }
 
 function input(event) {
 
-    //prevent visiting previous webpage
+    //prevent backspace navigating to previous website
     if (event.keyCode === 8) event.preventDefault();
 
-    if (menuOpen == false) {
+    if (menuOpen == false && passiveRuleVisible == false) {
 
         //numbered
         if (ruleset_ruleMode == 1) {
@@ -127,7 +136,7 @@ function input(event) {
             else if (input.value.length == 2);
 
             //numbers, numlock numbers
-            else if ( ((47 < event.keyCode && event.keyCode < 58) || (95 < event.keyCode && event.keyCode < 107)) == false );
+            else if (((47 < event.keyCode && event.keyCode < 58) || (95 < event.keyCode && event.keyCode < 107)) == false);
 
             //leading zeros
             else if (input.value == "" && event.key == "0");
@@ -167,8 +176,8 @@ function setRule(ruleIndex) {
 function reset() {
     document.getElementsByTagName("h1")[0].innerHTML = "Drenga!";
     document.getElementsByTagName("h2")[0].innerHTML = "";
-    if (ruleMode == 0) document.getElementsByClassName("drenga-input")[0].placeholder = "Random";
-    else if (ruleMode == 1) document.getElementsByClassName("drenga-input")[0].placeholder = "Start typing...";
+    if (ruleset_ruleMode == 0) document.getElementsByClassName("drenga-input")[0].placeholder = "Random";
+    else if (ruleset_ruleMode == 1) document.getElementsByClassName("drenga-input")[0].placeholder = "Start typing...";
     document.getElementsByClassName("drenga-input")[0].value = "";
     document.getElementsByClassName("drenga-bricks-moved")[0].innerHTML = "0";
     bricksMoved = 0;
@@ -182,13 +191,13 @@ function setMode(event) {
     if (event.currentTarget.id == "random") {
         buttonRandom.classList = "active";
         buttonNumbered.classList = "";
-        ruleMode = 0;
+        ruleset_ruleMode = 0;
         document.getElementsByClassName("drenga-input")[0].placeholder = "Random";
     }
     else if (event.currentTarget.id == "numbered") {
         buttonRandom.classList = "";
         buttonNumbered.classList = "active";
-        ruleMode = 1;
+        ruleset_ruleMode = 1;
         document.getElementsByClassName("drenga-input")[0].placeholder = "Start typing...";
     }
 }
@@ -224,8 +233,10 @@ function passiveRules_set(event) {
             buttonPassiveRules.classList = "active";
             ruleset_passive_active = true;
 
-            if (ruleset_passive_timerSet) {
-                ruleset_passive_timerSet = false;
+            //prevents button spam generating loads of timeouts, however if turned off, 
+            //timeout keeps going, so if turned on prior to timeout completion, rule could
+            //pop up earlier than min time
+            if (ruleset_passive_timerSet == false) {
                 var milliseconds = randInt(ruleset_passive_minTime, ruleset_passive_maxTime) * 1000;
                 setTimeout(passiveRules_show, milliseconds);
             }
@@ -249,9 +260,13 @@ function passiveRules_show() {
         var ruleIndex = randInt(0, ruleset_passive.length);
 
         //display
-        document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0].style.display = "grid";
-        document.getElementsByClassName("drenga-passiveRulesPopUp-title")[0].innerHTML = ruleset_passive[ruleIndex].title;
-        document.getElementsByClassName("drenga-passiveRulesPopUp-description")[0].innerHTML = ruleset_passive[ruleIndex].description;
+        if (menuOpen == false)
+        {
+            document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0].style.display = "grid";
+            document.getElementsByClassName("drenga-passiveRulesPopUp-title")[0].innerHTML = ruleset_passive[ruleIndex].title;
+            document.getElementsByClassName("drenga-passiveRulesPopUp-description")[0].innerHTML = ruleset_passive[ruleIndex].description;
+            passiveRuleVisible = true;
+        }
 
         //next
         ruleset_passive_timerSet = true;
@@ -272,7 +287,8 @@ function closeMenu(event) {
     else if (event.target == document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0]) {
         document.getElementsByClassName("drenga-settings-background")[0].style.display = "none";
         document.getElementsByClassName("drenga-info-background")[0].style.display = "none";
-        document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0].style.display = "none"; 
+        document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0].style.display = "none";
         menuOpen = false;
+        passiveRuleVisible = false;
     }
 }

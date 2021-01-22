@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-import { randInt } from "../js/_global.js";
+import { includeHTML, randInt } from "./global.js";
 
 const SMALL = 1;
 const MEDIUM = 2;
@@ -20,6 +20,9 @@ var nouns = ["croquette", "enema", "compiler", "prism", "oblong", "quandry", "se
 var myName = "";
 
 window.onload = function() {
+
+    //load common html
+    includeHTML();
 
     //keybpard event
     window.onkeydown = function (event) { if (event.keyCode == 13 || event.keyCode == 32) generateMyName(); };
