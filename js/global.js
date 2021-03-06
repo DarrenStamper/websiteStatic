@@ -34,22 +34,33 @@ function includeHTML() {
         /*search for elements with a certain atrribute:*/
         fileName = elmnt.getAttribute("w3-include-html");
         if (fileName) {
-        /* Make an HTTP request using the attribute value as the file name: */
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState == 4) {
-            if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-            if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
-            /* Remove the attribute, and call this function once more: */
-            elmnt.removeAttribute("w3-include-html");
-            includeHTML();
+            /* Make an HTTP request using the attribute value as the file name: */
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4) {
+                    if (this.status == 200) { elmnt.innerHTML = this.responseText; }
+                    if (this.status == 404) { elmnt.innerHTML = "Page not found."; }
+                    /* Remove the attribute, and call this function once more: */
+                    elmnt.removeAttribute("w3-include-html");
+                    includeHTML();
+                }
             }
+            xhttp.open("GET", addressPrefix + fileName, true);
+            xhttp.send();
+            /* Exit the function: */
+            return;
         }
-        xhttp.open("GET", addressPrefix + fileName, true);
-        xhttp.send();
-        /* Exit the function: */
-        return;
-        }
+    }
+}
+
+//responsive navbar
+
+function responsiveNavbar() {
+    var x = document.getElementById("navbar");
+    if (x.className === "navbarMinimised") {
+        x.className += "navbarExpanded";
+    } else {
+        x.className = "navbarMinimised";
     }
 }
 
@@ -82,4 +93,4 @@ function randInt(min, max) { //inclusive, exclusive
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-export { includeHTML, xhttpRequest_get, randInt };
+export { includeHTML, responsiveNavbar, xhttpRequest_get, randInt };

@@ -1,30 +1,41 @@
 ﻿'use strict';
 
-import { includeHTML, randInt } from "./global.js";
+import { includeHTML, xhttpRequest_get, randInt } from "./global.js";
 
-const SMALL = 1;
-const MEDIUM = 2;
-const LARGE = 3;
+var jsonData; //adjectives, nouns, standAloneNames, titles, fileExtensions
 
-var length = MEDIUM;
+var chanceList = [];
 
-var adjectives = ["autumnal", "scrotundal", "moist", "optimised", "ambivalent", "obfuscated", "palindromic", "gentrified", "panic", "prismic", "oblique", "miscreant", "oblong",
-                  "pragmatic", "oblate", "scroticular", "aforementioned", "peruvian", "corpulent", "recrudescent", "jovial", "ableist", "olfactory", "crinkle cut", "oval",
-                  "secular", "anphylactic", "salty", "cictral", "nonplussed"];
-
-var nouns = ["croquette", "enema", "compiler", "prism", "oblong", "quandry", "secretion", "miscreant", "flesh fountain", "gentrification", "hot tub club", "oblongata", "flexbox",
-             "fulcrum", "frustrum", "panic enema", "tangent", "inquiry", "bezemer", "sphincter", "spherinder", "cloaca", "spheroid", "klein bottle", "reticulum", "gauze", "plug",
-             "bumper", "orifice", "contraband", "exhilation", "anal phabet", "siemen demon", "cronjob", "skillet", "anus cakes", "cleet", "gonk", "conk", "kernel", "surprise",
-             "crab", "crab cycle", "new years nugget", "scrotalcardium", "lilibab", "guiseppe"];
-
-var myName = "";
+var outputName = "";
 
 window.onload = function() {
 
     //load common html
     includeHTML();
 
-    //keybpard event
+    //load data
+    xhttpRequest_get("json/myNameGenerator/myNameGenerator.json", loadData);
+}
+
+function loadData(xhttp) {
+
+    jsonData = JSON.parse(xhttp.response);
+
+    var total = jsonData.adjectives.length + jsonData.nouns.length + jsonData.standAloneNames.length;
+
+    chanceList.push([jsonData.adjectives.length / total, "adjectives"]);
+    chanceList.push([jsonData.nouns.length / total, "nouns"]);
+    chanceList.push([jsonData.standAloneNames.length / total, "standAloneNames"]);
+
+    chanceList.sort((a, b) => (a[0] > b[0]) ? 1 : -1);
+
+    for (var i = 1; i < 3; i++)
+        chanceList[i][0] += chanceList[i - 1][0];
+
+    chanceList.push([0.1, "titles"]);
+    chanceList.push([0.1, "fileExtensions"]);
+
+    //keyboard event
     window.onkeydown = function (event) { if (event.keyCode == 13 || event.keyCode == 32) generateMyName(); };
 
     //button event
@@ -33,22 +44,34 @@ window.onload = function() {
 
 function generateMyName() {
 
-    if (length == LARGE) {
+    outputName = "";
 
-        var a = randInt(0, adjectives.length);
-        var b = randInt(0, adjectives.length);
-        while (a == b) b = randInt(0, adjectives.length);
+    //randomly select name type
+    var wordTypeChance = Math.random();
+    var wordTypeIndex = 0;
+    for (; wordTypeIndex < 3; wordTypeIndex++)
+        if (wordTypeChance < chanceList[wordTypeIndex][0])
+            break;
 
-        myName = adjectives[a] + " " + adjectives[b] + " " + nouns[randInt(0, nouns.length)];
+    //randonly select name word
+    switch (chanceList[wordTypeIndex][1]) {
+        case "adjectives":
+            outputName += jsonData["adjectives"][randInt(0, jsonData["adjectives"].length)];
+            outputName +=  " " + jsonData["nouns"][randInt(0, jsonData["nouns"].length)]; 
+            break;
+        case "nouns":
+            outputName += jsonData["nouns"][randInt(0, jsonData["nouns"].length)];
+            break;
+        case "standAloneNames":
+            outputName += jsonData["standAloneNames"][randInt(0, jsonData["standAloneNames"].length)];
     }
 
-    else if (length == MEDIUM) {
-        myName = adjectives[randInt(0, adjectives.length)] + " " + nouns[randInt(0, nouns.length)];
-    }
+    //chance to add title
+    if (Math.random() < chanceList[3][0]) outputName = jsonData["titles"][randInt(0, jsonData["titles"].length)] + " " + outputName;
 
-    else if (length == SMALL) {
-        myName = nouns[randInt(0, nouns.length)];
-    }
+    //chance to add fileExtension
+    if (Math.random() < chanceList[4][0]) outputName += jsonData["fileExtensions"][randInt(0, jsonData["fileExtensions"].length)];
 
-    document.getElementById("myName").innerHTML = myName;
+    //output name
+    document.getElementById("myName").innerHTML = outputName;
 }

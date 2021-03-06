@@ -80,27 +80,36 @@ body {
 
 /* GENERAL - LAYOUT - PHONES */
 
-@media only screen and (max-width: 1310px) { /* 1290 + 20 [nav links + scrollbar] */
+.navbar .icon {
+    display: none;
+}
 
-    .navbar a {
-        width: 100%;
-    }
-
-    h1, h2 {
-        font-size: large;
-    }
-
-    /* scrollbar */
-
-    :root {
-        /* firefox */
-        scrollbar-width: none;
-    }
-    :root::-webkit-scrollbar {
-        /* chrome, safari and opera */
+@media screen and (max-width: 1300px) {
+    .navbar a:not(:first-child) {
         display: none;
     }
+    .navbar a.icon {
+        float: right;
+        display: block;
+    }
 }
+  
+@media screen and (max-width: 1300px) {
+    .navbar.responsive {
+        position: relative;
+    }
+    .navbar.responsive .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .navbar.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+}
+
 
 /* GENERAL - STYLE */
 

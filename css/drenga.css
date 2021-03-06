@@ -8,11 +8,18 @@
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    
+    /* scrollbar */
+    scrollbar-width: none; /* Firefox */
 }
+
+*::-webkit-scrollbar {
+    /* scrollbar */
+    display: none; /* Chrome */
+  }
 
 html, body {
     height: 100%;
-    scrollbar-width: none;
     font-family: monospace;
     min-width:unset;
     user-select: none;
