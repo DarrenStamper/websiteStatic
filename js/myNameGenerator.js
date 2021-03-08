@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-import { includeHTML, xhttpRequest_get, randInt } from "./global.js";
+import { loadNavbar, navbarDropdown, xhttpRequest_get, randInt } from "./global.js";
 
 var jsonData; //adjectives, nouns, standAloneNames, titles, fileExtensions
 
@@ -10,8 +10,8 @@ var outputName = "";
 
 window.onload = function() {
 
-    //load common html
-    includeHTML();
+    //load navbar
+    loadNavbar().then( () => document.getElementById("navbarIcon").addEventListener("click", navbarDropdown) );
 
     //load data
     xhttpRequest_get("json/myNameGenerator/myNameGenerator.json", loadData);

@@ -26,6 +26,10 @@ var addressPrefix = "";
 
 //load common html
 function includeHTML() {
+
+    //to use this function add following div element to code, changing where appropriate
+    //<div w3-include-html="html/navbar.html"></div>
+
     var z, i, elmnt, fileName, xhttp;
     /* Loop through a collection of all HTML elements: */
     z = document.getElementsByTagName("*");
@@ -53,14 +57,34 @@ function includeHTML() {
     }
 }
 
-//responsive navbar
+//include navbar
+function loadNavbar() {
+    return new Promise((resolve) => {
+   
+        const xhttp = new XMLHttpRequest();
+    
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                var navbar = document.getElementById("navbar");
+                if (this.status == 200) { 
+                    navbar.innerHTML = this.responseText;
+                    resolve();
+                }
+                if (this.status == 404) { navbar.innerHTML = "Page not found."; }
+            }
+        }
+        xhttp.open("GET", "html/navbar.html");
+        xhttp.send();
+    });
+}
 
-function responsiveNavbar() {
+//responsive navbar
+function navbarDropdown() {
     var x = document.getElementById("navbar");
-    if (x.className === "navbarMinimised") {
-        x.className += "navbarExpanded";
+    if (x.className === "navbar") {
+      x.className += " dropdown";
     } else {
-        x.className = "navbarMinimised";
+      x.className = "navbar";
     }
 }
 
@@ -93,4 +117,4 @@ function randInt(min, max) { //inclusive, exclusive
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-export { includeHTML, responsiveNavbar, xhttpRequest_get, randInt };
+export { includeHTML, loadNavbar, navbarDropdown, xhttpRequest_get, randInt };

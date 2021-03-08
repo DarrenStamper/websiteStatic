@@ -1,9 +1,9 @@
 ﻿'use strict';
 
-import { includeHTML } from "./global.js";
+import { loadNavbar, navbarDropdown } from "./global.js";
 
-window.onload = function () {
+window.onload = async function () {
     
-    //load common html
-    includeHTML();
+    //load navbar
+    loadNavbar().then( () => document.getElementById("navbarIcon").addEventListener("click", navbarDropdown) );
 }

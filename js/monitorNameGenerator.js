@@ -11,7 +11,7 @@
 
 'use strict';
 
-import { includeHTML, randInt } from "./global.js";
+import { loadNavbar, navbarDropdown, randInt } from "./global.js";
 
 //adjective
 var tone = ["agreeable", "animated", "bright", "clever", "encouraging", "fresh", "gentle", "hopeful", "kind", "loving", "open", "pleased", "supportive", "sympathetic", "warm", "annoyed", "bitter", "disgruntled", "disgusted", "evil", "guilty", "hostile", "hurtful", "nasty", "obnoxious", "oppressive", "overbearing", "resentful", "sarcastic", "sardonic", "ambivalent", "anxious", "bashful", "candid", "cautious", "horrified", "intelligent", "mysterious", "pragmatic", "political", "quizzical", "religious", "secretive", "secular", "strong"];
@@ -33,8 +33,8 @@ var monitorName;
 
 window.onload = function() {
 
-    //load common html
-    includeHTML();
+    //load navbar
+    loadNavbar().then( () => document.getElementById("navbarIcon").addEventListener("click", navbarDropdown) );
 
     //button event
     document.getElementById("button").addEventListener("click", generateMonitorName);

@@ -23,6 +23,14 @@
     font-family: monospace, Arial, Helvetica, sans-serif;
     color: var(--colour-5);
 
+    /* media queries - note, they can't use var function so must be set manually */
+    
+    --navbar-width-min: 1300px;
+
+    /* size */
+
+    --navbar-height: 46px;
+
     /* spacing */
 
     --spacer-1: 0.25rem;
@@ -60,8 +68,9 @@ html {
 
 body {
     margin: 0px;
-    background-color: var(--colour-1);
-    opacity: 1;
+    background-color: var(--colour-2);
+
+    position: relative;
 }
 
 /* GENERAL - LAYOUT - FLEX */
@@ -78,13 +87,50 @@ body {
     margin: var(--gap) 0 0 var(--gap);
 }
 
-/* GENERAL - LAYOUT - PHONES */
+/* GENERAL - LAYOUT - NAVBAR */
 
-.navbar .icon {
-    display: none;
+.navbar {
+    overflow: hidden;
+    background-color: var(--colour-2);
+
+    position: absolute;
+    width: 100%;
+    top: calc(0px - var(--navbar-height));
+    z-index: 1000;
 }
 
+.navbar a {
+    float: left;
+    display: block;
+    color: var(--colour-5);
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    background-color: var(--colour-3);
+}
+
+.navbar .icon {
+    display: none; 
+    height: var(--navbar-height);
+}
+
+/* GENERAL - LAYOUT - CONTENT */
+
+#bodyContent {
+    background-color: var(--colour-1);
+    padding: var(--bodyContent-padding);
+
+    margin-top: var(--navbar-height);
+    width: 100%;
+    height: calc(100vh - var(--navbar-height));
+}
+
+/* GENERAL - LAYOUT - PHONES */
+
 @media screen and (max-width: 1300px) {
+    
     .navbar a:not(:first-child) {
         display: none;
     }
@@ -92,24 +138,20 @@ body {
         float: right;
         display: block;
     }
-}
-  
-@media screen and (max-width: 1300px) {
-    .navbar.responsive {
-        position: relative;
-    }
-    .navbar.responsive .icon {
+
+    /* dropdown */
+
+    .navbar.dropdown .icon {
         position: absolute;
         right: 0;
         top: 0;
     }
-    .navbar.responsive a {
+    .navbar.dropdown a {
         float: none;
         display: block;
         text-align: left;
     }
 }
-
 
 /* GENERAL - STYLE */
 
@@ -241,29 +283,4 @@ textarea:read-write:hover {
 
 textarea:read-write:focus {
     border-color: var(--colour-4);
-}
-
-/* NAVBAR */
-
-.navbar {
-    overflow: hidden;
-    background-color: var(--colour-2);
-}
-
-.navbar a {
-    float: left;
-    display: block;
-    color: var(--colour-5);
-    padding: 14px 20px;
-    text-decoration: none;
-}
-
-.navbar a:hover {
-    background-color: var(--colour-3);
-}
-
-/* CONTENT */
-
-#bodyContent {
-    padding: var(--bodyContent-padding);
 }

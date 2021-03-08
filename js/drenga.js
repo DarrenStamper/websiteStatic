@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-import { includeHTML, xhttpRequest_get, randInt } from "./global.js";
+import { loadNavbar, navbarDropdown, xhttpRequest_get, randInt } from "./global.js";
 
 let ruleset_list_nameList = ["legacy", "casual", "retards"];
 let ruleset_list = [null, null, null];
@@ -26,8 +26,8 @@ var addressSuffix = ".json"
 
 window.onload = function () {
 
-    //load common html
-    includeHTML();
+    //load navbar
+    loadNavbar().then( () => document.getElementById("navbarIcon").addEventListener("click", navbarDropdown) );
 
     //input event
     window.onkeydown = input;
