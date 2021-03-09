@@ -1,5 +1,64 @@
 ﻿@import "global.css";
 
+/* DESKTOP */
+
+:root {
+
+    /* font */
+
+    --font-weight-h1: 100;
+    --font-weight-h2: normal;
+    --font-weight-h3: normal;
+    --font-weight-h4: normal;
+
+    /* position */
+
+    --centering-offset-h1: 60px;
+
+    /* size */
+
+    --font-size-h1: 80px;
+    --font-size-h2: 80px;
+    --font-size-h3: 50px;
+    --font-size-h4: 30px;
+    --font-size-h5: 16px;
+    --font-size-p: 16px;
+
+    --font-size-input: 50px;
+
+    --icon-width: 60px;
+
+    --menu-width: 545px;
+    --menu-height: 60vh;
+    --menu-height-max: 545px;
+    
+    --menu-button-height: 90px;
+
+    /* spacing */
+
+    --padding-general: 20px;
+
+    --grid-gap: 20px;
+
+    /* theme */
+}
+
+/* TABLET */
+
+@media only screen and (max-width: 1300px) {
+    :root {
+        --font-size-h1: 60px;
+    }
+}
+
+/* PHONE */
+
+@media only screen and (max-width: 600px) {
+    :root {
+        --font-size-h1: 40px;
+    }
+}
+
 /* GENERAL */
 
 * {
@@ -19,29 +78,15 @@
   }
 
 html, body {
-    font-family: monospace;
-    min-width:unset;
+    min-width: unset;
     user-select: none;
 
 }
 
-/* GENERAL - FONTS */
-
-/* GENERAL - ICONS */
-
-.drenga-settings-icon, .drenga-info-icon, .drenga-reset-icon {
-    width: 3vw;
-    fill: rgb(060,060,060);
-}
-
-svg:hover {
-    fill: rgb(071,071,071);
-}
-
-/* GENERAL - LAYOUT */
+/* LAYOUT GENERAL */
 
 #bodyContent {
-    padding: 1vw;
+    padding: var(--padding-general);
 }
 
 .drenga-grid {
@@ -50,7 +95,7 @@ svg:hover {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto;
-    grid-gap: 20px;
+    grid-gap: var(--grid-gap);
     text-align: center;
     align-content: center;
     justify-content: center;
@@ -60,7 +105,18 @@ svg:hover {
     width: 100%;
 }
 
-/* HEADER */
+/* STYLE - GENERAL - ICONS */
+
+.drenga-settings-icon, .drenga-info-icon, .drenga-reset-icon {
+    width: var(--icon-width);
+    fill: rgb(060,060,060);
+}
+
+svg:hover {
+    fill: rgb(071,071,071);
+}
+
+/* STYLE - HEADER */
 
 .drenga-grid-row-1 {
     height: auto;
@@ -69,10 +125,10 @@ svg:hover {
 }
 
 h1 {
-    font-size: 4vw;
-    font-weight: 100;
+    font-size: var(--font-size-h1);
+    font-weight: var(--font-weight-h1);
     position: relative;
-    left: 3.3vw; /* What is this ghetto measurement you ask? well, although the h1 element is aligned perfectly relative to the viewport, the title itself doesn't appear central */
+    left: var(--centering-offset-h1);
 }
 
 .drenga-controls {
@@ -80,7 +136,58 @@ h1 {
     z-index: 1;
 }
 
-/* POP UPS - GENERAL */
+/* STYLE - BODY */
+
+.drenga-grid-row-2 {
+    height: 100%;
+    text-align: center;
+}
+
+h2 {
+    font-size: var(--font-size-h2);
+    margin: var(--padding-general) 0px 0px 0px;
+    font-weight: var(--font-weight-h2);
+    text-align: left;
+}
+
+/* STYLE - FOOTER */
+
+.drenga-grid-row-3 {
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: var(--grid-gap);
+    align-items: end;
+}
+
+input[type="number"].drenga-input { /* id to override input element style precedence */
+    border: none;
+    background-color: transparent;
+    color: transparent;
+    text-shadow: 0 0 0 rgb(000,128,000);
+    font-family: monospace;
+    font-style: italic;
+    font-size: var(--font-size-input);
+    height: auto;
+}
+
+.drenga-status {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto;
+    grid-gap: var(--grid-gap);
+    align-items: center;
+}
+
+h3 {
+    font-weight: var(--font-weight-h3);
+    font-size: var(--font-size-h3);
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+}
+
+/* STYLE - POP UP - GENERAL */
 
 .drenga-settings-background, .drenga-info-background, .drenga-passiveRulesPopUp-background {
     display: none;
@@ -97,9 +204,10 @@ h1 {
     background-color: rgb(037,037,037);
     position: relative;
     margin: auto;
-    width: 30vw;
-    height: 30vw;
-    padding: 20px 0px;
+    width: var(--menu-width);
+    height: var(--menu-height);
+    max-height: var(--menu-height-max);
+    padding: var(--padding-general) 0px;
 }
 
 .drenga-settings-container:before, .drenga-info-container:before {
@@ -108,8 +216,8 @@ h1 {
     display: block;
     position: absolute;
     width: inherit;
-    height: 20px;
-    top: 20px;
+    height: var(--padding-general);
+    top: var(--padding-general);
     background-image: linear-gradient(to bottom, rgba(037,037,037, 1) 0%, rgba(037,037,037, 0) 100%);
     pointer-events: none;
 }
@@ -120,32 +228,37 @@ h1 {
     display: block;
     position: absolute;
     width: inherit;
-    height: 20px;
-    bottom: 20px;
+    height: var(--padding-general);
+    bottom: var(--padding-general);
     background-image: linear-gradient(to top, rgba(037,037,037, 1) 0%, rgba(037,037,037, 0) 100%);
     pointer-events: none;
 }
 
 .drenga-settings-content, .drenga-info-content, .drenga-passiveRulesPopUp-content {
     height: 100%;
-    padding: 0px 20px 20px 20px;
+    padding: 0px var(--padding-general) var(--padding-general) var(--padding-general);
     overflow-y: scroll;
 }
 
-.drenga-settings-content h4, drenga-passiveRulesPopUp-description {
-    font-size: 1.5vw;
+h4 {
+    margin: 0px;
     float: left;
-    font-weight: normal;
-    font-family: monospace;
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-h4);
+    font-family: var(--font-family-global);
 }
 
-/* POP UPS - SETTINGS */
+p {
+    text-align: justify;
+}
+
+/* STYLE - POP UP - SETTINGS */
 
 .drenga-settings-content {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
-    grid-gap: 20px;
+    grid-gap: var(--padding-general);
 }
 
 .drenga-settings-content p {
@@ -156,8 +269,8 @@ h1 {
 .drenga-settings-content button {
     display: inline;
     margin: 0px;
-    padding: 20px;
-    height: 4.7vw;
+    padding: var(--padding-general);
+    height: var(--menu-button-height);
 }
 
 .drenga-settings-content button:hover {
@@ -172,26 +285,17 @@ h1 {
     fill: rgb(000,128,000);
     height: 100%;
     float: left;
-    padding-right: 1vw;
+    padding-right: var(--padding-general);
 }
 
 .drenga-settings-content button h5 {
     text-decoration: none;
     font-style: italic;
     font-weight: unset;
-    font-size: 0.9vw;
+    font-size: var(--font-size-h5);
     float: left;
     margin: 0;
-    font-family: monospace;
-    white-space: nowrap;
-}
-
-.drenga-settings-content button p {
-    text-decoration: none;
-    font-style: italic;
-    font-size: 0.9vw;
-    float: left;
-    font-family: monospace;
+    font-family: var(--font-family-global);
     white-space: nowrap;
 }
 
@@ -199,7 +303,7 @@ h1 {
     height: 1px;
 }
 
-/* POP UPS - INFO */
+/* STYLE - POP UP - INFO */
 
 ul {
     list-style-type: square;
@@ -211,7 +315,7 @@ span {
     text-decoration: underline;
 }
 
-/* POP UPS - PASSIVE RULES */
+/* STYLE - POP UP - PASSIVE RULES */
 
 .drenga-passiveRulesPopUp-container {
     height: auto;
@@ -229,7 +333,7 @@ span {
 }
 
 .drenga-passiveRulesPopUp-content div svg {
-    height: 3vw;
+    height: var(--icon-width);
     fill: rgb(000, 128, 000);
 }
 
@@ -237,71 +341,9 @@ span {
     display: inline-block;
     text-align: center;
     position: relative;
-    left: -1.5vw;
+    left: calc(0px - var(--icon-width) / 2);
 }
 
 .drenga-passiveRulesPopUp-content h4 {
-    margin-top: 1.5vw;
-    font-size: 1.5vw;
-}
-
-/* BODY */
-
-.drenga-grid-row-2 {
-    height: 100%;
-    text-align: center;
-}
-
-h2 {
-    font-size: 5vw;
-    margin: 20px 0px 0px 0px;
-    font-weight: normal;
-    text-align: left;
-}
-
-/* FOOTER */
-
-.drenga-grid-row-3 {
-    height: auto;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-gap: 1vw;
-    align-items: end;
-}
-
-input[type="number"].drenga-input { /* id to override input element style precedence */
-    border: none;
-    background-color: transparent;
-    color: transparent;
-    text-shadow: 0 0 0 rgb(000,128,000);
-    font-family: monospace;
-    font-style: italic;
-    font-size: 4vw;
-    height: auto;
-}
-
-.drenga-status {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto;
-    grid-gap: 1vw;
-    align-items: center;
-}
-
-h3, .drenga-bricks-moved {
-    font-weight: normal;
-    font-size: 2.5vw;
-    margin: 0px;
-    padding: 0;
-    text-align: left;
-}
-
-h4 {
-    font-size: 1vw;
-    margin: 0px;
-    font-weight: normal;
-}
-
-p {
-    text-align: justify;
+    margin-top: var(--padding-general);
 }

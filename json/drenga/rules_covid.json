@@ -1,0 +1,11 @@
+{
+  "Ruleset Name": "covid-19",
+  "Ruleset List": {
+    "Covid-19": "Drink 19",
+    "Super Spreader": "Swap drinks with the person on your left",
+    "Exponential": "Nominate one, two, then four drinks",
+    "Anti-masker": "You deny the existence of alcohol. Take a drink from each persons drink to get rid of the evidence",
+    "Cross species transmission": "Mix two drifferent drinks to make a new one",
+    "Spillover": "Mix two different drinks to make a new one"
+  }
+}

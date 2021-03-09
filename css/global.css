@@ -18,9 +18,11 @@
 :root {
 
     /* font */
+    
+    --font-family-global: monospace, Arial, Helvetica, sans-serif; /* h4 needs to be set manually for some reason */
 
     font-size: 16px;
-    font-family: monospace, Arial, Helvetica, sans-serif;
+    font-family: var(--font-family-global);
     color: var(--colour-5);
 
     /* media queries - note, they can't use var function so must be set manually */
