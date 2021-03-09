@@ -93,7 +93,7 @@
         --font-size-h2: 30px;
     }
 
-    /* Header */
+    /* header */
 
     .drenga-controls {
         display: flex;
@@ -104,7 +104,10 @@
         margin-bottom: 8px;
     }
 
-    /* see: STYLE - FOOTER - RESPONSIVE */
+    /* footer:
+       > see: STYLE - FOOTER - RESPONSIVE
+       > see: GENERAL - RESPONSIVE
+    */
 }
 
 /* GENERAL */
@@ -129,6 +132,19 @@ html, body {
     min-width: unset;
     user-select: none;
 }
+
+/* GENERAL - RESPONSIVE */
+
+@media only screen and (max-width: 800px) {
+
+    .drenga-input {
+        -moz-user-select: unset;
+        -webkit-user-select: unset;
+        -ms-user-select: unset;
+        user-select: unset;
+    }
+}
+
 
 /* LAYOUT */
 
