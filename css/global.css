@@ -13,8 +13,6 @@
   OnePlus 3T - 450x800
 */
 
-/* VARIABLES */
-
 :root {
 
     /* font */
@@ -57,6 +55,32 @@
     --colour-5: rgb(000,128,000); /* text            , section-border , field-selected  */
 }
 
+/* RESPONSIVE - NAVBAR */
+
+@media screen and (max-width: 1300px) {
+    
+    .navbar a:not(:first-child) {
+        display: none;
+    }
+    .navbar a.icon {
+        float: right;
+        display: block;
+    }
+
+    /* dropdown */
+
+    .navbar.dropdown .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .navbar.dropdown a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+}
+
 /* GENERAL */
 
 html {
@@ -75,7 +99,7 @@ body {
     position: relative;
 }
 
-/* GENERAL - LAYOUT - FLEX */
+/* GENERAL - FLEX */
 
 .flex-gap {
     --gap: 20px;
@@ -89,7 +113,7 @@ body {
     margin: var(--gap) 0 0 var(--gap);
 }
 
-/* GENERAL - LAYOUT - NAVBAR */
+/* LAYOUT - NAVBAR */
 
 .navbar {
     overflow: hidden;
@@ -122,7 +146,7 @@ body {
     height: var(--navbar-height);
 }
 
-/* GENERAL - LAYOUT - CONTENT */
+/* LAYOUT - CONTENT */
 
 #bodyContent {
     background-color: var(--colour-1);
@@ -133,40 +157,14 @@ body {
     height: calc(100vh - var(--navbar-height));
 }
 
-/* GENERAL - LAYOUT - PHONES */
-
-@media screen and (max-width: 1300px) {
-    
-    .navbar a:not(:first-child) {
-        display: none;
-    }
-    .navbar a.icon {
-        float: right;
-        display: block;
-    }
-
-    /* dropdown */
-
-    .navbar.dropdown .icon {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .navbar.dropdown a {
-        float: none;
-        display: block;
-        text-align: left;
-    }
-}
-
-/* GENERAL - STYLE */
+/* STYLE */
 
 button, label, input, textarea, p {
     width: 100%;
     padding: var(--spacer-1);
 }
 
-/* GENERAL - STYLE - BUTTON */
+/* STYLE - BUTTON */
 
 input[type="submit"], input[type="reset"], button {
     border: none;
@@ -178,21 +176,21 @@ input[type="submit"]:hover, input[type="reset"]:hover, button:hover {
     cursor: pointer;
 }
 
-/* GENERAL - STYLE - HEADINGS */
+/* STYLE - HEADINGS */
 
 h1, h2 {
     margin: 0px 0px 20px 0px;
     text-align: center;
 }
 
-/* GENERAL - STYLE - INPUT */
+/* STYLE - INPUT */
 
 input {
     background-color: var(--colour-3);
     border-color: var(--colour-4);
 }
 
-/* GENERAL - STYLE - INPUT - TEXT */
+/* STYLE - INPUT - TEXT */
 
 input[type="text"], input[type="number"] {
     background-color: var(--colour-0);
@@ -211,13 +209,13 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-/* GENERAL - STYLE - LABEL */
+/* STYLE - LABEL */
 
 label {
     text-align: right;
 }
 
-/* GENERAL - STYLE - LIST */
+/* STYLE - LIST */
 
 .ul-options {
     list-style-type: none;
@@ -239,7 +237,7 @@ label {
     background-color: var(--colour-3);
 }
 
-/* GENERAL - STYLE - SELECT */
+/* STYLE - SELECT */
 
 select {
     display: block;
@@ -271,7 +269,7 @@ select > option {
     background-color: var(--colour-0);
 }
 
-/* GENERAL - STYLE - TEXT AREA */
+/* STYLE - TEXT AREA */
 
 textarea {
     resize: none;

@@ -1,7 +1,5 @@
 ﻿@import "global.css";
 
-/* DESKTOP */
-
 :root {
 
     /* font */
@@ -39,24 +37,74 @@
     --padding-general: 20px;
 
     --grid-gap: 20px;
-
-    /* theme */
 }
 
-/* TABLET */
+/* RESPONSIVE - TABLET */
 
 @media only screen and (max-width: 1300px) {
     :root {
-        --font-size-h1: 60px;
+            
+        /* font */
+
+        --font-weight-h1: 100;
+        --font-weight-h2: normal;
+        --font-weight-h3: normal;
+        --font-weight-h4: normal;
+
+        /* position */
+
+        --centering-offset-h1: 40px;
+
+        /* size */
+
+        --font-size-h1: 55px;
+        --font-size-h2: 55px;
+        --font-size-h3: 35px;
+        --font-size-h4: 20px;
+        --font-size-h5: 11px;
+        --font-size-p: 11px;
+
+        --font-size-input: 35px;
+
+        --icon-width: 40px;
+
+        --menu-width: 415px;
+        --menu-height: 60vh;
+        --menu-height-max: 415px;
+        
+        --menu-button-height: 75px;
+
+        /* spacing */
+
+        --padding-general: 20px;
+
+        --grid-gap: 20px;
     }
 }
 
-/* PHONE */
+/* RESPONSIVE - PHONE */
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     :root {
+
+        /* font */
+
         --font-size-h1: 40px;
+        --font-size-h2: 30px;
     }
+
+    /* Header */
+
+    .drenga-controls {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .drenga-settings-icon {
+        margin-bottom: 8px;
+    }
+
+    /* see: STYLE - FOOTER - RESPONSIVE */
 }
 
 /* GENERAL */
@@ -80,10 +128,9 @@
 html, body {
     min-width: unset;
     user-select: none;
-
 }
 
-/* LAYOUT GENERAL */
+/* LAYOUT */
 
 #bodyContent {
     padding: var(--padding-general);
@@ -105,7 +152,7 @@ html, body {
     width: 100%;
 }
 
-/* STYLE - GENERAL - ICONS */
+/* STYLE - GENERAL */
 
 .drenga-settings-icon, .drenga-info-icon, .drenga-reset-icon {
     width: var(--icon-width);
@@ -124,11 +171,15 @@ svg:hover {
     grid-template-columns: 1fr auto;
 }
 
+.heading-wrapper {
+    width: calc(100% - var(--centering-offset-h1));
+    justify-self: end;
+}
+
 h1 {
+    display: inline;
     font-size: var(--font-size-h1);
     font-weight: var(--font-weight-h1);
-    position: relative;
-    left: var(--centering-offset-h1);
 }
 
 .drenga-controls {
@@ -153,9 +204,9 @@ h2 {
 /* STYLE - FOOTER */
 
 .drenga-grid-row-3 {
+    grid-template-columns: 1fr auto;
     height: auto;
     display: grid;
-    grid-template-columns: 1fr auto;
     grid-gap: var(--grid-gap);
     align-items: end;
 }
@@ -186,6 +237,25 @@ h3 {
     padding: 0px;
     text-align: left;
 }
+
+@media only screen and (max-width: 800px) {
+
+    /* for some reason grip gap places gap on right of reset icon when "bricks moved" text is disabled for phone screens */
+
+    .drenga-status {
+        grid-gap: 0px;
+    }
+
+    .drenga-status h3:first-of-type {
+        display: none;
+    }
+
+    .drenga-bricks-moved {
+        margin-right: 15px;
+    }
+}
+
+/* STYLE - FOOTER - RESPONSIVE */
 
 /* STYLE - POP UP - GENERAL */
 
