@@ -27,7 +27,10 @@ var addressSuffix = ".json"
 window.onload = function () {
 
     //load navbar
-    loadNavbar().then( () => document.getElementById("navbarIcon").addEventListener("click", navbarDropdown) );
+    loadNavbar().then( () => {
+        document.getElementById("navbarIcon").addEventListener("click", navbarDropdown);
+        document.getElementById("drenga").className = "active";
+    });
 
     //input event
     window.onkeydown = input;

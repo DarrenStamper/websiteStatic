@@ -34,7 +34,10 @@ var monitorName;
 window.onload = function() {
 
     //load navbar
-    loadNavbar().then( () => document.getElementById("navbarIcon").addEventListener("click", navbarDropdown) );
+    loadNavbar().then( () => {
+        document.getElementById("navbarIcon").addEventListener("click", navbarDropdown);
+        document.getElementById("monitorNameGenerator").className = "active";
+    });
 
     //button event
     document.getElementById("button").addEventListener("click", generateMonitorName);

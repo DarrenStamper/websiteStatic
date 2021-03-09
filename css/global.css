@@ -109,6 +109,10 @@ body {
     text-decoration: none;
 }
 
+.navbar .active {
+    background-color: var(--colour-3);
+}
+
 .navbar a:hover {
     background-color: var(--colour-3);
 }
