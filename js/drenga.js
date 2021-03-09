@@ -293,5 +293,9 @@ function closeMenu(event) {
         document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0].style.display = "none";
         menuOpen = false;
         passiveRuleVisible = false;
+        console.log("pooperino");
+    }
+    else {
+        console.log("poop");
     }
 }

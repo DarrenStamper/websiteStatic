@@ -114,10 +114,10 @@
 
 * {
     /* select */
-    -moz-user-select: none;
+    /* -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    user-select: none; */
     
     /* scrollbar */
     scrollbar-width: none; /* Firefox */
@@ -132,19 +132,6 @@ html, body {
     min-width: unset;
     user-select: none;
 }
-
-/* GENERAL - RESPONSIVE */
-
-@media only screen and (max-width: 800px) {
-
-    .drenga-input {
-        -moz-user-select: unset;
-        -webkit-user-select: unset;
-        -ms-user-select: unset;
-        user-select: unset;
-    }
-}
-
 
 /* LAYOUT */
 
@@ -200,7 +187,6 @@ h1 {
 
 .drenga-controls {
     justify-self: right;
-    z-index: 1;
 }
 
 /* STYLE - BODY */
