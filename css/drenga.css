@@ -211,6 +211,7 @@ h3 {
     position: relative;
     margin: auto;
     width: var(--menu-width);
+    max-width: var(--menu-width-max);
     height: var(--menu-height);
     max-height: var(--menu-height-max);
     padding: var(--padding-general) 0px;
@@ -221,7 +222,7 @@ h3 {
     content: "";
     display: block;
     position: absolute;
-    width: inherit;
+    width: 100%;
     height: var(--padding-general);
     top: var(--padding-general);
     background-image: linear-gradient(to bottom, rgba(037,037,037, 1) 0%, rgba(037,037,037, 0) 100%);
@@ -233,7 +234,7 @@ h3 {
     content: "";
     display: block;
     position: absolute;
-    width: inherit;
+    width: 100%;
     height: var(--padding-general);
     bottom: var(--padding-general);
     background-image: linear-gradient(to top, rgba(037,037,037, 1) 0%, rgba(037,037,037, 0) 100%);
@@ -381,7 +382,8 @@ span {
 
         --icon-width: 40px;
 
-        --menu-width: 415px;
+        --menu-width: calc(100% - (var(--padding-general)*2));
+        --menu-width-max: 415px;
         --menu-height: 60vh;
         --menu-height-max: 415px;
         
