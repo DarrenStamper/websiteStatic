@@ -6,8 +6,8 @@ let ruleset_list_nameList = ["legacy", "casual", "retards"];
 let ruleset_list = [null, null, null];
 
 let ruleset_passive = null;
-var ruleset_passive_minTime = 3; //default: 90
-var ruleset_passive_maxTime = 3; //default 180
+var ruleset_passive_minTime = 90; //default: 90
+var ruleset_passive_maxTime = 180; //default 180
 
 //default settings
 var ruleset_ruleMode = 1; //random, numbered
@@ -34,6 +34,13 @@ window.onload = function () {
 
     //input event
     window.onkeydown = input;
+
+    var numpad = document.getElementsByClassName("numpad")[0];
+    for (var c = 0; c < numpad.children.length; c++) {
+        if (c != 10){
+            numpad.children[c].addEventListener("click", input);
+        }
+    }
 
     //reset event
     document.getElementsByClassName("drenga-reset-icon")[0].addEventListener("click", function () { reset(); });
@@ -74,6 +81,10 @@ window.onload = function () {
 
     if (ruleset_ruleMode == 0) document.getElementById("random").classList = "active";
     else document.getElementById("numbered").classList = "active";
+    if (window.innerWidth < 800){
+        document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid drenga-grid-numpad-enabled";
+        document.getElementsByClassName("numpad")[0].className = "numpad numpad-enabled";
+    }
 
     document.getElementById(ruleset_list_nameList[ruleset_list_index]).classList = "active";
 
@@ -109,8 +120,14 @@ function addRules(xhttp) {
 
 function input(event) {
 
+    var key;
+
+    if (event.target.nodeName == "BODY") key = event.key;
+
+    else if (event.target.nodeName == "BUTTON") key = event.target.value;
+    
     //prevent backspace navigating to previous website
-    if (event.keyCode === 8) event.preventDefault();
+    if (key == "Backspace") event.preventDefault();
 
     if (menuOpen == false && passiveRuleVisible == false) {
 
@@ -120,7 +137,7 @@ function input(event) {
             var input = document.getElementsByClassName("drenga-input")[0];
 
             //enter key
-            if (event.keyCode === 13 && input.value != "") {
+            if (key == "Enter" && input.value != "") {
 
                 input.placeholder = "";
                 var ruleIndex = Number.parseInt(input.value) - 1;
@@ -129,8 +146,8 @@ function input(event) {
             }
 
             //backspace
-            else if (event.keyCode === 8) {
-                event.preventDefault();
+            else if (key == "Backspace") {
+                if(event.target.nodeName == "BODY") event.preventDefault(); /* Is this neccessary */
                 if (input.value.length < 2) input.value = "";
                 else input.value = input.value.charAt(0);
             }
@@ -139,20 +156,20 @@ function input(event) {
             else if (input.value.length == 2);
 
             //numbers, numlock numbers
-            else if (((47 < event.keyCode && event.keyCode < 58) || (95 < event.keyCode && event.keyCode < 107)) == false);
+            else if (parseInt(key) < 0 && parseInt(key) > 9);
 
             //leading zeros
-            else if (input.value == "" && event.key == "0");
+            else if (input.value == "" && key == "0");
 
             //range
-            else if (Number.parseInt(input.value + event.key) <= ruleset_list[ruleset_list_index].length) input.value += event.key;
+            else if (Number.parseInt(input.value + key) <= ruleset_list[ruleset_list_index].length) input.value += key;
         }
 
         //random
         else if (ruleset_ruleMode == 0) {
 
             //enter, r, spacebar
-            if (event.keyCode == 13 || event.keyCode == 82 || event.keyCode == 32) {
+            if (key == "Enter" || key == "r" || key == " ") {
                 var ruleIndex = randInt(0, ruleset_list[ruleset_list_index].length);
                 setRule(ruleIndex);
             }
@@ -196,12 +213,18 @@ function setMode(event) {
         buttonNumbered.classList = "";
         ruleset_ruleMode = 0;
         document.getElementsByClassName("drenga-input")[0].placeholder = "Random";
+        document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid";
+        document.getElementsByClassName("numpad")[0].className = "numpad";
     }
     else if (event.currentTarget.id == "numbered") {
         buttonRandom.classList = "";
         buttonNumbered.classList = "active";
         ruleset_ruleMode = 1;
         document.getElementsByClassName("drenga-input")[0].placeholder = "Start typing...";
+        if (window.innerWidth < 800){
+            document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid drenga-grid-numpad-enabled";
+            document.getElementsByClassName("numpad")[0].className = "numpad numpad-enabled";
+        }
     }
 }
 
