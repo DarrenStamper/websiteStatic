@@ -33,6 +33,7 @@ window.onload = function () {
     });
 
     //input event
+
     window.onkeydown = input;
 
     var numpad = document.getElementsByClassName("numpad")[0];
@@ -79,11 +80,15 @@ window.onload = function () {
 
     //set active settings
 
-    if (ruleset_ruleMode == 0) document.getElementById("random").classList = "active";
-    else document.getElementById("numbered").classList = "active";
-    if (window.innerWidth < 800){
-        document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid drenga-grid-numpad-enabled";
-        document.getElementsByClassName("numpad")[0].className = "numpad numpad-enabled";
+    if (ruleset_ruleMode == 0) {
+        document.getElementById("random").classList = "active";
+    }
+    else {
+        document.getElementById("numbered").classList = "active";
+        if (window.innerWidth < 800){
+            document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid drenga-grid-numpad-enabled";
+            document.getElementsByClassName("numpad")[0].className = "numpad numpad-enabled";
+        }
     }
 
     document.getElementById(ruleset_list_nameList[ruleset_list_index]).classList = "active";
@@ -316,9 +321,5 @@ function closeMenu(event) {
         document.getElementsByClassName("drenga-passiveRulesPopUp-background")[0].style.display = "none";
         menuOpen = false;
         passiveRuleVisible = false;
-        console.log("pooperino");
-    }
-    else {
-        console.log("poop");
     }
 }
