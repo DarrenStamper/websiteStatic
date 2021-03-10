@@ -293,7 +293,10 @@ p {
     float: left;
     padding-right: var(--padding-general);
 }
-
+.drenga-settings-content button h4 {
+    text-align: left;
+    width: calc(100% - (var(--menu-button-height) - var(--padding-general)));
+}
 .drenga-settings-content button h5 {
     text-decoration: none;
     font-style: italic;
@@ -302,6 +305,8 @@ p {
     float: left;
     margin: 0;
     white-space: nowrap;
+    text-align: left;
+    width: calc(100% - (var(--menu-button-height) - var(--padding-general)));
 }
 
 .ghetto-pad {
