@@ -131,6 +131,7 @@ body {
     color: var(--colour-5);
     padding: 14px 20px;
     text-decoration: none;
+    height: var(--navbar-height);
 }
 
 .navbar .active {

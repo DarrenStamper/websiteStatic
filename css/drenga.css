@@ -9,6 +9,11 @@
     --font-weight-h3: normal;
     --font-weight-h4: normal;
 
+    /* media queries - note, they can't use var function so must be set manually */
+
+    --max-width-tablet: 1300px;
+    --max-width-mobile: 800px;
+
     /* position */
 
     --centering-offset-h1: 60px;
