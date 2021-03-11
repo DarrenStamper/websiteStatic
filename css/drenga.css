@@ -53,7 +53,7 @@ html, body {
 
 /* GENERAL - FONTS */
 
-input[type="number"].drenga-input, h4, .drenga-settings-content button h5, .numpad button {
+h3.drenga-input, h4, .drenga-settings-content button h5, .numpad button {
     font-family: var(--font-family-global);
 }
 
@@ -125,6 +125,7 @@ svg:hover {
 
 h1 {
     display: inline;
+    overflow-wrap: break-word;
     font-size: var(--font-size-h1);
     font-weight: var(--font-weight-h1);
 }
@@ -158,14 +159,13 @@ h2 {
     align-items: end;
 }
 
-input[type="number"].drenga-input { /* id to override input element style precedence */
-    border: none;
-    background-color: transparent;
-    color: var(--colour-5); /* */
-    text-shadow: 0 0 0 rgb(000,128,000);
+h3.drenga-input {
+    padding-bottom: 4px;
+}
+
+h3.drenga-input.placeholder { /* id to override element style precedence */
     font-style: italic;
-    font-size: var(--font-size-input);
-    height: auto;
+    opacity: 0.5;
 }
 
 .drenga-status {
@@ -469,6 +469,8 @@ span {
         --keyboard-height: calc((100% - var(--navbar-height) - (2*(var(--padding-general))))*0.25);
 
         margin: 0 auto;
+
+        margin-bottom: calc(var(--keyboard-height) + (2*(var(--padding-general))));
 
         margin-top: calc(var(--navbar-height)
                     + (var(--padding-general)*2)
