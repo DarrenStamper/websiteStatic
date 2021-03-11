@@ -38,9 +38,7 @@ window.onload = function () {
 
     var numpad = document.getElementsByClassName("numpad")[0];
     for (var c = 0; c < numpad.children.length; c++) {
-        if (c != 10){
-            numpad.children[c].addEventListener("click", input);
-        }
+        numpad.children[c].addEventListener("click", input);
     }
 
     //reset event
@@ -85,10 +83,8 @@ window.onload = function () {
     }
     else {
         document.getElementById("numbered").classList = "active";
-        if (window.innerWidth < 800){
-            document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid drenga-grid-numpad-enabled";
-            document.getElementsByClassName("numpad")[0].className = "numpad numpad-enabled";
-        }
+        document.getElementsByClassName("drenga-grid")[0].className = "drenga-grid drenga-grid-numpad-enabled";
+        document.getElementsByClassName("numpad")[0].className = "numpad numpad-enabled";
     }
 
     document.getElementById(ruleset_list_nameList[ruleset_list_index]).classList = "active";

@@ -261,6 +261,7 @@ h4 {
 
 p {
     text-align: justify;
+    padding: 0px 0px 0px 1px;
 }
 
 /* POP UP - SETTINGS */
@@ -282,14 +283,16 @@ p {
     margin: 0px;
     padding: var(--padding-general);
     height: var(--menu-button-height);
+    background-color: var(--colour-2);
+    border: 2px solid var(--colour-3);
 }
 
 .drenga-settings-content button:hover {
-    background-color: rgb(071,071,071);
+    background-color: var(--colour-3);
 }
 
 .drenga-settings-content button.active {
-    background-color: rgb(071,071,071);
+    background-color: var(--colour-3);
 }
 
 .drenga-settings-content button svg {
@@ -416,6 +419,10 @@ span {
 
         --font-size-h1: 40px;
         --font-size-h2: 30px;
+
+        /* Spacing */
+
+        --icon-margin-bottom: 8px;
     }
 
     /* layout */
@@ -432,7 +439,7 @@ span {
     }
     
     .drenga-settings-icon {
-        margin-bottom: 8px;
+        margin-bottom: var(--icon-margin-bottom);
     }
 
     /* footer - for some reason grip gap places gap on right of reset icon when "bricks moved" text is disabled for phone screens */
@@ -453,5 +460,27 @@ span {
 
     .numpad-enabled {
         display: grid;
+    }
+    
+    /* pop ups */
+
+    .drenga-settings-container, .drenga-info-container, .drenga-passiveRulesPopUp-container {
+        
+        --keyboard-height: calc((100% - var(--navbar-height) - (2*(var(--padding-general))))*0.25);
+
+        margin: 0 auto;
+
+        margin-top: calc(var(--navbar-height)
+                    + (var(--padding-general)*2)
+                    + (var(--icon-width)*2)
+                    + var(--icon-margin-bottom));
+
+        height: calc(100% - var(--navbar-height)
+                          - (4*var(--padding-general))
+                          - (2*(var(--icon-width))) 
+                          - var(--icon-margin-bottom)
+                          - var(--keyboard-height) );
+        
+        overflow: hidden;
     }
 }
