@@ -1,0 +1,24 @@
+@import "global.css";
+
+:root {
+
+    /* Theme */
+
+    --color-accent: rgb(232,208,124);
+}
+
+@font-face {
+    font-family: artDeco;
+    src: url(../fonts/grenadier.regular.otf);
+}
+
+#bodyContent {
+    background-color: black;
+}
+
+h1 {
+    font-family: artDeco;
+    font-weight: 100;
+    font-size: 90px;
+    color: var(--color-accent);
+}
