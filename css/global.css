@@ -21,6 +21,7 @@
 
     font-size: 16px;
     font-family: var(--font-family-global);
+    font-weight: 100;
     color: var(--colour-5);
 
     /* media queries - note, they can't use var function so must be set manually */
@@ -216,7 +217,7 @@ label {
     text-align: right;
 }
 
-/* STYLE - LIST */
+/* STYLE - LIST - MENU */
 
 .ul-options {
     list-style-type: none;
@@ -237,6 +238,8 @@ label {
 .ul-options li:active {
     background-color: var(--colour-3);
 }
+
+/* STYLE - LIST - TEXT */
 
 /* STYLE - SELECT */
 
