@@ -1,0 +1,25 @@
+﻿@import "global.css";
+
+/* GENERAL - LAYOUT */
+
+#bodyContent {
+    width: 100%;
+    height: 100%;
+}
+
+/* GENERAL - SELECT */
+
+html, body {
+    user-select: none;
+}
+
+/* GENERAL - SCROLLBAR */
+
+* {
+    scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+    /* scrollbar */
+    display: none; /* Chrome */
+}

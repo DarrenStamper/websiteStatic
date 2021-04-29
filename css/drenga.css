@@ -48,7 +48,6 @@
 
 html, body {
     min-width: unset;
-    user-select: none;
 }
 
 /* GENERAL - FONTS */

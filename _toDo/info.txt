@@ -1,2 +1,5 @@
 map tool for highlighting roads, routes, adding notes
 pollutiondata webpage
+add blog entry template inspired by gta hacking fix guys blog style
+github docs using submodules with github pages
+github docs securing your github pages site with https
