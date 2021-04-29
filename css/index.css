@@ -3,3 +3,12 @@
 #bodyContent {
     background: repeating-radial-gradient(#a65a08, #326c85 50px);
 }
+
+/* RESPONSIVE - TABLET */
+
+@media only screen and (max-width: 1300px) {
+    
+    #bodyContent {
+        background: var(--colour-1);
+    }
+}
