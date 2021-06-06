@@ -22,13 +22,14 @@ body::-webkit-scrollbar {
 
 img {
     width: 100%;
+    display: block;
 }
 
 /* HEADER */
 
 #headerContainer {
     position: relative;
-    text-align: center;
+    height: auto;
 }
 
 #header {
@@ -41,9 +42,9 @@ img {
     font-size: 115px;
 }
 
-/* PICTURE 2 */
+/* GRID */
 
-#batKittyContainter {
+#grid {
     display: grid;
     grid-template-columns: 50% 50%;
     text-align: center;
@@ -51,22 +52,59 @@ img {
     justify-content: center;
 }
 
-#batKittyContainter p {
+#grid p {
     margin: 0px;
     font-size: 60px;
     display: inline;
     align-self: center;
 }
 
+/* RESPONSIVE */
 
-/* some shit */
+@media only screen and (max-width: 1400px) {
 
-ul {
-    list-style-type: square;
-    list-style-position: inside;
-    padding-left: 0px;
+    #header {
+        font-size: 90px;
+    }
+/* 
+    #batKittyContainter p {
+        font-size: 30px;
+    } */
+
 }
 
-li {
-    padding: var(--spacer-1);
+@media only screen and (max-width: 1100px) {
+
+    #header {
+        font-size: 60px;
+    }
+
+    #batKittyContainter p {
+        font-size: 25px;
+    }
+
+}
+
+@media only screen and (max-width: 800px) {
+ 
+    #header {
+        font-size: 40px;
+    }
+
+    p {
+        font-size: 20px;
+    }
+    
+}
+
+@media only screen and (max-width: 600px) {
+ 
+    #header {
+        font-size: 30px;
+    }
+
+    p {
+        font-size: 20px;
+    }
+    
 }

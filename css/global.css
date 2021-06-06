@@ -75,7 +75,7 @@
 
 /* RESPONSIVE - NAVBAR */
 
-@media screen and (max-width: 1800px) {
+@media screen and (max-width: 2000px) {
     
     .navbar a:not(:first-child) {
         display: none;
