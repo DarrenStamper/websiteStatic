@@ -5,6 +5,7 @@ html, body {
 }
 
 #bodyContent {
+    height: calc(100vh - var(--navbar-height));
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto auto auto 1fr;

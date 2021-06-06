@@ -90,6 +90,7 @@ svg:hover {
 /* LAYOUT */
 
 #bodyContent {
+    height: calc(100vh - var(--navbar-height));
     padding: var(--padding-general);
 }
 

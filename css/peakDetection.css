@@ -1,0 +1,85 @@
+﻿@import "global.css";
+
+/* GENERAL - STYLES */
+
+h1, h2 {
+    font-weight: 100;
+}
+
+/* GENERAL - LAYOUT */
+
+#grid {
+    width: 100%;
+    max-width: 930px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+}
+
+/* CHARTS */
+
+#chartInputDataWrapper, #chartOutputSignalWrapper {
+    background-color: var(--colour-2);
+    padding: var(--spacer-5);
+}
+
+#chartOutputSignalWrapper {
+    margin-top: 20px;
+}
+
+/* CONTROLS */
+
+#controls {
+    display: grid;
+    grid-template-columns: auto 100px auto 100px auto 100px 1fr 100px;
+    grid-template-rows: auto;
+    grid-gap: 20px;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+}
+
+/* SOURCES */
+
+#sources {
+    margin-top: var(--spacer-5);
+}
+
+#sources h2 {
+    text-align: left;
+}
+
+#sources ul {
+    margin: 0px;
+    padding-left: var(--spacer-4);
+    text-align: left;
+}
+
+#sources ul li {
+    list-style-type: square;
+}
+
+#sources ul li a {
+    text-decoration-color: var(--colour-7);
+}
+
+#sources ul li:not(:last-child) {
+    padding-bottom: var(--spacer-2);
+}
+
+#sources ul li a:hover {
+    color: var(--colour-6);
+}
+
+/* MOBILE */
+
+@media screen and (max-width: 800px) {
+    #grid {
+        grid-template-columns: 100%;
+    }
+}

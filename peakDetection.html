@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peak Detection</title>
+    <link rel="stylesheet" href="css/peakDetection.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="module" src="./js/peakDetection.js"></script>
+    <!-- It's pronounced GIF -->
+</head>
+
+<body>
+    <div class="navbar" id="navbar"></div>
+    <div id="bodyContent">
+        <div id=grid>
+
+            <!-- title -->
+            <h1>Peak Detection</h1>
+
+            <!-- chart input data -->
+            <div id="chartInputDataWrapper">
+                <canvas id="chartInputData" width="2" height="1"></canvas>
+            </div>
+
+            <!-- controls -->
+            <div id="controls">
+                <label for="lag">Lag: </label>
+                <input type="number" id="lag" name="lag" step="any" placeholder="5" autocomplete="off"/>
+    
+                <label for="threshold">Threshold: </label>
+                <input type="number" id="threshold" name="threshold" step="any" placeholder="3.5" autocomplete="off"/>
+    
+                <label for="influence">Influence: </label>
+                <input type="number" id="influence" name="influence" step="any" placeholder="0.5" autocomplete="off"/>
+    
+                <div></div>
+                <input id="reset" type="reset" value="Reset" />
+            </div>
+
+            <!-- chart output signal -->
+            <div id="chartOutputSignalWrapper">
+                <canvas id="chartOutputSignal" width="2" height="1"></canvas>
+            </div>
+
+            <!-- sources -->
+            <div id="sources">
+                <h2>Sources</h2>
+                <ul>
+                    <li><a href="https://stackoverflow.com/questions/22583391/peak-signal-detection-in-realtime-timeseries-data/22640362#22640362">Peak detection algorithm</a></li>
+                    <li><a href="https://stackoverflow.com/questions/22583391/peak-signal-detection-in-realtime-timeseries-data/57889588#57889588">Javascript implementation</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

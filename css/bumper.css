@@ -1,5 +1,66 @@
 @import "global.css";
 
+/* GENERAL */
+
+.navbar {
+    top: unset;
+}
+
+html, body {
+    overflow-y: scroll;
+    scrollbar-width: none;
+  }
+  
+body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+#bodyContent {
+    padding: 0px;
+}
+
+img {
+    width: 100%;
+}
+
+/* HEADER */
+
+#headerContainer {
+    position: relative;
+    text-align: center;
+}
+
+#header {
+    width: 100%;
+    margin: 0px;
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 115px;
+}
+
+/* PICTURE 2 */
+
+#batKittyContainter {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+}
+
+#batKittyContainter p {
+    margin: 0px;
+    font-size: 60px;
+    display: inline;
+    align-self: center;
+}
+
+
+/* some shit */
+
 ul {
     list-style-type: square;
     list-style-position: inside;

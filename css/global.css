@@ -58,11 +58,24 @@
     --colour-3: rgb(060,060,060); /* button          , field-border   , nav hover       */
     --colour-4: rgb(071,071,071); /* Hover           , button-selected                  */
     --colour-5: rgb(000,128,000); /* text            , section-border , field-selected  */
+    --colour-6: rgb(000,229,000); /* text hover                                         */
+    --colour-7: rgb(000,064,000); /* text faded                                         */
+
+    /* new colour system for future theme setting: 
+       > --colourPrimary-1
+       > --colourPrimary-2
+       > --colourAccent-1
+       > --colourAccent-2
+       > --colourText-1
+       > --colourText-2
+
+       alternatively for full control just have a colour variable for each object type
+    */
 }
 
 /* RESPONSIVE - NAVBAR */
 
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1800px) {
     
     .navbar a:not(:first-child) {
         display: none;
@@ -99,9 +112,12 @@ html {
 
 body {
     margin: 0px;
-    background-color: var(--colour-2);
-
+    background-color: var(--colour-0);
     position: relative;
+}
+
+#bodyContent {
+    min-height: calc(100vh - var(--navbar-height));
 }
 
 /* GENERAL - FLEX */
@@ -157,10 +173,8 @@ body {
 #bodyContent {
     background-color: var(--colour-1);
     padding: var(--bodyContent-padding);
-
     margin-top: var(--navbar-height);
     width: 100%;
-    height: calc(100vh - var(--navbar-height));
 }
 
 /* STYLE */
@@ -209,6 +223,7 @@ input[type="text"]:hover, input[type="number"]:hover {
 
 input[type="text"]:focus, input[type="number"]:focus {
     border-color: var(--colour-4);
+    outline: none;
 }
 
 input[type=number] {
