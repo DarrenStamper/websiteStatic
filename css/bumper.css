@@ -25,6 +25,10 @@ img {
     display: block;
 }
 
+p {
+    padding: var(--spacer-5);
+}
+
 /* HEADER */
 
 #headerContainer {
@@ -52,7 +56,7 @@ img {
     justify-content: center;
 }
 
-#grid p {
+p {
     margin: 0px;
     font-size: 60px;
     display: inline;
@@ -66,10 +70,6 @@ img {
     #header {
         font-size: 90px;
     }
-/* 
-    #batKittyContainter p {
-        font-size: 30px;
-    } */
 
 }
 
@@ -79,25 +79,17 @@ img {
         font-size: 60px;
     }
 
-    #batKittyContainter p {
-        font-size: 25px;
-    }
-
 }
 
-@media only screen and (max-width: 800px) {
- 
-    #header {
-        font-size: 40px;
-    }
+@media only screen and (max-width: 1030px) {
 
     p {
-        font-size: 20px;
+        font-size: 40px;
     }
     
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 770px) {
  
     #header {
         font-size: 30px;
