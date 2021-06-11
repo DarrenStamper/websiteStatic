@@ -24,6 +24,16 @@ var color5 = "rgb(000,128,000)";
 
 var addressPrefix = "";
 
+/* The dollar sign is commonly used as a shortcut to the function document.getElementById().
+   Because this function is fairly verbose and used frequently. There is nothing about $
+   that requires it to be used this way, however. But it has been the convention, although
+   there is nothing in the language to enforce it. 
+
+   https://www.thoughtco.com/and-in-javascript-2037515
+*/
+//$ shortcut
+function $(x) {return document.getElementById(x);}
+
 //load common html
 function includeHTML() {
 

@@ -1,5 +1,19 @@
 'use strict';
 
+/* The Intersection Observer API lets code register a callback function that is executed
+   whenever an element they wish to monitor enters or exits another element (or the 
+   viewport). Historically, detecting visibility of an element, or the relative visibility
+   of two elements in relation to each other, has been a difficult task. Intersection
+   information is needed for:
+   > Lazy-loading of images or other content as a page is scrolled
+   > infinite scrolling
+   > Reporting of visibility of advertisements in order to calculate ad revenues
+   > Deciding whether or not to perform tasks or animation processes based on
+     whether or not the user will see the result.
+
+   https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+*/
+
 import { loadNavbar, navbarDropdown } from "./global.js";
 
 /* An Immediately-invoked Function Expression (IIFE for friends) is a way to execute
