@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logs</title>
+    <link rel="stylesheet" href="css/geneticAlgorithm.css"/>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2/dist/chartjs-plugin-annotation.min.js"></script>
+    
+    <script type="module" src="./js/geneticAlgorithm.js"></script>
+    <!-- It's pronounced GIF -->
+</head>
+
+<body>
+    <div class="navbar" id="navbar"></div>
+    <div id="bodyContent">
+        <div id="grid">
+            
+        <h1>Genetic Algorithm</h1>
+
+        <h2>Parameters</h2>
+        <div id="parametersContainer">
+            <div id="parameters">
+
+                <label for="populationSize">Population Size: </label>
+                <input type="number" id="populationSize" name="populationSize" autocomplete="off"/>
+
+                <label for="tournamentSize">Tournament Size: </label>
+                <input type="number" id="tournamentSize" name="tournamentSize" autocomplete="off"/>
+
+                <label for="crossRate">Cross Rate: </label>
+                <input type="number" id="crossRate" name="crossRate" autocomplete="off"/>
+
+                <label for="numOfRuns">Num of Runs: </label>
+                <input type="number" id="numOfRuns" name="numOfRuns" autocomplete="off"/>
+
+                <label for="numOfGenerations">Num of Generations: </label>
+                <input type="number" id="numOfGenerations" name="numOfGenerations" autocomplete="off"/>
+
+                <hr id="divider1">
+
+                <label for="fitnessFunction">Fitness Function: </label>
+                <select id="fitnessFunction" name="fitnessFunction">
+                    <option value="1">Optimisation 0</option>
+                    <option value="2">Optimisation 1</option>
+                </select>
+
+                <label for="problemType">Fitness Function: </label>
+                <select id="problemType" name="problemType">
+                    <option value="0">Minimisation</option>
+                    <option value="1">Maximisation</option>
+                </select>
+                
+                <label for="geneSize">Gene Size: </label>
+                <input type="number" id="geneSize" name="geneSize" autocomplete="off"/>
+
+                <label for="geneMin">Gene Min: </label>
+                <input type="number" id="geneMin" name="geneMin" autocomplete="off"/>
+
+                <label for="geneMax">Gene Max: </label>
+                <input type="number" id="geneMax" name="geneMax" autocomplete="off"/>
+
+                <label for="mutateRate">Mutate Rate: </label>
+                <input type="number" id="mutateRate" name="mutateRate" autocomplete="off"/>
+
+                <label for="mutateMax">Mutate Max: </label>
+                <input type="number" id="mutateMax" name="mutateMax" autocomplete="off"/>
+
+                <label for="fitnessSuggestedMax">Fitness Suggested Max: </label>
+                <input type="number" id="fitnessSuggestedMax" name="fitnessSuggestedMax" autocomplete="off"/>
+
+                <hr id="divider1">
+
+                <button id="reset">Reset</button>
+                <button id="start">Start</button>
+            </div>
+        </div>
+
+        <h2>Log</h2>
+        <div id="logContainer">
+            <textarea id="log" spellcheck="false" autocomplete="off" disabled></textarea>
+            <div></div>
+            <button id="logClear">Clear</button>
+        </div>
+
+        <h2>Output</h2>
+        <div id="outputContainer">
+
+            <div id="outputInfoContainer">
+                <h3>Info</h3>
+                <div id="outputInfo">
+
+                    <label for="runTime">Run Time: </label>
+                    <textarea id="runTime" name="runTime" spellcheck="false" autocomplete="off" disabled></textarea>
+
+                    <label for="bestFitness">Best Fitness: </label>
+                    <textarea id="bestFitness" name="bestFitness" spellcheck="false" autocomplete="off" disabled></textarea>
+                </div>
+            </div>
+
+            <div id="chartContainer">
+                <h3>Average and Best Per Generation [10 Run Average]</h3>
+                <canvas id="chart" width="2" height="1"></canvas>
+            </div>
+
+            <div id="chartContainer">
+                <h3>Total Per Generation [10 Run Average]</h3>
+                <canvas id="chart2" width="2" height="1"></canvas>
+            </div>
+
+        </div>
+    </div>
+</body>

@@ -1,0 +1,82 @@
+@import "global.css";
+
+/* GENERAL */
+
+#grid {
+    width: 700px;
+    margin: auto;
+    display: grid;
+    gap: 20px;
+}
+
+#parametersContainer, #logContainer, #outputInfoContainer, #chartContainer {
+    background-color: var(--colour-2);
+    padding: 20px;
+}
+
+h1, h2, h3{
+    font-weight: 100;
+}
+
+h2{
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
+
+h3 {
+    margin-top: 0px;
+    text-align: center;
+}
+
+/* PARAMETERS */
+
+#parameters {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+}
+
+#divider1{
+    grid-column: 1/3;
+    width: 100%;
+    height: 1px;
+    margin: 0px;
+    color: var(--colour-3);
+}
+
+/* LOG */
+
+#logContainer {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr 1fr;
+}
+
+#log {
+    height: 200px;
+    grid-column: 1/3;
+}
+
+/* OUTPUT */
+
+#outputContainer {
+    padding: 20px;
+    border: 1px solid var(--colour-5);
+    display: grid;
+    gap: 20px;
+}
+
+/* OUTPUT - INFO */
+
+#outputInfo {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+#outputInfo textarea {
+    border: none;
+    height: 24px;
+    padding: 4px;
+    text-align: center;
+}
