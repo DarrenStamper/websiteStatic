@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="css/mapTool.css" />
+    <script type="module" src="./js/mapTool.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/css/ol.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/build/ol.js"></script>
+    <!-- It's pronounced GIF -->
+</head>
+
+<body>
+    <div class="navbar" id="navbar"></div>
+    <div id="bodyContent">
+        <div id="grid">
+
+            <h1>Map Tool</h1>
+
+            <div id="loadContainer">
+                <div id="loadGrid">
+                    <label for="load">Load Data:</label>
+                    <input type="file" id="load" name="load">
+    
+                    <label for="save">Save Data:</label>
+                    <input type="file" id="save" name="save">
+                </div>
+            </div>
+            
+            <div id="mapContainer">
+                <div id="map" class="map"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
