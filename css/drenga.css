@@ -250,6 +250,7 @@ h3 {
     height: 100%;
     padding: 0px var(--padding-general) var(--padding-general) var(--padding-general);
     overflow-y: scroll;
+    overscroll-behavior: contain;
 }
 
 h4 {

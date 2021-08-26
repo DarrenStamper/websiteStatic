@@ -15,25 +15,38 @@
   breakpoint width tablet 1300
   breakpoint width mobile 800
 
+  should I have a section just for the z-indexes of things, overlay order?
+
+  css layout
+  > :root
+  > *
+  > element
+    > alphabetical order
+  > class
+    > alphabetical order
+  > id
+    > alphabetical order
+  > media queries
 */
 
 :root {
 
     /* font */
-    
-    --font-family-global: monospace, Arial, Helvetica, sans-serif; /* h4 needs to be set manually for some reason */
 
-    font-size: 16px;
+    font-size: var(--font-size-1);
     font-family: var(--font-family-global);
     font-weight: 100;
     color: var(--colour-5);
+    
+    --font-family-global: monospace, Arial, Helvetica, sans-serif; /* h4 needs to be set manually for some reason */
 
     /* media queries - note, they can't use var function so must be set manually */
     
-    --navbar-width-min: 1300px;
+    --navbar-width-min: 2000px;
 
     /* size */
 
+    --font-size-1: 16px;
     --navbar-height: 46px; /* sinful magic number */
 
     /* spacing */
@@ -43,12 +56,21 @@
     --spacer-3: 0.75rem;
     --spacer-4: 1.00rem;
     --spacer-5: 1.25rem;
+    --spacer-6: 1.50rem;
 
     --bodyContent-padding: var(--spacer-5);
 
     --flex-gap: var(--spacer-5);
 
     --select-arrow-background-width: calc(100% - var(--spacer-1) - 1rem - var(--spacer-1)); /* 100% - pad + 1rem + pad */
+
+    /* stacking order */
+
+    --z-index-pop-ups: 200;
+    --z-index-navbar: 100;
+    --z-index-rotating-border: 10;
+    --z-index-rotating-border-after: 9;
+    --z-index-rotating-border-before: 8;
 
     /* theme */
 
@@ -73,118 +95,19 @@
     */
 }
 
-/* RESPONSIVE - NAVBAR */
-
-@media screen and (max-width: 2000px) {
-    
-    .navbar a:not(:first-child) {
-        display: none;
-    }
-    .navbar a.icon {
-        float: right;
-        display: block;
-    }
-
-    /* dropdown */
-
-    .navbar.dropdown .icon {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .navbar.dropdown a {
-        float: none;
-        display: block;
-        text-align: left;
-    }
-}
-
-/* GENERAL */
-
-html {
-    box-sizing: border-box;
-}
-
 *, *:before, *:after {
     box-sizing: inherit; /* you can use content-box or padding-box (where supported) at will, without worrying about a universal selector overriding your CSS, children inherit from custom set parent */
     color: inherit;
 }
 
-body {
-    margin: 0px;
-    background-color: var(--colour-0);
-    position: relative;
-}
-
-#bodyContent {
-    min-height: calc(100vh - var(--navbar-height));
-}
-
-/* GENERAL - FLEX */
-
-.flex-gap {
-    --gap: 20px;
-    display: inline-flex;
-    flex-wrap: wrap;
-    margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
-    width: calc(100% + var(--gap));
-}
-
-.flex-gap > * {
-    margin: var(--gap) 0 0 var(--gap);
-}
-
-/* LAYOUT - NAVBAR */
-
-.navbar {
-    overflow: hidden;
-    background-color: var(--colour-2);
-
-    position: absolute;
-    width: 100%;
-    top: calc(0px - var(--navbar-height));
-    z-index: 1000;
-}
-
-.navbar a {
-    float: left;
-    display: block;
-    color: var(--colour-5);
-    padding: 14px 20px;
-    text-decoration: none;
-    height: var(--navbar-height);
-}
-
-.navbar .active {
-    background-color: var(--colour-3);
-}
-
-.navbar a:hover {
-    background-color: var(--colour-3);
-}
-
-.navbar .icon {
-    display: none; 
-    height: var(--navbar-height);
-}
-
-/* LAYOUT - CONTENT */
-
-#bodyContent {
-    background-color: var(--colour-1);
-    padding: var(--bodyContent-padding);
-    margin-top: var(--navbar-height);
-    width: 100%;
-}
-
-/* STYLE */
+/* ELEMENT - _COMMON */
 
 button, label, input, textarea, p {
     width: 100%;
     padding: var(--spacer-1);
 }
 
-/* STYLE - BUTTON */
+/* ELEMENT - _COMMON - BUTTONS */
 
 input[type="submit"], input[type="reset"], button {
     border: none;
@@ -196,47 +119,78 @@ input[type="submit"]:hover, input[type="reset"]:hover, button:hover {
     cursor: pointer;
 }
 
-/* STYLE - HEADINGS */
+/* ELEMENT - _COMMON - HEADING */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 100;
+}
+
+/* ELEMENT - BODY */
+
+body {
+    margin: 0px;
+    background-color: var(--colour-0);
+    position: relative;
+}
+
+/* ELEMENT - FLEX */
+
+.flex-gap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin: calc(-1 * var(--spacer-5)) 0 0 calc(-1 * var(--spacer-5));
+    width: calc(100% + var(--spacer-5));
+}
+
+.flex-gap > * {
+    margin: var(--spacer-5) 0 0 var(--spacer-5);
+}
+
+/* ELEMENT - HEADING */
 
 h1, h2 {
     margin: 0px 0px 20px 0px;
     text-align: center;
 }
 
-/* STYLE - INPUT */
+/* ELEMENT - HTML */
+
+html {
+    box-sizing: border-box;
+}
+
+/* ELEMENT - INPUT */
 
 input {
     background-color: var(--colour-3);
     border-color: var(--colour-4);
 }
 
-/* STYLE - INPUT - TEXT */
-
-input[type="text"], input[type="number"] {
-    background-color: var(--colour-0);
-    border: 1px solid var(--colour-3);
-}
-
-input[type="text"]:hover, input[type="number"]:hover {
-    border-color: var(--colour-4);
-}
-
-input[type="text"]:focus, input[type="number"]:focus {
-    border-color: var(--colour-4);
-    outline: none;
-}
-
 input[type=number] {
     -moz-appearance: textfield;
 }
 
-/* STYLE - LABEL */
+input[type="number"], input[type="text"] {
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-3);
+}
+
+input[type="number"]:hover, input[type="text"]:hover {
+    border-color: var(--colour-4);
+}
+
+input[type="number"]:focus, input[type="text"]:focus {
+    border-color: var(--colour-4);
+    outline: none;
+}
+
+/* ELEMENT - LABEL */
 
 label {
     text-align: right;
 }
 
-/* STYLE - LIST - MENU */
+/* ELEMENT - UNORDERED LIST */
 
 .ul-options {
     list-style-type: none;
@@ -258,9 +212,7 @@ label {
     background-color: var(--colour-3);
 }
 
-/* STYLE - LIST - TEXT */
-
-/* STYLE - SELECT */
+/* ELEMENT - SELECT */
 
 select {
     display: block;
@@ -292,7 +244,7 @@ select > option {
     background-color: var(--colour-0);
 }
 
-/* STYLE - TEXT AREA */
+/* ELEMENT - TEXT AREA */
 
 textarea {
     resize: none;
@@ -310,4 +262,324 @@ textarea:read-write:hover {
 
 textarea:read-write:focus {
     border-color: var(--colour-4);
+}
+
+textarea.readOnlySmall {
+    border: none;
+    height: 24px;
+    padding: 4px;
+    text-align: center;
+}
+
+/* CLASS - _COMMON - BUTTON DISABLED */
+
+.buttonDisabled-1 {
+    color: rgb(082,082,082);
+    background-color: rgb(048,048,048);
+}
+
+.buttonDisabled-1:hover {
+    background-color: rgb(048,048,048);
+    cursor: default;
+}
+
+/* CLASS - _COMMON - ROTATING BORDER */
+
+@keyframes spin {
+    from {transform: translate(-50%, -50%) rotate(0);}
+    to   {transform: translate(-50%, -50%) rotate(360deg);}
+}
+
+.rotating-border::before, .inputChange-1::before {
+    content: '';
+    display: block;
+    background: var(--border-bg);
+    width: calc(100% * 1.41421356237);
+    padding-bottom: calc(100% * 1.41421356237);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 100%;
+    z-index: var(--z-index-rotating-border-before);
+    -webkit-animation: spin 3s linear infinite;
+    animation: spin 3s linear infinite;
+}
+
+.rotating-border, .inputChange-1 {
+    --padding: 0px;
+    position: relative;
+    overflow: hidden;
+    font-size: var(--font-size-1);
+    padding: calc(var(--padding) + var(--border-size));
+    border-radius: var(--border-radius);
+    display: inline-block;
+    --border-radius: 0px;
+    --border-size: 1px;
+    --border-bg: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+    text-align: center;
+    z-index: var(--z-index-rotating-border);
+}
+
+.rotating-border *, .inputChange-1 input {
+    position: relative;
+    border: none;
+    z-index: 11;
+}
+
+/* CLASS - CONTAINER - POP UPS */
+
+.container-popUp {
+    display: none;
+    position: fixed;
+    z-index: var(--z-index-pop-ups);
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
+}
+
+/* CLASS - CUSTOM FILE INPUT */
+
+.customFileInput {
+    padding: var(--spacer-1);
+    background-color: var(--colour-0);
+    display: grid;
+    gap: var(--spacer-1);
+    grid-template-columns: 1fr 3fr;
+}
+
+.customFileInput > input[type=file] {
+    display: none;
+}
+
+.customFileInput > label {
+    padding: 2px 4px;
+    background-color: var(--colour-3);
+    font-size: 14px;
+}
+
+.customFileInput > label:hover {
+    background-color: var(--colour-4);
+}
+
+.customFileInput > span {
+    padding: 2px 4px 2px 0px;
+    font-size: 14px;
+}
+
+/* CLASS - HORIZONTAL RULE*/
+
+.hr-1 {
+    width: 100%;
+    height: 1px;
+    margin: 0px;
+    border: none;
+    background: var(--colour-4);
+}
+
+/* CLASS - INPUT CHANGE > SEE: CLASS - _COMMON - ROTATING BORDER */
+
+/* CLASS - INPUT DISABLED */
+
+input.inputDisabled-1 {
+    background-color: var(--colour-2);
+}
+
+input.inputDisabled-1:hover {
+    border-color: var(--colour-3);
+}
+
+/* CLASS - INPUT ERROR */
+
+.inputError-1 {
+    border-color: red;
+}
+
+/* CLASS - SCROLL LIST */
+
+.tableScrollList {
+    height: 200px;
+    background-color: var(--colour-0);
+    display: grid;
+    padding: var(--spacer-5);
+    gap: var(--spacer-1);
+    grid-template-rows: auto 1fr;
+}
+
+.tableScrollList table {
+    table-layout: fixed;
+    width: 100%;
+    border-spacing: 0px;
+}
+
+.tableScrollList > table th {
+    text-align: left;
+}
+
+.tableScrollList > div {
+    overflow-y: auto;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+}
+
+.tableScrollList > div::-webkit-scrollbar {
+    display: none;
+}
+
+.tableScrollList > div td {
+    border-bottom: 1px solid var(--colour-3);
+    padding: var(--spacer-1) 0px var(--spacer-1) 0px;
+}
+
+.tableScrollList tr:last-of-type td {
+    border-bottom: none;
+}
+
+/* CLASS - SECTION */
+
+.section-greyBackground {
+    padding: var(--spacer-5);
+    background-color: var(--colour-2);
+}
+
+.section-greenBorder {
+    padding: var(--spacer-5);
+    border: 1px solid var(--colour-5);
+}
+
+/* CLASS - TABLE */
+
+.tableStyle-1 {
+    background-color: var(--colour-0);
+    padding: var(--spacer-5);
+    border-spacing: 0px;
+}
+.tableStyle-1 th {
+    text-align: left;
+}
+.tableStyle-1 thead tr {
+    display: block;
+}
+.tableStyle-1 tbody {
+    display: block;
+    height: 200px;
+    width: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    overscroll-behavior: contain;
+}
+.tableStyle-1 tbody::-webkit-scrollbar {
+    display: none;
+}
+.tableStyle-1 td {
+    border-bottom: 1px solid var(--colour-3);
+    padding: var(--spacer-1) 0px var(--spacer-1) 0px;
+}
+
+/* ID - _COMMON - CUSTOM POP UPS */
+
+#customAlert, #customConfirm, #customPrompt, #multiPrompt {
+    background-color: var(--colour-2);
+    position: relative;
+    height: auto;
+    width: 300px;
+    margin: auto;
+    padding: var(--spacer-5);
+    display: grid;
+    gap: var(--spacer-5);
+}
+
+/* ID - BODY CONTENT */
+
+#bodyContent {
+    min-height: calc(100vh - var(--navbar-height));
+    background-color: var(--colour-1);
+    padding: var(--bodyContent-padding);
+    margin-top: var(--navbar-height);
+    width: 100%;
+}
+
+/* ID - CUSTOM POP UPS */
+
+#customConfirm, #multiPrompt {
+    grid-template-columns: 1fr 1fr;
+}
+
+#customConfirm > h3, #multiPrompt > h3 {
+    margin: 0px;
+    grid-column: 1 / 3;
+}
+
+#multiPrompt {
+    width: 500px;
+}
+
+#customPrompt {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#customPrompt > h3, #customPrompt > input {
+    grid-column: 1/4;
+}
+
+/* ID - NAVBAR */
+
+#navbar {
+    overflow: hidden;
+    background-color: var(--colour-2);
+
+    position: absolute;
+    width: 100%;
+    top: calc(0px - var(--navbar-height));
+    z-index: var(--z-index-navbar);
+}
+
+#navbar a {
+    float: left;
+    display: block;
+    color: var(--colour-5);
+    padding: 14px 20px;
+    text-decoration: none;
+    height: var(--navbar-height);
+}
+
+#navbar .active {
+    background-color: var(--colour-3);
+}
+
+#navbar a:hover {
+    background-color: var(--colour-3);
+}
+
+#navbar .icon {
+    display: none; 
+    height: var(--navbar-height);
+}
+
+/* RESPONSIVE - NAVBAR */
+
+@media screen and (max-width: 2000px) {
+    
+    #navbar a:not(:first-child) {
+        display: none;
+    }
+    #navbar a.icon {
+        float: right;
+        display: block;
+    }
+
+    /* dropdown */
+
+    #navbar.expanded .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    #navbar.expanded a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="css/augmentedReality.css" />
+    <script type="module" src="./js/augmentedReality.js"></script>
+
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <!-- It's pronounced GIF -->
+</head>
+
+<body>
+    <div class="collapsed" id="navbar"></div>
+    <div id="bodyContent">
+        <div id="bodyGrid">
+            <h1>Augmented reality</h1>
+
+            <!-- augmented reality window -->
+            <div id="sectionContainer-1">
+                <a-scene embedded arjs>
+                    <a-marker preset="hiro">
+                      <a-entity
+                        position="0 0 0"
+                        scale="0.05 0.05 0.05"
+                        gltf-model="https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf"
+                      ></a-entity>
+                    </a-marker>
+                    <a-entity camera></a-entity>
+                </a-scene>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

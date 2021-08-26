@@ -24,14 +24,13 @@ var color5 = "rgb(000,128,000)";
 
 var addressPrefix = "";
 
-/* The dollar sign is commonly used as a shortcut to the function document.getElementById().
-   Because this function is fairly verbose and used frequently. There is nothing about $
+/* The dollar sign is commonly used as a shortcut to the function document.getElementById()
+   because this function is fairly verbose and used frequently. There is nothing about $
    that requires it to be used this way, however. But it has been the convention, although
    there is nothing in the language to enforce it. 
 
    https://www.thoughtco.com/and-in-javascript-2037515
 */
-//$ shortcut
 function $(x) {return document.getElementById(x);}
 
 //load common html
@@ -69,6 +68,7 @@ function includeHTML() {
 
 //include navbar
 function loadNavbar() {
+    console.log("¯\\_(ツ)_/¯");
     return new Promise((resolve) => {
    
         const xhttp = new XMLHttpRequest();
@@ -88,17 +88,30 @@ function loadNavbar() {
     });
 }
 
+//activity log
+function log(val) {
+    $("log").textContent += val + "\n";
+    //this feels dirty...
+    requestAnimationFrame(() => { // fires before next repaint
+        requestAnimationFrame(() => { // fires before the _next_ next repaint which is effectively _after_ the next repaint
+            $("log").scrollTop = 99999999;
+        });
+    });
+}
+
 //responsive navbar
 function navbarDropdown() {
     var x = document.getElementById("navbar");
-    if (x.className === "navbar") {
-      x.className += " dropdown";
-    } else {
-      x.className = "navbar";
-    }
+    if (x.className === "collapsed") { x.className = "expanded"; }
+    else { x.className = "collapsed"; }
 }
 
-//get
+function randInt(min, max) { //inclusive, exclusive
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
 function xhttpRequest_get(url, callback) {
 
     const xhttp = new XMLHttpRequest();
@@ -120,11 +133,4 @@ function xhttpRequest_get(url, callback) {
     xhttp.send();
 }
 
-//random int
-function randInt(min, max) { //inclusive, exclusive
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
-}
-
-export { includeHTML, loadNavbar, navbarDropdown, xhttpRequest_get, randInt };
+export { $, includeHTML, loadNavbar, log, navbarDropdown, randInt, xhttpRequest_get };

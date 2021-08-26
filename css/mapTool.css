@@ -3,15 +3,25 @@
 /* GENERAL */
 
 h1 {
-    font-weight: 100;
-    display: auto;
+    margin-bottom: 40px;
 }
 
-/* GENERAL - SECTION CONTAINER */
+h2, h3, h4 {
+    margin: 0px;
+}
 
-#loadContainer, #mapContainer {
-    padding: 20px;
-    background-color: var(--colour-2);
+h3 {
+    margin-bottom: var(--spacer-1);
+}
+
+button, label, input, textarea, p {
+    padding: 6px;
+}
+
+textarea.readOnlySmall {
+    padding: 6px;
+    height: 28px;
+    text-align: left;
 }
 
 /* LAYOUT */
@@ -23,17 +33,87 @@ h1 {
     max-width: 1000px;
 }
 
-/* LOAD */
-
-#loadGrid {
+#fileGrid, #attributes, #routes, #tools {
     display: grid;
-    gap: 20px;
-    grid-template-columns: auto 1fr auto 1fr;
+    gap: var(--spacer-5);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.tableStyle-1 {
+    grid-column: 1/5;
+}
+
+#routeList th, #routeList td {
+    width: 200px;
+}
+
+/* LOG */
+
+#log {
+    height: 200px;
+}
+
+/* OPTIONS */
+
+#options > div {
+    margin-bottom: var(--spacer-5);
+}
+
+#options > div:last-child {
+    margin-bottom: 0px;
+}
+
+/* OPTIONS - FILE */
+
+#fileGrid {
     align-items: center;
 }
 
-#loadGrid input[type="file"] {
-    background-color: var(--colour-0);
+#fileInputContainer, #fileStatus {
+    grid-column: 2/4;
+}
+
+/* OPTIONS - ATTRIBUTES */
+
+#attributes > h4, #attributes > hr {
+    grid-column: 1/5;
+}
+
+/* OPTIONS - ZONE QUICK SELECT LIST */
+
+#currentHomeList {
+    grid-column: 1/5;
+}
+
+/* OPTIONS - ATTRIBUTES / ROUTES */
+
+#attributes > h4, #routes > h4 {
+    border-top: 1px solid var(--colour-4);
+    padding: var(--spacer-1) 0px 0px 0px;
+}
+
+/* OPTIONS - ROUTES */
+
+#routes > h4, #routes > hr {
+    grid-column: 1/5;
+}
+
+#routes > h4:first-child {
+    border-top: none;
+    padding-top: 0px;
+}
+
+#routes > .tableScrollList {
+    grid-column: 1/5;
+}
+
+#routeDescriptionContainer {
+    grid-column: 2/5;
+    height: 100px;
+}
+
+#routeDescription {
+    height: 100%;
 }
 
 /* MAP */
@@ -41,4 +121,14 @@ h1 {
 .map {
     height: 400px;
     width: 100%;
-  }
+    margin-bottom: var(--spacer-5);
+}
+
+/* MAP - TOOLS */
+
+#mapContainer > h4 {
+    grid-column: 1/5;
+    border-top: 1px solid var(--colour-4);
+    padding: var(--spacer-1) 0px 0px 0px;
+    margin-bottom: var(--spacer-5);
+}
