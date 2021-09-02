@@ -76,20 +76,22 @@
 
                     <h4>Filters</h4>
 
-                    <label for="originFilter">Origin:</label>
-                    <select id="originFilter">
-                        <option>No Origin Set</option>
-                        <option>All</option>
-                    </select>
-
                     <label for="typeFilter">Type:</label>
                     <select id="typeFilter">
-                        <option>No Origin Set</option>
+                        <option>None</option>
                         <option>All</option>
                     </select>
 
-                    <label for="ascendingOrderFilter">Ascending Order:</label>
-                    <select id="ascendingOrderFilter">
+                    <label for="homeFilter">Home:</label>
+                    <select id="homeFilter">
+                        <option>None</option>
+                        <option>All</option>
+                    </select>
+
+                    <label for="descendingOrderFilter">Descending Order:</label>
+                    <select id="descendingOrderFilter">
+                        <option value="type">Type</option>
+                        <option value="home">Home</option>
                         <option value="name">Name</option>
                         <option value="distance">Distance</option>
                     </select>
@@ -102,53 +104,12 @@
                         <table>
                             <tr>
                                 <th>Name</th>
+                                <th>Type</th>
+                                <th>Home</th>
                                 <th>Distance</th>
                             </tr>
                         </table>
-                        <div>
-                            <table>
-                                <tr id="route-0">
-                                    <td>dfved</td>
-                                    <td>dvsv</td>
-                                </tr>
-                                <tr id="route-1">
-                                    <td>dvsdv</td>
-                                    <td>sdvsd</td>
-                                </tr>
-                                <tr id="route-2">
-                                    <td>svcdvcsv</td>
-                                    <td>sdcvsvds</td>
-                                </tr>
-                                <tr id="route-3">
-                                    <td>sdvsvds</td>
-                                    <td>sdvsdvsd</td>
-                                </tr>
-                                <tr id="route-4">
-                                    <td>sdvsdv</td>
-                                    <td>sdvsdv</td>
-                                </tr>
-                                <tr id="route-5">
-                                    <td>dfved</td>
-                                    <td>dvsv</td>
-                                </tr>
-                                <tr id="route-6">
-                                    <td>dvsdv</td>
-                                    <td>sdvsd</td>
-                                </tr>
-                                <tr id="route-7">
-                                    <td>svcdvcsv</td>
-                                    <td>sdcvsvds</td>
-                                </tr>
-                                <tr id="route-8">
-                                    <td>sdvsvds</td>
-                                    <td>sdvsdvsd</td>
-                                </tr>
-                                <tr id="route-9">
-                                    <td>sdvsdv</td>
-                                    <td>sdvsdv</td>
-                                </tr>
-                            </table>
-                        </div>
+                        <div><table></table></div>
                     </div>
                     <div></div>
                     <div></div>
@@ -156,19 +117,21 @@
                     <button class="buttonDisabled-1" id="addRoute" disabled>Add Route</button>
 
                     <h4 class="underlineFull">Route Details</h4>
-                    <label for="routeType">Type:</label>
-                    <div><input type="text" class="inputDisabled-1" id="routeType" autocomplete="off" disabled></div>
                     <label for="routeName">Name:</label>
                     <div><input type="text" class="inputDisabled-1" id="routeName" autocomplete="off" disabled></div>
+                    <div></div><div></div>
+                    <label for="routeName">Home:</label>
+                    <div><input type="text" class="inputDisabled-1" id="routeHome" autocomplete="off" disabled></div>
+                    <label for="routeType">Type:</label>
+                    <div><input type="text" class="inputDisabled-1" id="routeType" autocomplete="off" disabled></div>
                     <label for="routeDescription">Description:</label>
-                    <div id="routeDescriptionContainer"><input type="text" class="inputDisabled-1" id="routeDescription"
-                            autocomplete="off" disabled></div>
-                    <label for="geometryStyle">Geometry Style:</label>
+                    <div id="routeDescriptionContainer"><input type="text" class="inputDisabled-1" id="routeDescription" autocomplete="off" disabled></div>
+                    <!-- <label for="geometryStyle">Geometry Style:</label>
                     <select id="geometryStyle">
                         <option value="0">Line</option>
                         <option value="1">Hollow Point</option>
-                    </select>
-                    <div></div>
+                    </select> -->
+                    <div></div><div></div><div></div>
                     <button class="buttonDisabled-1" id="updateDetails" disabled>Update Details</button>
 
                 </div>

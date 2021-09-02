@@ -3,15 +3,10 @@
 import { $, loadNavbar, log, navbarDropdown } from "./global.js";
 
 const NO_FILE_LOADED = 0;
-const NEW_FILE_UNSAVED_CHANGES = 1;
-const UNSAVED_CHANGES = 2;
-const SAVED_CHANGES = 3;
-
-const IDLE = 0;
-const LOAD_FILE = 1;
-const SAVE_FILE = 2;
-const NEW_FILE = 3;
-const HOME_ENTER = 4;
+const FILE_LOADED = 1;
+const NEW_FILE_UNSAVED_CHANGES = 2;
+const UNSAVED_CHANGES = 3;
+const SAVED_CHANGES = 4;
 
 var inputChangeStyle = "inputChange-1";
 var buttonDisabledStyle = "buttonDisabled-1";
@@ -23,8 +18,9 @@ var data;
 
 var selectedRouteId = null;
 
-window.onload = async function () {
+var map;
 
+window.onload = async function () {
     loadNavbar().then(() => {
         document.getElementById("navbarIcon").addEventListener("click", navbarDropdown);
         document.getElementById("mapTool").className = "active";
@@ -43,19 +39,23 @@ window.onload = async function () {
 
     document.querySelector("#currentHomeList div").addEventListener("click", e => {
         if (e.target.tagName === "TD") {
-            data["currentHomeId"] = selectTableRowById(data["currentHomeId"], e.target.parentElement.id);
+            data["currentHomeId"] = parseInt(selectTableRowById("home-"+data["currentHomeId"], e.target.parentElement.id).split("-")[1]);
+            var lat = data["homeList"][data["currentHomeId"]].latitude;
+            var lon = data["homeList"][data["currentHomeId"]].longitude;
+            map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
         }
     });
+    $("deleteHome").addEventListener("click", deleteHome);
     $("addNewHome").addEventListener("click", addNewHome);
 
     document.querySelector("#routeList div").addEventListener("click", e => {
         if (e.target.tagName === "TD") {
-            selectedRouteId = selectTableRowById(selectedRouteId, e.target.parentElement.id);
+            selectedRouteId = parseInt(selectTableRowById("route-"+selectedRouteId, e.target.parentElement.id).split("-")[1]);
         }
     });
     $("addRoute").addEventListener("click", addRoute);
 
-    var map = new ol.Map({
+    map = new ol.Map({
         target: 'map',
         layers: [
             new ol.layer.Tile({
@@ -67,6 +67,7 @@ window.onload = async function () {
             zoom: 19
         })
     });
+    window.map = map;
 }
 
 function customAlertPromise(message) {
@@ -180,15 +181,15 @@ function multiPromptPromise(message, inputList) {
 function createNewDataObject() {
     data = {
         fileName: null,
-        currentHomeList: [],
+        currentHomeIdList: [],
         currentHomeId: null,
         routeList: [
             {
-                originId: null,
-                typeId: null,
                 name: null,
-                distance: null,
-                description: null,
+                homeId: -1,
+                typeId: -1,
+                distance: -1,
+                description: "",
                 geometry: {
                     style: null,
                     vertices: [
@@ -217,6 +218,15 @@ function createNewDataObject() {
     }
 }
 
+function setFileStatus(fs) {
+    if (fileStatus === NO_FILE_LOADED) { enableInputs(); }
+    fileStatus = fs;
+    if (fs === FILE_LOADED) { $("fileStatus").textContent = "File Loaded"; }
+    else if (fs === NEW_FILE_UNSAVED_CHANGES) { $("fileStatus").textContent = "New File, Unsaved Changes"; }
+    if (fs === UNSAVED_CHANGES) { $("fileStatus").textContent = "Unsaved Changes"; }
+    if (fs === SAVED_CHANGES) { $("fileStatus").textContent = "Saved Changes"; }
+}
+
 function enableInputs() {
     $("fileName").disabled = false;
     $("fileName").className = "";
@@ -233,6 +243,14 @@ function enableInputs() {
     $("addRoute").className = "";
 }
 
+function clearFields() {
+    var currentHomeTable = document.querySelector("#currentHomeList div table");
+    for(var i=0; i<currentHomeTable.childElementCount; i++){ currentHomeTable.deleteRow(i); }
+
+    var routeTable = document.querySelector("#routeList div table");
+    for(var i=0; i<routeTable; i++) { routeTable.deleteRow(i); }
+}
+
 async function newFile() {
 
     if (fileStatus === NEW_FILE_UNSAVED_CHANGES || fileStatus === UNSAVED_CHANGES) {
@@ -246,32 +264,52 @@ async function newFile() {
 
         createNewDataObject();
         data["fileName"] = fn;
-        $("fileStatus").textContent = "New File, Unsaved Changes";
         $("fileName").value = data["fileName"];
 
-        if (fileStatus === NO_FILE_LOADED) { enableInputs(); }
-        fileStatus = NEW_FILE_UNSAVED_CHANGES;
+        clearFields();
+        setFileStatus(NEW_FILE_UNSAVED_CHANGES);
     }
     catch(e) {}
 }
 
 function loadFile(e) {
     var fileReference = e.target.files[0];
-    $("fileUploadText").innerHTML = fileReference.name;
-    console.log("name: ", fileReference.name);
-    console.log("type: ", fileReference.type);
-    console.log("size: ", fileReference.size);
-    console.log("last modified:", fileReference.lastModifiedDate);
+    $("fileInputText").innerHTML = fileReference.name;
 
     var reader = new FileReader();
-
     reader.onload = function(e) {
-        console.log(e.target.result);
-        var jsonFile = JSON.parse(e.target.result);
-    }
 
+        clearFields();
+
+        data = JSON.parse(e.target.result);
+
+        $("fileName").value = data["fileName"];
+
+        var currentHomeTable = document.querySelector("#currentHomeList div table");
+        for(var i=0; i<data["currentHomeIdList"].length; i++){
+            var homeId = data["currentHomeIdList"][i];
+            var home = data["homeList"][homeId];
+            addTableRow(
+                currentHomeTable,
+                "home-"+homeId,
+                [home.name, home.latitude, home.longitude]
+            );
+        }
+        var newSelectedRowId = null;
+        if (data["currentHomeId"] !== null) newSelectedRowId = "home-" + data["currentHomeId"];
+        selectTableRowById(null, newSelectedRowId);
+
+        if(data["currentHomeId"] !== null) {
+            $("deleteHome").disabled = false;
+            $("deleteHome").className = "";
+            var lat = data.homeList[data["currentHomeId"]].latitude;
+            var lon = data.homeList[data["currentHomeId"]].longitude;
+            map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+        }
+    }
     reader.readAsText(fileReference);
-    if (fileStatus === NO_FILE_LOADED) { enableInputs(); }
+
+    setFileStatus(FILE_LOADED);
 }
 
 async function saveFile() {
@@ -289,7 +327,7 @@ async function saveFile() {
         element.click();
         document.body.removeChild(element);
 
-        fileStatus = SAVED_CHANGES;
+        setFileStatus(SAVED_CHANGES);
     }
 }
 
@@ -309,6 +347,18 @@ function update() {
     $("update").className = buttonDisabledStyle;
 }
 
+function addTableRow(table, rowId, rowDataList) {
+    var tr = document.createElement("TR");
+    tr.id = rowId;
+    for(var i=0; i<rowDataList.length; i++){
+        var td = document.createElement("TD");
+        var textNode = document.createTextNode(rowDataList[i]);
+        td.appendChild(textNode);
+        tr.appendChild(td);
+    }
+    table.appendChild(tr);
+}
+
 function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
     if (newSelectedRowId === oldSelectedRowId) { return oldSelectedRowId; }
     if (oldSelectedRowId !== null) {
@@ -317,6 +367,7 @@ function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
             tr.children[i].style.backgroundColor = "";
         }
     }
+    if (newSelectedRowId === null) { return null; }
     var tr = document.getElementById(newSelectedRowId);
     for (var i = 0; i < tr.children.length; i++) {
         tr.children[i].style.backgroundColor = tableRowSelectedStyle;
@@ -325,7 +376,24 @@ function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
 }
 
 function deleteHome() {
-
+    document.getElementById("home-"+data.currentHomeId).remove();
+    for(var i=0; i<data.currentHomeIdList.length; i++) {
+        if (data.currentHomeIdList[i] === data.currentHomeId) {
+            data.currentHomeIdList.splice(i,1);
+        }
+    }
+    if (data.homeList[data.currentHomeId].routeIdList.length === 0) {
+        data.homeList.splice(data.currentHomeId,1);
+    }
+    data.currentHomeId = null;
+    if (data.currentHomeIdList.length>0) {
+        data.currentHomeId = data.currentHomeIdList[0];
+        selectTableRowById(null,"home-"+data.currentHomeId);
+    }
+    else {
+        $("deleteHome").disabled = true;
+        $("deleteHome").className = buttonDisabledStyle;
+    }
 }
 
 function readdHome() {
@@ -334,27 +402,29 @@ function readdHome() {
 
 async function addNewHome(e) {
     try {
-        var homeDetails = await multiPromptPromise("Please enter new origin.", ["name","latitude","longitude"]);
-        console.log(homeDetails);
+        var newHomeDetails = await multiPromptPromise("Please enter new origin.", ["name","latitude","longitude"]);
 
         data["homeList"].push({
-            name: homeDetails[0],
-            latitude: homeDetails[1],
-            longitude: homeDetails[2],
+            name: newHomeDetails[0],
+            latitude: newHomeDetails[1],
+            longitude: newHomeDetails[2],
             routeIdList: []
         });
         var newHomeId = data["homeList"].length-1;
+        data["currentHomeIdList"].push(newHomeId);
 
-        var tr = document.createElement("TR");
-        tr.id="home-"+newHomeId;
-        for (var i=0; i<homeDetails.length; i++) {
-            var td = document.createElement("TD");
-            var textNode = document.createTextNode(homeDetails[i]);
-            td.appendChild(textNode);
-            tr.appendChild(td);
-        }
-        document.querySelector("#currentHomeList div table").appendChild(tr);
-        data["currentHomeId"] = selectTableRowById(data["currentHomeId"], tr.id);
+        addTableRow(
+            document.querySelector("#currentHomeList div table"),
+            "home-"+newHomeId,
+            [newHomeDetails[0],newHomeDetails[1],newHomeDetails[2]]  
+        );
+
+        var oldSelectedRowId = null;
+        if (data["currentHomeId"] !== null) oldSelectedRowId = "home-"+data["currentHomeId"];
+        data["currentHomeId"] = parseInt(selectTableRowById(oldSelectedRowId, "home-"+newHomeId).split("-")[1]);
+
+        $("deleteHome").disabled = false;
+        $("deleteHome").className = "";
     }
     catch(e){}
 }
@@ -363,7 +433,30 @@ function deleteRoute() {
 
 }
 
-function addRoute() {
-    var route = document.createElement("LI");
-    var textNode = document.createTextNode("");
+async function addRoute() {
+    try {
+        var newRouteName = await customPromptPromise("Please enter new route name.");
+
+        data["routeList"].push({
+            name: newRouteName,
+            typeId: -1,
+            homeId: -1,
+            distance: 0
+        });
+        newRouteId = data["routeList"].length-1;
+
+        addTableRow(
+            document.querySelector("#routeList div table"),
+            "home-"+newRouteId,
+            [newRouteName,"None","None",0]
+        );
+
+        var oldSelectedRowId = null;
+        if(selectedRouteId !== null) oldSelectedRowId = "route-"+selectedRouteId;
+        selectedRouteId = parseInt(selectTableRowById(oldSelectedRowId, "route-"+newRouteId).split("-")[1]);
+
+        $("deleteRoute").disabled = false;
+        $("deleteRoute").className = "";
+    }
+    catch(e){}
 }

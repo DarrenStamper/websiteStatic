@@ -43,10 +43,6 @@ textarea.readOnlySmall {
     grid-column: 1/5;
 }
 
-#routeList th, #routeList td {
-    width: 200px;
-}
-
 /* LOG */
 
 #log {
@@ -79,7 +75,7 @@ textarea.readOnlySmall {
     grid-column: 1/5;
 }
 
-/* OPTIONS - ZONE QUICK SELECT LIST */
+/* OPTIONS - CURRENT HOME LIST */
 
 #currentHomeList {
     grid-column: 1/5;
