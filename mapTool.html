@@ -52,23 +52,37 @@
                     <div></div>
                     <button class="buttonDisabled-1" id="update" disabled>Update</button>
 
-                    <h4 class="underlineFull">Home</h4>
-                    <div class="tableScrollList" id="currentHomeList">
+                    <h4 class="underlineFull">Home List</h4>
+                    <div class="tableScrollList" id="homeList">
                         <table>
                             <tr>
                                 <th>Name</th>
                                 <th>Latitude</th>
                                 <th>Longitude</th>
+                                <th>Routes</th>
                             </tr>
                         </table>
-                        <div>
-                            <table></table>
-                        </div>
+                        <div><table></table></div>
                     </div>
                     <div></div>
                     <button class="buttonDisabled-1" id="deleteHome">Delete Home</button>
-                    <button class="buttonDisabled-1" id="readdHome">Re-add Home</button>
-                    <button class="buttonDisabled-1" id="addNewHome">Add New Home</button>
+                    <button class="buttonDisabled-1" id="editHome">Edit Home</button>
+                    <button class="buttonDisabled-1" id="addHome">Add Home</button>
+
+                    <h4 class="underlineFull">Type List</h4>
+                    <div class="tableScrollList" id="typeList">
+                        <table>
+                            <tr>
+                                <th>Name</th>
+                                <th>Routes</th>
+                            </tr>
+                        </table>
+                        <div><table></table></div>
+                    </div>
+                    <div></div>
+                    <button class="buttonDisabled-1" id="deleteType">Delete Type</button>
+                    <button class="buttonDisabled-1" id="editType">Edit Type</button>
+                    <button class="buttonDisabled-1" id="addType">Add Type</button>
                 </div>
 
                 <h3>Routes</h3>
@@ -78,14 +92,14 @@
 
                     <label for="typeFilter">Type:</label>
                     <select id="typeFilter">
-                        <option>None</option>
-                        <option>All</option>
+                        <option value="-2">None</option>
+                        <option value="-1">All</option>
                     </select>
 
                     <label for="homeFilter">Home:</label>
                     <select id="homeFilter">
-                        <option>None</option>
-                        <option>All</option>
+                        <option value="-2">None</option>
+                        <option value="-1">All</option>
                     </select>
 
                     <label for="descendingOrderFilter">Descending Order:</label>
@@ -103,9 +117,9 @@
                     <div class="tableScrollList" id="routeList">
                         <table>
                             <tr>
-                                <th>Name</th>
                                 <th>Type</th>
                                 <th>Home</th>
+                                <th>Name</th>
                                 <th>Distance</th>
                             </tr>
                         </table>
@@ -117,13 +131,19 @@
                     <button class="buttonDisabled-1" id="addRoute" disabled>Add Route</button>
 
                     <h4 class="underlineFull">Route Details</h4>
+                    <label for="routeType">Type:</label>
+                    <select id="routeType">
+                        <option value="-2">None</option>
+                        <option value="-1">All</option>
+                    </select>
+                    <label for="routeHome">Home:</label>
+                    <select id="routeHome">
+                        <option value="-2">None</option>
+                        <option value="-1">All</option>
+                    </select>
                     <label for="routeName">Name:</label>
                     <div><input type="text" class="inputDisabled-1" id="routeName" autocomplete="off" disabled></div>
                     <div></div><div></div>
-                    <label for="routeName">Home:</label>
-                    <div><input type="text" class="inputDisabled-1" id="routeHome" autocomplete="off" disabled></div>
-                    <label for="routeType">Type:</label>
-                    <div><input type="text" class="inputDisabled-1" id="routeType" autocomplete="off" disabled></div>
                     <label for="routeDescription">Description:</label>
                     <div id="routeDescriptionContainer"><input type="text" class="inputDisabled-1" id="routeDescription" autocomplete="off" disabled></div>
                     <!-- <label for="geometryStyle">Geometry Style:</label>

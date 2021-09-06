@@ -39,7 +39,7 @@ textarea.readOnlySmall {
     grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-.tableStyle-1 {
+.tableScrollList {
     grid-column: 1/5;
 }
 
@@ -75,12 +75,6 @@ textarea.readOnlySmall {
     grid-column: 1/5;
 }
 
-/* OPTIONS - CURRENT HOME LIST */
-
-#currentHomeList {
-    grid-column: 1/5;
-}
-
 /* OPTIONS - ATTRIBUTES / ROUTES */
 
 #attributes > h4, #routes > h4 {
@@ -97,10 +91,6 @@ textarea.readOnlySmall {
 #routes > h4:first-child {
     border-top: none;
     padding-top: 0px;
-}
-
-#routes > .tableScrollList {
-    grid-column: 1/5;
 }
 
 #routeDescriptionContainer {

@@ -93,6 +93,8 @@
 
        alternatively for full control just have a colour variable for each object type
     */
+
+    --colour-accent-1: rgb(229, 190, 209);
 }
 
 *, *:before, *:after {
@@ -539,7 +541,6 @@ input.inputDisabled-1:hover {
 #navbar a {
     float: left;
     display: block;
-    color: var(--colour-5);
     padding: 14px 20px;
     text-decoration: none;
     height: var(--navbar-height);

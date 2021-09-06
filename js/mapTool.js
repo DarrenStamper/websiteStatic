@@ -8,7 +8,12 @@ const NEW_FILE_UNSAVED_CHANGES = 2;
 const UNSAVED_CHANGES = 3;
 const SAVED_CHANGES = 4;
 
+const POPULATE = 0;
+const ADD = 1;
+const REMOVE = 2;
+
 var inputChangeStyle = "inputChange-1";
+var inputDisabledStyle = "inputDisabled-1";
 var buttonDisabledStyle = "buttonDisabled-1";
 var tableRowSelectedStyle = "var(--colour-2)";
 
@@ -16,6 +21,8 @@ var fileStatus = NO_FILE_LOADED;
 
 var data;
 
+var selectedHomeId = null;
+var selectedTypeId = null;
 var selectedRouteId = null;
 
 var map;
@@ -37,20 +44,41 @@ window.onload = async function () {
     $("attributes").addEventListener("keyup", attributeChange);
     $("update").addEventListener("click", update);
 
-    document.querySelector("#currentHomeList div").addEventListener("click", e => {
+    document.querySelector("#homeList div").addEventListener("click", e => {
         if (e.target.tagName === "TD") {
-            data["currentHomeId"] = parseInt(selectTableRowById("home-"+data["currentHomeId"], e.target.parentElement.id).split("-")[1]);
-            var lat = data["homeList"][data["currentHomeId"]].latitude;
-            var lon = data["homeList"][data["currentHomeId"]].longitude;
-            map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+            var oldSelectedRowId = null;
+            if (selectedHomeId !== null) oldSelectedRowId = "home-"+selectedHomeId;
+            selectedHomeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.List).split("-")[1]);
+            enableOrDisableListOfInputs(["deleteHome","editHome"],false,"");
+            // var lat = data["homeList"][data["currentHomeId"]].latitude;
+            // var lon = data["homeList"][data["currentHomeId"]].longitude;
+            // map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
         }
     });
     $("deleteHome").addEventListener("click", deleteHome);
-    $("addNewHome").addEventListener("click", addNewHome);
+    $("editHome").addEventListener("click", editHome);
+    $("addHome").addEventListener("click", addHome);
+
+    //type list
+
+    document.querySelector("#typeList div").addEventListener("click", e => {
+        if (e.target.tagName === "TD") {
+            var oldSelectedRowId = null;
+            if (selectedTypeId !== null) oldSelectedRowId = "type-"+selectedTypeId;
+            selectedTypeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.List).split("-")[1]);
+            enableOrDisableListOfInputs(["deleteType","editType"],false,"");
+        }
+    });
+
+    $("deleteType").addEventListener("click", deleteType);
+    $("editType").addEventListener("click", editType);
+    $("addType").addEventListener("click", addType);
+
+    //route list
 
     document.querySelector("#routeList div").addEventListener("click", e => {
         if (e.target.tagName === "TD") {
-            selectedRouteId = parseInt(selectTableRowById("route-"+selectedRouteId, e.target.parentElement.id).split("-")[1]);
+            selectedRouteId = parseInt(selectTableRowById("route-"+selectedRouteId, e.target.parentElement.List).split("-")[1]);
         }
     });
     $("addRoute").addEventListener("click", addRoute);
@@ -69,6 +97,8 @@ window.onload = async function () {
     });
     window.map = map;
 }
+
+//pop up functions
 
 function customAlertPromise(message) {
     var customAlertContainer = $("customAlertContainer");
@@ -128,7 +158,7 @@ function customPromptPromise(message) {
     });
 }
 
-function multiPromptPromise(message, inputList) {
+function multiPromptPromise(message, inputList, inputValueList) {
     var multiPromptContainer = $("multiPromptContainer");
     var multiPrompt = $("multiPrompt");
 
@@ -145,8 +175,9 @@ function multiPromptPromise(message, inputList) {
         insertIndex++;
 
         var input = document.createElement("INPUT");
-        input.setAttribute("id", inputList[i]);
+        input.setAttribute("List", inputList[i]);
         input.setAttribute("type", "text");
+        if(inputValueList !== null) input.value = inputValueList[i];
         multiPrompt.insertBefore(input, multiPrompt.children[insertIndex]);
         insertIndex++;
     }
@@ -178,78 +209,7 @@ function multiPromptPromise(message, inputList) {
     });
 }
 
-function createNewDataObject() {
-    data = {
-        fileName: null,
-        currentHomeIdList: [],
-        currentHomeId: null,
-        routeList: [
-            {
-                name: null,
-                homeId: -1,
-                typeId: -1,
-                distance: -1,
-                description: "",
-                geometry: {
-                    style: null,
-                    vertices: [
-                        {
-                            latitude: null,
-                            longitude: null,
-                        }
-                    ]
-                }
-            }
-        ],
-        homeList: [
-            // {
-            //     name: null,
-            //     latitude: null,
-            //     longitude: null
-            //     routeIdList: []
-            // }
-        ],
-        typeList: [
-            // {
-            //     name: null,
-            //     routeIdList: []
-            // }            
-        ]
-    }
-}
-
-function setFileStatus(fs) {
-    if (fileStatus === NO_FILE_LOADED) { enableInputs(); }
-    fileStatus = fs;
-    if (fs === FILE_LOADED) { $("fileStatus").textContent = "File Loaded"; }
-    else if (fs === NEW_FILE_UNSAVED_CHANGES) { $("fileStatus").textContent = "New File, Unsaved Changes"; }
-    if (fs === UNSAVED_CHANGES) { $("fileStatus").textContent = "Unsaved Changes"; }
-    if (fs === SAVED_CHANGES) { $("fileStatus").textContent = "Saved Changes"; }
-}
-
-function enableInputs() {
-    $("fileName").disabled = false;
-    $("fileName").className = "";
-
-    $("update").disabled = false;
-    $("update").className = "";
-
-    $("readdHome").disabled = false;
-    $("readdHome").className = "";
-    $("addNewHome").disabled = false;
-    $("addNewHome").className = "";
-
-    $("addRoute").disabled = false;
-    $("addRoute").className = "";
-}
-
-function clearFields() {
-    var currentHomeTable = document.querySelector("#currentHomeList div table");
-    for(var i=0; i<currentHomeTable.childElementCount; i++){ currentHomeTable.deleteRow(i); }
-
-    var routeTable = document.querySelector("#routeList div table");
-    for(var i=0; i<routeTable; i++) { routeTable.deleteRow(i); }
-}
+//file functions
 
 async function newFile() {
 
@@ -266,10 +226,12 @@ async function newFile() {
         data["fileName"] = fn;
         $("fileName").value = data["fileName"];
 
-        clearFields();
+        clearTables();
+        clearDropdowns();
+        enableOrDisableListOfInputs(["deleteHome","editHome","deleteType","editType"],true,buttonDisabledStyle);
         setFileStatus(NEW_FILE_UNSAVED_CHANGES);
     }
-    catch(e) {}
+    catch(e) { console.log(e); }
 }
 
 function loadFile(e) {
@@ -279,33 +241,72 @@ function loadFile(e) {
     var reader = new FileReader();
     reader.onload = function(e) {
 
-        clearFields();
+        clearTables();
+        clearDropdowns();
+        enableOrDisableListOfInputs(["deleteHome","editHome","deleteType","editType"],true,buttonDisabledStyle);
 
         data = JSON.parse(e.target.result);
 
         $("fileName").value = data["fileName"];
 
-        var currentHomeTable = document.querySelector("#currentHomeList div table");
-        for(var i=0; i<data["currentHomeIdList"].length; i++){
-            var homeId = data["currentHomeIdList"][i];
-            var home = data["homeList"][homeId];
+        //home list
+        for (var i=0; i<data.homeList.length; i++) {
             addTableRow(
-                currentHomeTable,
-                "home-"+homeId,
-                [home.name, home.latitude, home.longitude]
+                document.querySelector("homeList div table"),
+                "home-"+i,
+                [data.homeList[i].name,data.homeList[i].latitude,data.homeList[i].longitude,data.homeList[i].routeIdList.length]
             );
         }
-        var newSelectedRowId = null;
-        if (data["currentHomeId"] !== null) newSelectedRowId = "home-" + data["currentHomeId"];
-        selectTableRowById(null, newSelectedRowId);
 
-        if(data["currentHomeId"] !== null) {
-            $("deleteHome").disabled = false;
-            $("deleteHome").className = "";
-            var lat = data.homeList[data["currentHomeId"]].latitude;
-            var lon = data.homeList[data["currentHomeId"]].longitude;
-            map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+        //type list
+
+        for (var i=0; i<data.typeList.length; i++) {
+            addTableRow(
+                document.querySelector("typeList div table"),
+                "type-"+i,
+                [data.typeList[i].name,data.typeList[i].routeIdList.length]
+            );
         }
+
+        //dropdowns
+
+        var textList = [];
+        var valueList = [];
+        for (var i=0; i<data.homeList.length; i++) {
+            textList.push(data.homeList[i].name);
+            valueList.push(i);
+        }
+        addDropdownOptions(
+            document.getElementById("")
+        );
+
+        for (var i=0; i<data.typeList.length; i++) {
+
+        }
+
+        //load homes
+
+        // var homeTable = document.querySelector("#currentHomeList div table");
+        // for(var i=0; i<data["currentHomeIdList"].length; i++){
+        //     var homeId = data["currentHomeIdList"][i];
+        //     var home = data["homeList"][homeId];
+        //     addTableRow(
+        //         homeTable,
+        //         "home-"+homeId,
+        //         [home.name, home.latitude, home.longitude]
+        //     );
+        // }
+        // var newSelectedRowId = null;
+        // if (data["currentHomeId"] !== null) newSelectedRowId = "home-" + data["currentHomeId"];
+        // selectTableRowById(null, newSelectedRowId);
+
+        // if(data["currentHomeId"] !== null) {
+        //     $("deleteHome").disabled = false;
+        //     $("deleteHome").className = "";
+        //     var lat = data.homeList[data["currentHomeId"]].latitude;
+        //     var lon = data.homeList[data["currentHomeId"]].longitude;
+        //     map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+        // }
     }
     reader.readAsText(fileReference);
 
@@ -331,6 +332,68 @@ async function saveFile() {
     }
 }
 
+function createNewDataObject() {
+    data = {
+        fileName: null,
+        typeList: [
+            // {
+            //     name: null,
+            //     routeIdList: []
+            // }            
+        ],
+        homeList: [
+            // {
+            //     name: null,
+            //     latitude: null,
+            //     longitude: null
+            //     routeIdList: []
+            // }
+        ],
+        routeList: [
+            // {
+            //     name: null,
+            //     homeId: -1,
+            //     typeId: -1,
+            //     distance: -1,
+            //     description: "",
+            //     geometry: {
+            //         style: null,
+            //         vertices: [
+            //             {
+            //                 latitude: null,
+            //                 longitude: null,
+            //             }
+            //         ]
+            //     }
+            // }
+        ]
+    }
+}
+
+function setFileStatus(fs) {
+    if (fileStatus === NO_FILE_LOADED) {
+        enableOrDisableListOfInputs(["fileName","addHome","addType","addRoute"],false,"");
+    }
+    fileStatus = fs;
+    if (fs === FILE_LOADED) { $("fileStatus").textContent = "File Loaded"; }
+    else if (fs === NEW_FILE_UNSAVED_CHANGES) { $("fileStatus").textContent = "New File, Unsaved Changes"; }
+    if (fs === UNSAVED_CHANGES) { $("fileStatus").textContent = "Unsaved Changes"; }
+    if (fs === SAVED_CHANGES) { $("fileStatus").textContent = "Saved Changes"; }
+}
+
+//input functions
+
+function enableOrDisableListOfInputs(inputList, disabled, inputStyle) {
+    for (var i=0; i<inputList.length; i++) {
+        $(inputList[i]).disabled = disabled;
+        $(inputList[i]).className = inputStyle;
+    }
+}
+
+function clearRouteDetails() {
+
+}
+
 function attributeChange(e) {
     e.target.parentElement.className = inputChangeStyle;
     $("update").className = "";
@@ -347,9 +410,22 @@ function update() {
     $("update").className = buttonDisabledStyle;
 }
 
+//input - table functions
+
+function clearTables() {
+    var homeTable = document.querySelector("#homeList div table");
+    for(var i=0; i<homeTable.childElementCount; i++){ homeTable.deleteRow(0); }
+
+    var typeTable = document.querySelector("#typeList div table");
+    for(var i=0; i<typeTable.childElementCount; i++){ typeTable.deleteRow(0); }
+
+    var routeTable = document.querySelector("#routeList div table");
+    for(var i=0; i<routeTable; i++) { routeTable.deleteRow(0); }
+}
+
 function addTableRow(table, rowId, rowDataList) {
     var tr = document.createElement("TR");
-    tr.id = rowId;
+    tr.List = rowId;
     for(var i=0; i<rowDataList.length; i++){
         var td = document.createElement("TD");
         var textNode = document.createTextNode(rowDataList[i]);
@@ -375,34 +451,101 @@ function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
     return newSelectedRowId;
 }
 
-function deleteHome() {
-    document.getElementById("home-"+data.currentHomeId).remove();
-    for(var i=0; i<data.currentHomeIdList.length; i++) {
-        if (data.currentHomeIdList[i] === data.currentHomeId) {
-            data.currentHomeIdList.splice(i,1);
+//input - drop down functions
+
+function clearDropdowns() {
+    var typeFilter = document.getElementById("typeFilter");
+    for(var i=2; i<typeFilter.childElementCount; i++) typeFilter.children[2].remove();
+    var homeFilter = document.getElementById("homeFilter");
+    for(var i=2; i<homeFilter.childElementCount; i++) homeFilter.children[2].remove();
+    var routeType = document.getElementById("routeType");
+    for(var i=2; i<routeType.childElementCount; i++) routeType.children[2].remove();
+    var routeHome = document.getElementById("routeHome");
+    for(var i=2; i<routeHome.childElementCount; i++) routeHome.children[2].remove();
+}
+
+function addDropdownOptions(dropdown, textList, valueList) {
+    for (var i=0; i<textList.length; i++) {
+        var option = document.createElement("OPTION");
+        option.text = textList[i];
+        option.value=valueList[i];
+        dropdown.add(option);
+    }
+}
+
+function removeDropdownOptionsByValue(dropdown, valueList) {
+    for (var i=0; i<valueList.length; i++) {
+        for (var j=0; j<dropdown.childElementCount; j++) {
+            if (dropdown.children[j].value === valueList[i]) {
+                dropdown.children[j].remove();
+                break;
+            }
         }
     }
-    if (data.homeList[data.currentHomeId].routeIdList.length === 0) {
-        data.homeList.splice(data.currentHomeId,1);
-    }
-    data.currentHomeId = null;
-    if (data.currentHomeIdList.length>0) {
-        data.currentHomeId = data.currentHomeIdList[0];
-        selectTableRowById(null,"home-"+data.currentHomeId);
-    }
-    else {
-        $("deleteHome").disabled = true;
-        $("deleteHome").className = buttonDisabledStyle;
-    }
 }
 
-function readdHome() {
+//home list functions
 
+async function deleteHome() {
+
+    if (data.homeList[selectedHomeId].routeIdList.length > 0) {
+        var confirm = await customPromptPromise("This home has routes assigned. Deleting it will remove the home from those routes.");
+        if (confirm === false) { return; }
+    }
+    
+    document.getElementById("home-"+selectedHomeId).remove();
+
+    for (var i=0; i<data.homeList[selectedHomeId].routeIdList.length; i++) {
+        var routeId = data.homeList[selectedHomeId].routeIdList[i];
+        data.routeList[routeId].homeId = -1;
+    }
+
+    data.homeList.splice(selectedHomeId,1);
+
+    selectedHomeId = null;
+    enableOrDisableListOfInputs(["deleteHome","editHome"],true, buttonDisabledStyle);
+
+    // for(var i=0; i<data.currentHomeIdList.length; i++) {
+    //     if (data.currentHomeIdList[i] === data.currentHomeId) {
+    //         data.currentHomeIdList.splice(i,1);
+    //     }
+    // }
+    // if (data.homeList[data.currentHomeId].routeIdList.length === 0) {
+    //     data.homeList.splice(data.currentHomeId,1);
+    // }
+    // data.currentHomeId = null;
+    // if (data.currentHomeIdList.length>0) {
+    //     data.currentHomeId = data.currentHomeIdList[0];
+    //     selectTableRowById(null,"home-"+data.currentHomeId);
+    // }
+    // else {
+    //     $("deleteHome").disabled = true;
+    //     $("deleteHome").className = buttonDisabledStyle;
+    // }
 }
 
-async function addNewHome(e) {
+async function editHome() {
     try {
-        var newHomeDetails = await multiPromptPromise("Please enter new origin.", ["name","latitude","longitude"]);
+        var home = data.homeList[selectedHomeId];
+        var updatedHomeDetails = await multiPromptPromise(
+            "Please enter updated home details.", ["name","latitude","longitude"],
+            [home.name,home.latitude,home.longitude]
+        );
+        data.homeList[selectedHomeId].name = updatedHomeDetails[0];
+        data.homeList[selectedHomeId].latitude = updatedHomeDetails[1];
+        data.homeList[selectedHomeId].longitude = updatedHomeDetails[2];
+
+        var tableRow = document.getElementById("home-"+selectedHomeId);
+        tableRow.children[0].innerText = updatedHomeDetails[0];
+        tableRow.children[1].innerText = updatedHomeDetails[1];
+        tableRow.children[2].innerText = updatedHomeDetails[2];
+    }
+    catch(e){}
+}
+
+async function addHome(e) {
+    try {
+        var newHomeDetails = await multiPromptPromise("Please enter new home details.", ["name","latitude","longitude"],null);
 
         data["homeList"].push({
             name: newHomeDetails[0],
@@ -411,23 +554,80 @@ async function addNewHome(e) {
             routeIdList: []
         });
         var newHomeId = data["homeList"].length-1;
-        data["currentHomeIdList"].push(newHomeId);
+        // data["currentHomeIdList"].push(newHomeId);
 
         addTableRow(
-            document.querySelector("#currentHomeList div table"),
+            document.querySelector("#homeList div table"),
             "home-"+newHomeId,
-            [newHomeDetails[0],newHomeDetails[1],newHomeDetails[2]]  
+            [newHomeDetails[0],newHomeDetails[1],newHomeDetails[2],0]  
         );
 
-        var oldSelectedRowId = null;
-        if (data["currentHomeId"] !== null) oldSelectedRowId = "home-"+data["currentHomeId"];
-        data["currentHomeId"] = parseInt(selectTableRowById(oldSelectedRowId, "home-"+newHomeId).split("-")[1]);
+        // var oldSelectedRowId = null;
+        // if (data["currentHomeId"] !== null) oldSelectedRowId = "home-"+data["currentHomeId"];
+        // data["currentHomeId"] = parseInt(selectTableRowById(oldSelectedRowId, "home-"+newHomeId).split("-")[1]);
 
-        $("deleteHome").disabled = false;
-        $("deleteHome").className = "";
+        // $("deleteHome").disabled = false;
+        // $("deleteHome").className = "";
     }
     catch(e){}
 }
+
+//type list functions
+
+async function deleteType() {
+    var confirm = true;
+    if (data.typeList[selectedTypeId].routeIdList.length > 0) {
+        confirm = await customConfirmPromise("This will delete this type from all associated routes.");
+    }
+
+    if (confirm === true) {
+        document.getElementById("type-"+selectedTypeId).remove();
+        for (var i=0; i < data.typeList[selectedTypeId].routeIdList.length; i++){
+            var selectedTypeRouteId = data.typeList[selectedTypeId].routeIdList[i];
+            data.routeList[selectedTypeRouteId].typeId = -1;
+        }
+        data.typeList.splice(selectedTypeId, 1);
+        selectedTypeId = null;
+
+        //update route list table
+    }
+}
+
+async function editType() {
+    try {
+        var updatedTypeName = await customPromptPromise("Please enter updated type name.");
+        data.typeList[selectedTypeId].name = updatedTypeName;
+
+        var tableRow = document.getElementById("type-"+selectedTypeId);
+        tableRow.children[0].innerText = updatedTypeName;
+
+        //update type list
+        //update route list table
+    }
+    catch(e){}
+}
+
+async function addType() {
+    try {
+        var newTypeName = await customPromptPromise("Please enter new type name.");
+        data.typeList.push({
+            name: newTypeName,
+            routeIdList: []
+        });
+        var newTypeId = data.typeList.length-1;
+
+        addTableRow(
+            document.querySelector("#typeList div table"),
+            "type-"+newTypeId,
+            [newTypeName, 0]  
+        );
+
+        //update type list
+    }
+    catch(e){}
+}
+
+//route list functions
 
 function deleteRoute() {
 
@@ -443,11 +643,11 @@ async function addRoute() {
             homeId: -1,
             distance: 0
         });
-        newRouteId = data["routeList"].length-1;
+        var newRouteId = data["routeList"].length-1;
 
         addTableRow(
             document.querySelector("#routeList div table"),
-            "home-"+newRouteId,
+            "route-"+newRouteId,
             [newRouteName,"None","None",0]
         );
 
@@ -457,6 +657,7 @@ async function addRoute() {
 
         $("deleteRoute").disabled = false;
         $("deleteRoute").className = "";
+        enableRouteInputs();
     }
     catch(e){}
 }
