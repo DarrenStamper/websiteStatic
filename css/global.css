@@ -68,6 +68,7 @@
 
     --z-index-pop-ups: 200;
     --z-index-navbar: 100;
+    --z-index-rotating-boder-child: 11;
     --z-index-rotating-border: 10;
     --z-index-rotating-border-after: 9;
     --z-index-rotating-border-before: 8;
@@ -232,7 +233,7 @@ select {
     background-repeat: no-repeat;
 }
 
-select:hover {
+select:hover:enabled {
     border: 1px solid var(--colour-4);
     background: 
         url(/svg/chevron_down.svg),
@@ -360,6 +361,7 @@ textarea.readOnlySmall {
     padding: 2px 4px;
     background-color: var(--colour-3);
     font-size: 14px;
+    text-align: center;
 }
 
 .customFileInput > label:hover {
@@ -449,6 +451,19 @@ input.inputDisabled-1:hover {
 .section-greenBorder {
     padding: var(--spacer-5);
     border: 1px solid var(--colour-5);
+}
+
+/* CLASS - SELECT DISABLED */
+
+.selectDisabled-1 {
+    color: rgb(082,082,082);
+    cursor: default;
+    background: 
+        url(/svg/chevron_down.svg),
+        linear-gradient(to right, var(--colour-2) var(--select-arrow-background-width), var(--colour-3) var(--select-arrow-background-width));
+    background-position: right var(--spacer-1) top 50%, left;
+    background-size: auto 1rem, 100% 100%;
+    background-repeat: no-repeat;
 }
 
 /* CLASS - TABLE */

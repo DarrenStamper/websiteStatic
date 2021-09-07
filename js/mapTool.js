@@ -15,6 +15,7 @@ const REMOVE = 2;
 var inputChangeStyle = "inputChange-1";
 var inputDisabledStyle = "inputDisabled-1";
 var buttonDisabledStyle = "buttonDisabled-1";
+var selectDisabledStyle = "selectDisabled-1";
 var tableRowSelectedStyle = "var(--colour-2)";
 
 var fileStatus = NO_FILE_LOADED;
@@ -48,7 +49,7 @@ window.onload = async function () {
         if (e.target.tagName === "TD") {
             var oldSelectedRowId = null;
             if (selectedHomeId !== null) oldSelectedRowId = "home-"+selectedHomeId;
-            selectedHomeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.List).split("-")[1]);
+            selectedHomeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.id).split("-")[1]);
             enableOrDisableListOfInputs(["deleteHome","editHome"],false,"");
             // var lat = data["homeList"][data["currentHomeId"]].latitude;
             // var lon = data["homeList"][data["currentHomeId"]].longitude;
@@ -65,7 +66,7 @@ window.onload = async function () {
         if (e.target.tagName === "TD") {
             var oldSelectedRowId = null;
             if (selectedTypeId !== null) oldSelectedRowId = "type-"+selectedTypeId;
-            selectedTypeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.List).split("-")[1]);
+            selectedTypeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.id).split("-")[1]);
             enableOrDisableListOfInputs(["deleteType","editType"],false,"");
         }
     });
@@ -78,7 +79,7 @@ window.onload = async function () {
 
     document.querySelector("#routeList div").addEventListener("click", e => {
         if (e.target.tagName === "TD") {
-            selectedRouteId = parseInt(selectTableRowById("route-"+selectedRouteId, e.target.parentElement.List).split("-")[1]);
+            selectedRouteId = parseInt(selectTableRowById("route-"+selectedRouteId, e.target.parentElement.id).split("-")[1]);
         }
     });
     $("addRoute").addEventListener("click", addRoute);
@@ -175,8 +176,8 @@ function multiPromptPromise(message, inputList, inputValueList) {
         insertIndex++;
 
         var input = document.createElement("INPUT");
-        input.setAttribute("List", inputList[i]);
-        input.setAttribute("type", "text");
+        input.id = inputList[i];
+        input.type = "text";
         if(inputValueList !== null) input.value = inputValueList[i];
         multiPrompt.insertBefore(input, multiPrompt.children[insertIndex]);
         insertIndex++;
@@ -252,7 +253,7 @@ function loadFile(e) {
         //home list
         for (var i=0; i<data.homeList.length; i++) {
             addTableRow(
-                document.querySelector("homeList div table"),
+                document.querySelector("#homeList div table"),
                 "home-"+i,
                 [data.homeList[i].name,data.homeList[i].latitude,data.homeList[i].longitude,data.homeList[i].routeIdList.length]
             );
@@ -262,7 +263,7 @@ function loadFile(e) {
 
         for (var i=0; i<data.typeList.length; i++) {
             addTableRow(
-                document.querySelector("typeList div table"),
+                document.querySelector("#typeList div table"),
                 "type-"+i,
                 [data.typeList[i].name,data.typeList[i].routeIdList.length]
             );
@@ -276,13 +277,17 @@ function loadFile(e) {
             textList.push(data.homeList[i].name);
             valueList.push(i);
         }
-        addDropdownOptions(
-            document.getElementById("")
-        );
+        addDropdownOptions(document.getElementById("homeFilter"),textList,valueList);
+        addDropdownOptions(document.getElementById("routeHome"),textList,valueList);
 
+        textList = [];
+        valueList = [];
         for (var i=0; i<data.typeList.length; i++) {
-
+            textList.push(data.typeList[i].name);
+            valueList.push(i);
         }
+        addDropdownOptions(document.getElementById("typeFilter"),textList,valueList);
+        addDropdownOptions(document.getElementById("routeType"),textList,valueList);
 
         //load homes
 
@@ -372,7 +377,7 @@ function createNewDataObject() {
 
 function setFileStatus(fs) {
     if (fileStatus === NO_FILE_LOADED) {
-        enableOrDisableListOfInputs(["fileName","addHome","addType","addRoute"],false,"");
+        enableOrDisableListOfInputs(["fileName","addHome","addType","addRoute","filterType","filterHome","filterDescendingOrder","filterApply"],false,"");
     }
     fileStatus = fs;
     if (fs === FILE_LOADED) { $("fileStatus").textContent = "File Loaded"; }
@@ -390,13 +395,10 @@ function enableOrDisableListOfInputs(inputList, disabled, inputStyle) {
     }
 }
 
-function clearRouteDetails() {
-
-}
-
 function attributeChange(e) {
     e.target.parentElement.className = inputChangeStyle;
     $("update").className = "";
+    $("update").disabled = false;
 }
 
 function update() {
@@ -410,53 +412,12 @@ function update() {
     $("update").className = buttonDisabledStyle;
 }
 
-//input - table functions
-
-function clearTables() {
-    var homeTable = document.querySelector("#homeList div table");
-    for(var i=0; i<homeTable.childElementCount; i++){ homeTable.deleteRow(0); }
-
-    var typeTable = document.querySelector("#typeList div table");
-    for(var i=0; i<typeTable.childElementCount; i++){ typeTable.deleteRow(0); }
-
-    var routeTable = document.querySelector("#routeList div table");
-    for(var i=0; i<routeTable; i++) { routeTable.deleteRow(0); }
-}
-
-function addTableRow(table, rowId, rowDataList) {
-    var tr = document.createElement("TR");
-    tr.List = rowId;
-    for(var i=0; i<rowDataList.length; i++){
-        var td = document.createElement("TD");
-        var textNode = document.createTextNode(rowDataList[i]);
-        td.appendChild(textNode);
-        tr.appendChild(td);
-    }
-    table.appendChild(tr);
-}
-
-function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
-    if (newSelectedRowId === oldSelectedRowId) { return oldSelectedRowId; }
-    if (oldSelectedRowId !== null) {
-        var tr = document.getElementById(oldSelectedRowId);
-        for (var i = 0; i < tr.children.length; i++) {
-            tr.children[i].style.backgroundColor = "";
-        }
-    }
-    if (newSelectedRowId === null) { return null; }
-    var tr = document.getElementById(newSelectedRowId);
-    for (var i = 0; i < tr.children.length; i++) {
-        tr.children[i].style.backgroundColor = tableRowSelectedStyle;
-    }
-    return newSelectedRowId;
-}
-
-//input - drop down functions
+//input drop down functions
 
 function clearDropdowns() {
-    var typeFilter = document.getElementById("typeFilter");
+    var typeFilter = document.getElementById("filterType");
     for(var i=2; i<typeFilter.childElementCount; i++) typeFilter.children[2].remove();
-    var homeFilter = document.getElementById("homeFilter");
+    var homeFilter = document.getElementById("filterHome");
     for(var i=2; i<homeFilter.childElementCount; i++) homeFilter.children[2].remove();
     var routeType = document.getElementById("routeType");
     for(var i=2; i<routeType.childElementCount; i++) routeType.children[2].remove();
@@ -482,6 +443,50 @@ function removeDropdownOptionsByValue(dropdown, valueList) {
             }
         }
     }
+}
+
+//input table functions
+
+function clearTables() {
+    var homeTable = document.querySelector("#homeList div table");
+    var numOfRows = homeTable.childElementCount;
+    for(var i=0; i<numOfRows; i++){ homeTable.deleteRow(0); }
+
+    var typeTable = document.querySelector("#typeList div table");
+    numOfRows = typeTable.childElementCount;
+    for(var i=0; i<numOfRows; i++){ typeTable.deleteRow(0); }
+
+    var routeTable = document.querySelector("#routeList div table");
+    numOfRows = routeTable.childElementCount;
+    for(var i=0; i<numOfRows; i++) { routeTable.deleteRow(0); }
+}
+
+function addTableRow(table, rowId, rowDataList) {
+    var tr = document.createElement("TR");
+    tr.id = rowId;
+    for(var i=0; i<rowDataList.length; i++){
+        var td = document.createElement("TD");
+        var textNode = document.createTextNode(rowDataList[i]);
+        td.appendChild(textNode);
+        tr.appendChild(td);
+    }
+    table.appendChild(tr);
+}
+
+function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
+    if (newSelectedRowId === oldSelectedRowId) { return oldSelectedRowId; }
+    if (oldSelectedRowId !== null) {
+        var tr = document.getElementById(oldSelectedRowId);
+        for (var i = 0; i < tr.children.length; i++) {
+            tr.children[i].style.backgroundColor = "";
+        }
+    }
+    if (newSelectedRowId === null) { return null; }
+    var tr = document.getElementById(newSelectedRowId);
+    for (var i = 0; i < tr.children.length; i++) {
+        tr.children[i].style.backgroundColor = tableRowSelectedStyle;
+    }
+    return newSelectedRowId;
 }
 
 //home list functions
@@ -627,6 +632,12 @@ async function addType() {
     catch(e){}
 }
 
+//route functions
+
+function clearRouteDetails() {
+
+}
+
 //route list functions
 
 function deleteRoute() {
@@ -655,9 +666,7 @@ async function addRoute() {
         if(selectedRouteId !== null) oldSelectedRowId = "route-"+selectedRouteId;
         selectedRouteId = parseInt(selectTableRowById(oldSelectedRowId, "route-"+newRouteId).split("-")[1]);
 
-        $("deleteRoute").disabled = false;
-        $("deleteRoute").className = "";
-        enableRouteInputs();
+        enableOrDisableListOfInputs(["deleteRoute","routeType","routeHome","routeName","routeDescription"],false,"");
     }
     catch(e){}
 }
