@@ -16,6 +16,7 @@ var inputChangeStyle = "inputChange-1";
 var inputDisabledStyle = "inputDisabled-1";
 var buttonDisabledStyle = "buttonDisabled-1";
 var selectDisabledStyle = "selectDisabled-1";
+var textareaDisabledStyle = "textareaDisabled-1";
 var tableRowSelectedStyle = "var(--colour-2)";
 
 var fileStatus = NO_FILE_LOADED;
@@ -42,8 +43,15 @@ window.onload = async function () {
     $("saveFile").addEventListener("click", saveFile);
     $("newFile").addEventListener("click", newFile);
 
-    $("attributes").addEventListener("keyup", attributeChange);
-    $("update").addEventListener("click", update);
+    $("fileName").addEventListener("keyup", e => {
+        e.target.parentElement.className = inputChangeStyle;
+        enableOrDisableListOfInputs(["update"],false,"");
+    });
+    $("update").addEventListener("click", () => {
+        data["fileName"] = $("fileName").value;
+        $("fileName").parentElement.className = "";
+        enableOrDisableListOfInputs(["update"],true,inputDisabledStyle);
+    });
 
     document.querySelector("#homeList div").addEventListener("click", e => {
         if (e.target.tagName === "TD") {
@@ -75,6 +83,13 @@ window.onload = async function () {
     $("editType").addEventListener("click", editType);
     $("addType").addEventListener("click", addType);
 
+    //route filter
+
+    $("filterType").addEventListener("change",filterChange);
+    $("filterHome").addEventListener("change",filterChange);
+    $("filterDescendingOrder").addEventListener("change",filterChange);
+    $("filterApply").addEventListener("click",filterApply);
+
     //route list
 
     document.querySelector("#routeList div").addEventListener("click", e => {
@@ -83,6 +98,16 @@ window.onload = async function () {
         }
     });
     $("addRoute").addEventListener("click", addRoute);
+
+    //route details
+
+    $("routeType").addEventListener("change",routeChange);
+    $("routeHome").addEventListener("change",routeChange);
+    $("routeName").addEventListener("keyup",routeChange);
+    $("routeDescription").addEventListener("keyup",routeChange);
+    $("updateDetails").addEventListener("click",routeApply);
+
+    //map
 
     map = new ol.Map({
         target: 'map',
@@ -227,9 +252,15 @@ async function newFile() {
         data["fileName"] = fn;
         $("fileName").value = data["fileName"];
 
+        //reset form
         clearTables();
-        clearDropdowns();
+        clearListOfDropdowns(["filterType","filterHome","routeType","routeHome"],2);
+        clearRouteDetails();
         enableOrDisableListOfInputs(["deleteHome","editHome","deleteType","editType"],true,buttonDisabledStyle);
+        enableOrDisableListOfInputs(["routeType","routeHome"],true,selectDisabledStyle);
+        enableOrDisableListOfInputs(["routeName"],true,inputDisabledStyle);
+        enableOrDisableListOfInputs(["routeDescription"],true,textareaDisabledStyle);
+
         setFileStatus(NEW_FILE_UNSAVED_CHANGES);
     }
     catch(e) { console.log(e); }
@@ -242,9 +273,14 @@ function loadFile(e) {
     var reader = new FileReader();
     reader.onload = function(e) {
 
+        //reset form
         clearTables();
-        clearDropdowns();
+        clearListOfDropdowns(["filterType","filterHome","routeType","routeHome"],2);
+        clearRouteDetails();
         enableOrDisableListOfInputs(["deleteHome","editHome","deleteType","editType"],true,buttonDisabledStyle);
+        enableOrDisableListOfInputs(["routeType","routeHome"],true,selectDisabledStyle);
+        enableOrDisableListOfInputs(["routeName"],true,inputDisabledStyle);
+        enableOrDisableListOfInputs(["routeDescription"],true,textareaDisabledStyle);
 
         data = JSON.parse(e.target.result);
 
@@ -277,8 +313,8 @@ function loadFile(e) {
             textList.push(data.homeList[i].name);
             valueList.push(i);
         }
-        addDropdownOptions(document.getElementById("homeFilter"),textList,valueList);
-        addDropdownOptions(document.getElementById("routeHome"),textList,valueList);
+        addDropdownOptions($("filterHome"),textList,valueList);
+        addDropdownOptions($("routeHome"),textList,valueList);
 
         textList = [];
         valueList = [];
@@ -286,8 +322,8 @@ function loadFile(e) {
             textList.push(data.typeList[i].name);
             valueList.push(i);
         }
-        addDropdownOptions(document.getElementById("typeFilter"),textList,valueList);
-        addDropdownOptions(document.getElementById("routeType"),textList,valueList);
+        addDropdownOptions($("filterType"),textList,valueList);
+        addDropdownOptions($("routeType"),textList,valueList);
 
         //load homes
 
@@ -395,34 +431,15 @@ function enableOrDisableListOfInputs(inputList, disabled, inputStyle) {
     }
 }
 
-function attributeChange(e) {
-    e.target.parentElement.className = inputChangeStyle;
-    $("update").className = "";
-    $("update").disabled = false;
-}
-
-function update() {
-    console.log("clicked");
-    if ($("fileName").parentElement.className !== "") {
-        $("fileName").parentElement.className = "";
-        data["fileName"] = $("fileName").value;
-        log("File name set to: " + data["fileName"]);
-    }
-
-    $("update").className = buttonDisabledStyle;
-}
-
 //input drop down functions
 
-function clearDropdowns() {
-    var typeFilter = document.getElementById("filterType");
-    for(var i=2; i<typeFilter.childElementCount; i++) typeFilter.children[2].remove();
-    var homeFilter = document.getElementById("filterHome");
-    for(var i=2; i<homeFilter.childElementCount; i++) homeFilter.children[2].remove();
-    var routeType = document.getElementById("routeType");
-    for(var i=2; i<routeType.childElementCount; i++) routeType.children[2].remove();
-    var routeHome = document.getElementById("routeHome");
-    for(var i=2; i<routeHome.childElementCount; i++) routeHome.children[2].remove();
+function clearListOfDropdowns(dropdownIdList, startIndex) {
+    for (var i=0; i<dropdownIdList.length; i++) {
+        var numOfChildren = $(dropdownIdList[i]).childElementCount;
+        for (var j=startIndex; j<numOfChildren; j++) {
+            $(dropdownIdList[i]).children[startIndex].remove();
+        }
+    }
 }
 
 function addDropdownOptions(dropdown, textList, valueList) {
@@ -489,7 +506,7 @@ function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
     return newSelectedRowId;
 }
 
-//home list functions
+//home functions
 
 async function deleteHome() {
 
@@ -577,7 +594,7 @@ async function addHome(e) {
     catch(e){}
 }
 
-//type list functions
+//type functions
 
 async function deleteType() {
     var confirm = true;
@@ -632,13 +649,21 @@ async function addType() {
     catch(e){}
 }
 
-//route functions
+//filter functions
 
-function clearRouteDetails() {
-
+function filterChange(e) {
+    e.target.parentElement.className = inputChangeStyle;
+    enableOrDisableListOfInputs(["filterApply"],false,"");
 }
 
-//route list functions
+function filterApply() {
+    $("filterType").parentElement.className = "";
+    $("filterHome").parentElement.className = "";
+    $("filterDescendingOrder").parentElement.className = "";
+    enableOrDisableListOfInputs(["filterApply"],true,buttonDisabledStyle);
+}
+
+//route functions
 
 function deleteRoute() {
 
@@ -659,8 +684,10 @@ async function addRoute() {
         addTableRow(
             document.querySelector("#routeList div table"),
             "route-"+newRouteId,
-            [newRouteName,"None","None",0]
+            ["None","None",newRouteName,0]
         );
+
+        $("routeName").value = newRouteName;
 
         var oldSelectedRowId = null;
         if(selectedRouteId !== null) oldSelectedRowId = "route-"+selectedRouteId;
@@ -669,4 +696,26 @@ async function addRoute() {
         enableOrDisableListOfInputs(["deleteRoute","routeType","routeHome","routeName","routeDescription"],false,"");
     }
     catch(e){}
+}
+
+//route detail functions
+
+function routeChange(e) {
+    e.target.parentElement.className = inputChangeStyle;
+    enableOrDisableListOfInputs(["updateDetails"],false,"");
+}
+
+function routeApply() {
+    $("routeType").parentElement.className = "";
+    $("routeHome").parentElement.className = "";
+    $("routeName").parentElement.className = "";
+    $("routeDescription").parentElement.className = "";
+    enableOrDisableListOfInputs(["updateDetails"],true,buttonDisabledStyle);
+}
+
+function clearRouteDetails() {
+    $("routeType").selectedIndex = 0;
+    $("routeHome").selectedIndex = 0;
+    $("routeName").value = "";
+    $("routeDescription").value = "";
 }

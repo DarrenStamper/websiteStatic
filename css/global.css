@@ -253,6 +253,7 @@ textarea {
     resize: none;
     background-color: var(--colour-0);
     border: 1px solid var(--colour-3);
+    margin: 0px;
 }
 
 textarea:read-only:hover {
@@ -265,6 +266,7 @@ textarea:read-write:hover {
 
 textarea:read-write:focus {
     border-color: var(--colour-4);
+    outline: none;
 }
 
 textarea.readOnlySmall {
@@ -324,10 +326,14 @@ textarea.readOnlySmall {
     z-index: var(--z-index-rotating-border);
 }
 
-.rotating-border *, .inputChange-1 input {
+.rotating-border *, .inputChange-1 * {
     position: relative;
-    border: none;
+    border: none !important;
     z-index: 11;
+}
+
+.rotating-border select:hover {
+    border: none;
 }
 
 /* CLASS - CONTAINER - POP UPS */
@@ -493,6 +499,12 @@ input.inputDisabled-1:hover {
 .tableStyle-1 td {
     border-bottom: 1px solid var(--colour-3);
     padding: var(--spacer-1) 0px var(--spacer-1) 0px;
+}
+
+/* CLASS - TEXT AREA DISABLED */
+
+.textareaDisabled-1 {
+    background-color: var(--colour-2);
 }
 
 /* ID - _COMMON - CUSTOM POP UPS */

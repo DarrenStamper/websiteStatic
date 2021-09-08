@@ -50,7 +50,7 @@
                     <div><input type="text" class="inputDisabled-1" id="fileName" autocomplete="off" disabled></div>
                     <!-- idiot, div is for rotating-border class, don't delete -->
                     <div></div>
-                    <button class="buttonDisabled-1" id="update" disabled>Update</button>
+                    <button class="buttonDisabled-1" id="update" disabled>Apply Filename</button>
 
                     <h4 class="underlineFull">Home List</h4>
                     <div class="tableScrollList" id="homeList">
@@ -65,9 +65,9 @@
                         <div><table></table></div>
                     </div>
                     <div></div>
-                    <button class="buttonDisabled-1" id="deleteHome">Delete Home</button>
-                    <button class="buttonDisabled-1" id="editHome">Edit Home</button>
-                    <button class="buttonDisabled-1" id="addHome">Add Home</button>
+                    <button class="buttonDisabled-1" id="deleteHome" disabled>Delete Home</button>
+                    <button class="buttonDisabled-1" id="editHome" disabled>Edit Home</button>
+                    <button class="buttonDisabled-1" id="addHome" disabled>Add Home</button>
 
                     <h4 class="underlineFull">Type List</h4>
                     <div class="tableScrollList" id="typeList">
@@ -80,9 +80,9 @@
                         <div><table></table></div>
                     </div>
                     <div></div>
-                    <button class="buttonDisabled-1" id="deleteType">Delete Type</button>
-                    <button class="buttonDisabled-1" id="editType">Edit Type</button>
-                    <button class="buttonDisabled-1" id="addType">Add Type</button>
+                    <button class="buttonDisabled-1" id="deleteType" disabled>Delete Type</button>
+                    <button class="buttonDisabled-1" id="editType" disabled>Edit Type</button>
+                    <button class="buttonDisabled-1" id="addType" disabled>Add Type</button>
                 </div>
 
                 <h3>Routes</h3>
@@ -91,24 +91,34 @@
                     <h4>Filters</h4>
 
                     <label for="filterType">Type:</label>
-                    <select class="selectDisabled-1" id="filterType" disabled>
-                        <option value="-2">None</option>
-                        <option value="-1">All</option>
-                    </select>
+                    <div>
+                        <select class="selectDisabled-1" id="filterType" autocomplete="off" disabled>
+                            <option value="-3">Unset</option>
+                            <option value="-2">None</option>
+                            <option value="-1">All</option>
+                        </select>   
+                    </div>
 
                     <label for="filterHome">Home:</label>
-                    <select class="selectDisabled-1" id="filterHome" disabled>
-                        <option value="-2">None</option>
-                        <option value="-1">All</option>
-                    </select>
+                    <div>
+                        <select class="selectDisabled-1" id="filterHome" autocomplete="off" disabled>
+                            <option value="-3">Unset</option>
+                            <option value="-2">None</option>
+                            <option value="-1">All</option>
+                        </select>
+                    </div>
 
                     <label for="filterDescendingOrder">Descending Order:</label>
-                    <select class="selectDisabled-1" id="filterDescendingOrder" disabled>
-                        <option value="type">Type</option>
-                        <option value="home">Home</option>
-                        <option value="name">Name</option>
-                        <option value="distance">Distance</option>
-                    </select>
+                    <div>
+                        <select class="selectDisabled-1" id="filterDescendingOrder" autocomplete="off" disabled>
+                            <option value="0">Unset</option>
+                            <option value="1">None</option>
+                            <option value="2">Type</option>
+                            <option value="3">Home</option>
+                            <option value="4">Name</option>
+                            <option value="5">Distance</option>
+                        </select>
+                    </div>
 
                     <div></div>
                     <button class="buttonDisabled-1" id="filterApply" disabled>Apply Filters</button>
@@ -132,20 +142,22 @@
 
                     <h4 class="underlineFull">Route Details</h4>
                     <label for="routeType">Type:</label>
-                    <select class="selectDisabled-1" id="routeType" disabled>
-                        <option value="-2">None</option>
-                        <option value="-1">All</option>
-                    </select>
+                    <div>
+                        <select class="selectDisabled-1" id="routeType" autocomplete="off" disabled>
+                            <option value="-1">None</option>
+                        </select>
+                    </div>
                     <label for="routeHome">Home:</label>
-                    <select class="selectDisabled-1" id="routeHome" disabled>
-                        <option value="-2">None</option>
-                        <option value="-1">All</option>
-                    </select>
+                    <div>
+                        <select class="selectDisabled-1" id="routeHome" autocomplete="off" disabled>
+                            <option value="-1">None</option>
+                        </select>
+                    </div>
                     <label for="routeName">Name:</label>
                     <div><input type="text" class="inputDisabled-1" id="routeName" autocomplete="off" disabled></div>
                     <div></div><div></div>
                     <label for="routeDescription">Description:</label>
-                    <div id="routeDescriptionContainer"><input type="text" class="inputDisabled-1" id="routeDescription" autocomplete="off" disabled></div>
+                    <div id="routeDescriptionContainer"><textarea class="textareaDisabled-1" id="routeDescription" autocomplete="off" disabled></textarea></div>
                     <!-- <label for="geometryStyle">Geometry Style:</label>
                     <select id="geometryStyle">
                         <option value="0">Line</option>
