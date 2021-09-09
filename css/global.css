@@ -95,7 +95,7 @@
        alternatively for full control just have a colour variable for each object type
     */
 
-    --colour-accent-1: rgb(229, 190, 209);
+    --colour-accent-1: rgb(229, 190, 209); /* goes better on dark backgrounds */
 }
 
 *, *:before, *:after {

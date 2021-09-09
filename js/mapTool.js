@@ -59,9 +59,6 @@ window.onload = async function () {
             if (selectedHomeId !== null) oldSelectedRowId = "home-"+selectedHomeId;
             selectedHomeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.id).split("-")[1]);
             enableOrDisableListOfInputs(["deleteHome","editHome"],false,"");
-            // var lat = data["homeList"][data["currentHomeId"]].latitude;
-            // var lon = data["homeList"][data["currentHomeId"]].longitude;
-            // map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
         }
     });
     $("deleteHome").addEventListener("click", deleteHome);
@@ -121,7 +118,7 @@ window.onload = async function () {
             zoom: 19
         })
     });
-    window.map = map;
+    //window.map = map;
 }
 
 //pop up functions
@@ -706,6 +703,24 @@ function routeChange(e) {
 }
 
 function routeApply() {
+    
+    var typeId = parseInt($("routeType").children[$("routeType").selectedIndex].value);
+    var homeId = parseInt($("routeHome").children[$("routeHome").selectedIndex].value);
+
+    data.routeList[selectedRouteId].typeId = typeId;
+    data.routeList[selectedRouteId].homeID = homeId;
+    data.routeList[selectedRouteId].name = $("routeName").value;
+    data.routeList[selectedRouteId].description = $("routeDescription").value;
+
+    var tableRow = $("route-"+selectedRouteId);
+    if(typeId===-1) tableRow.children[0].innerText = "None";
+    else tableRow.children[0].innerText = data.typeList[typeId].name;
+    if(homeId===-1) tableRow.children[1].innerText = "None";
+    else tableRow.children[1].innerText = data.homeList[homeId].name;
+    tableRow.children[2].innerText = $("routeName").value;
+
+    if(homeId!==-1){ home(homeId); }
+
     $("routeType").parentElement.className = "";
     $("routeHome").parentElement.className = "";
     $("routeName").parentElement.className = "";
@@ -719,3 +734,12 @@ function clearRouteDetails() {
     $("routeName").value = "";
     $("routeDescription").value = "";
 }
+
+//map tool functions
+
+function home(id) {
+    var lat = data.homeList[id].latitude;
+    var lon = data.homeList[id].longitude;
+    map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
+}
+
