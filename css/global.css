@@ -588,7 +588,7 @@ input.inputDisabled-1:hover {
 
 /* RESPONSIVE - NAVBAR */
 
-@media screen and (max-width: 2000px) {
+@media screen and (max-width: 700px) {
     
     #navbar a:not(:first-child) {
         display: none;

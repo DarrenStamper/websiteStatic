@@ -3,12 +3,11 @@
 /* GENERAL */
 
 #bodyContent {
-    background: repeating-radial-gradient(#a65a08, #326c85 50px);
+    /* background: repeating-radial-gradient(#a65a08, #326c85 50px); */
 }
 
 h1 {
-    font-weight: 100;
-    display: none;
+    /* display: none; */
 }
 
 /* LAYOUT */
@@ -18,13 +17,13 @@ h1 {
     display: grid;
 }
 
-h1 {
+#bodyContent div {
     margin: auto;
 }
 
 /* RESPONSIVE - TABLET */
 
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 0px) {
     
     #bodyContent {
         background: var(--colour-1);

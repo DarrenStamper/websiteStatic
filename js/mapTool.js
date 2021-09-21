@@ -114,8 +114,8 @@ window.onload = async function () {
             })
         ],
         view: new ol.View({
-            center: ol.proj.fromLonLat([-122.420807, 37.791901]), //read the function name, it's LON then LAT
-            zoom: 19
+            center: ol.proj.fromLonLat([3.4360, 55.3781]), //read the function name, it's LON then LAT
+            zoom: 1
         })
     });
     //window.map = map;
