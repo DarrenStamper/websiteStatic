@@ -1,7 +1,6 @@
 'use strict';
 
 import { loadNavbar, navbarDropdown } from "./global.js";
-import { smoothedZScore } from "./zScore.js";
 
 //colors
 
