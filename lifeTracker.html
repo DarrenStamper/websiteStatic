@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Tracker</title>
+    <link rel="stylesheet" href="css/lifeTracker.css" />
+    <script type="module" src="./js/lifeTracker.js"></script>
+    <link rel="stylesheet" href="css/openLayers/ol.css" />
+    <script type="module" src="./js/openLayers/ol.js"></script>
+
+    <!-- It's pronounced GIF -->
+</head>
+
+<body>
+    <div class="collapsed" id="navbar"></div>
+    <div id="bodyContent">
+        <div id="grid">
+
+            <h1>Life Tracker</h1>
+
+            <div>
+                <div id="subNavbar">
+                    <button>Quick Log</button>
+                    <div></div>
+                    <button>Timetable</button>
+                    <button>Task List</button>
+                    <button>Sleep</button>
+                    <button>Intake</button>
+                    <button>Exercise</button>
+                    <button>Custom</button>
+                    <div></div>
+                    <button>Map Routes</button>
+                    <button>Nutrition Data</button>
+                    <div></div>
+                    <button id="settings"></button>
+                </div>
+
+                <div id="contentPanel">
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- pop ups -->
+
+        <div class="container-popUp" id="customAlertContainer">
+            <div id="customAlert">
+                <h3 class="message"></h3>
+                <button class="ok">OK</button>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="customConfirmContainer">
+            <div id="customConfirm">
+                <h3 class="message"></h3>
+                <button class="cancel">Cancel</button>
+                <button class="ok">Continue</button>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="customPromptContainer">
+            <div id="customPrompt">
+                <h3 class="message"></h3>
+                <input type="text" autocomplete="off">
+                <div></div>
+                <button class="cancel">Cancel</button>
+                <button class="ok">OK</button>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="multiPromptContainer">
+            <div id="multiPrompt">
+                <h3 class="message"></h3>
+                <button class="cancel">Cancel</button>
+                <button class="ok">OK</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

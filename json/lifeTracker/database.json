@@ -1,0 +1,49 @@
+{
+    "records": [
+        {
+            "unixDate": 1000000000,
+            "massInMorning": -1,
+            "intake": {
+                "water": 0,
+                "nutrition": [
+                    {
+                        "name": "",
+                        "compositionId": -1,
+                        "nutritionTypes": -1,
+                        "amount": 0
+                    }
+                ],
+                "supplements": [
+                    {
+                        "name": "",
+                        "amount": 0
+                    }
+                ]
+            },
+            "sleep": {
+                "bed": 0,
+                "wake": 0,
+                "hoursOfSleep": 0
+            },
+            "tasksComplete": [""]
+        }
+    ],
+    "compositions": [
+        "food",
+        "liquid"
+    ],
+    "nutritiontypes": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack",
+        "alcohol",
+        "junk food"
+    ],
+    "recipes": [
+        {
+            ""
+        }
+    ],
+    "products": []
+}
