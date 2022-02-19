@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="css/mapTool2.css" />
+    <script type="module" src="./js/mapTool2.js"></script>
+    <link rel="stylesheet" href="css/openLayers/ol.css" />
+    <script type="module" src="./js/openLayers/ol.js"></script>
+
+    <!-- It's pronounced GIF -->
+</head>
+
+<body>
+    <div class="collapsed" id="navbar"></div>
+    <div id="bodyContent">
+        <div id="grid">
+
+            <h1>Map Tool 2</h1>
+
+            <h3>File</h3>
+            <div class="section-greyBackground" id="fileGrid">
+                <label for="fileInput">Load File:</label>
+                <div class="customFileInput" id="fileInputContainer">
+                    <input type="file" id="fileInput" autocomplete="off">
+                    <label for="fileInput">Browse...</label>
+                    <span id="fileInputText">No file selected.</span>
+                </div>
+                <button id="newFile">New File</button>
+                <label for="fileStatus">File Status:</label>
+                <textarea class="readOnlySmall" id="fileStatus" name="fileStatus" spellcheck="false"
+                    autocomplete="off" disabled>No File Loaded</textarea>
+                <button id="saveFile">Save File</button>
+            </div>
+
+            <h3>Attributes</h3>
+            <div class="section-greyBackground" id="attributes">
+                <label for="fileName">File Name:</label>
+                <div><input type="text" class="inputDisabled-1" id="fileName" autocomplete="off" disabled></div> <!-- Enclosing div is for rotating border affect -->
+                <div></div>
+                <button class="buttonDisabled-1" id="fileNameUpdate" disabled>Apply Filename</button>
+                
+                <label for="lastOpened">Last Opened:</label>
+                <textarea class="readOnlySmall" id="lastOpened" name="lastOpened" spellcheck="false"
+                    autocomplete="off" disabled></textarea>
+                <div></div>
+                <div></div>
+            </div>
+
+            <h3>Types</h3>
+            <div class="section-greyBackground" id="types">
+                <div class="tableScrollList" id="typesList">
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Routes</th>
+                        </tr>
+                    </table>
+                    <div><table></table></div>
+                </div>
+                <div></div>
+                <button class="buttonDisabled-1" id="deleteType" disabled>Delete Type</button>
+                <button class="buttonDisabled-1" id="editType" disabled>Edit Type</button>
+                <button class="buttonDisabled-1" id="addType" disabled>Add Type</button>
+            </div>
+
+            <h3>Origins</h3>
+            <div class="section-greyBackground" id="origins">
+                <div class="tableScrollList" id="originsList">
+                    <table> <!-- Two tables is semantically incorrect, must replace at some point with one table and a header -->
+                        <tr>
+                            <th>Name</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Routes</th>
+                        </tr>
+                    </table>
+                    <div><table></table></div>
+                </div>
+                <div></div>
+                <button class="buttonDisabled-1" id="deleteOrigin" disabled>Delete Origin</button>
+                <button class="buttonDisabled-1" id="editOrigin" disabled>Edit Origin</button>
+                <button class="buttonDisabled-1" id="addOrigin" disabled>Add Origin</button>
+            </div>
+
+            <h3>Routes</h3>
+            <div class="section-greyBackground" id="routes">
+
+                <h4>Filters</h4>
+
+                <label for="filterType">Type:</label>
+                <div>
+                    <select class="selectDisabled-1" id="filterType" autocomplete="off" disabled>
+                        <option value="-3">Unset</option>
+                        <option value="-2">None</option>
+                        <option value="-1">All</option>
+                    </select>   
+                </div>
+
+                <label for="filterHome">Origin:</label>
+                <div>
+                    <select class="selectDisabled-1" id="filterOrigin" autocomplete="off" disabled>
+                        <option value="-3">Unset</option>
+                        <option value="-2">None</option>
+                        <option value="-1">All</option>
+                    </select>
+                </div>
+
+                <label for="filterDescendingOrder">Descending Order:</label>
+                <div>
+                    <select class="selectDisabled-1" id="filterDescendingOrder" autocomplete="off" disabled>
+                        <option value="0">Unset</option>
+                        <option value="1">None</option>
+                        <option value="2">Type</option>
+                        <option value="3">Home</option>
+                        <option value="4">Name</option>
+                        <option value="5">Distance</option>
+                    </select>
+                </div>
+
+                <div></div>
+                <button class="buttonDisabled-1" id="filterApply" disabled>Apply Filters</button>
+
+                <h4 class="underlineFull">Routes</h4>
+                <div class="tableScrollList" id="routeList">
+                    <table>
+                        <tr>
+                            <th>Type</th>
+                            <th>Origin</th>
+                            <th>Name</th>
+                            <th>Distance</th>
+                        </tr>
+                    </table>
+                    <div><table></table></div>
+                </div>
+                <div></div>
+                <div></div>
+                <button class="buttonDisabled-1" id="deleteRoute" disabled>Delete Route</button>
+                <button class="buttonDisabled-1" id="addRoute" disabled>Add Route</button>
+
+                <h4 class="underlineFull">Route Details</h4>
+                <label for="routeType">Type:</label>
+                <div>
+                    <select class="selectDisabled-1" id="routeType" autocomplete="off" disabled>
+                        <option value="-1">None</option>
+                    </select>
+                </div>
+                <label for="routeOrigin">Origin:</label>
+                <div>
+                    <select class="selectDisabled-1" id="routeOrigin" autocomplete="off" disabled>
+                        <option value="-1">None</option>
+                    </select>
+                </div>
+                <label for="routeName">Name:</label>
+                <div><input type="text" class="inputDisabled-1" id="routeName" autocomplete="off" disabled></div>
+                <div></div><div></div>
+                <label for="routeDescription">Description:</label>
+                <div id="routeDescriptionContainer"><textarea class="textareaDisabled-1" id="routeDescription" autocomplete="off" disabled></textarea></div>
+                <!-- <label for="geometryStyle">Geometry Style:</label>
+                <select id="geometryStyle">
+                    <option value="0">Line</option>
+                    <option value="1">Hollow Point</option>
+                </select> -->
+                <div></div><div></div><div></div>
+                <button class="buttonDisabled-1" id="updateDetails" disabled>Update Details</button>
+
+            </div>
+
+            <h3>Trips</h3>
+
+            <h2>Map</h2>
+            <div class="section-greyBackground" id="mapContainer">
+                <div id="map" class="map"></div>
+                <h4>Tools</h4>
+                <div id="tools">
+                    <button>Add Point</button>
+                    <button>Delete Last Point</button>
+                    <button>Select</button>
+                    <button>Shift Select</button>
+                    <button>Delete Route</button>
+                    <button>Home</button>
+                    <button></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="customAlertContainer">
+            <div id="customAlert">
+                <h3 class="message"></h3>
+                <button class="ok">OK</button>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="customConfirmContainer">
+            <div id="customConfirm">
+                <h3 class="message"></h3>
+                <button class="cancel">Cancel</button>
+                <button class="ok">Continue</button>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="customPromptContainer">
+            <div id="customPrompt">
+                <h3 class="message"></h3>
+                <input type="text" autocomplete="off">
+                <div></div>
+                <button class="cancel">Cancel</button>
+                <button class="ok">OK</button>
+            </div>
+        </div>
+
+        <div class="container-popUp" id="multiPromptContainer">
+            <div id="multiPrompt">
+                <h3 class="message"></h3>
+                <button class="cancel">Cancel</button>
+                <button class="ok">OK</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

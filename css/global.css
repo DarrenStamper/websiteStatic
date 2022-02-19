@@ -187,6 +187,39 @@ input[type="number"]:focus, input[type="text"]:focus {
     outline: none;
 }
 
+input[type="radio"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    appearance: none;
+    /* For iOS < 15 to remove gradient background */
+    background-color: var(--colour-0);
+    /* Not removed via appearance */
+    margin: 0;
+    color: var(--colour-3);
+    width: var(--spacer-5);
+    height: var(--spacer-5);
+    border: 1.5px solid var(--colour-3);
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+}
+
+input[type="radio"]::before {
+    content: "";
+    width: var(--spacer-2);
+    height: var(--spacer-2);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset var(--spacer-3) var(--spacer-3) var(--colour-5);
+    background-color: CanvasText; /* Windows High Contrast Mode doggery */
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
 /* ELEMENT - LABEL */
 
 label {
@@ -398,6 +431,14 @@ input.inputDisabled-1 {
 }
 
 input.inputDisabled-1:hover {
+    border-color: var(--colour-3);
+}
+
+input.inputDisabled-2 {
+    background-color: var(--colour-0);
+}
+
+input.inputDisabled-2:hover {
     border-color: var(--colour-3);
 }
 

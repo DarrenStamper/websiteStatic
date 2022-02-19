@@ -1,0 +1,261 @@
+{
+    "kitchen": {
+        "ceiling": [
+            "lights",
+            "coving"
+        ],
+        "walls": [
+            "clock",
+            "lights",
+            "windows",
+            "french doors",
+            "temp control",
+            "switches and sockets",
+            "pictures",
+            "skirting boards",
+            "tiles"
+        ],
+        "cabinets": [
+            "fronts",
+            "tops",
+            "insides",
+            "shelves"
+        ],
+        "floor": [
+            "mat",
+            "bin",
+            "table and chairs",
+            "book shelves",
+            "amp and speakers",
+            "bumpers food tray area"
+        ],
+        "appliances": [
+            "microwave area appliances",
+            "hob",
+            "cooker hood",
+            "electric can opener",
+            "main oven"
+        ],
+        "other": [
+            "sink",
+            "dish drainers",
+            "robs sweaty flaps :{"
+        ]
+    },
+    "front room": {
+        "ceiling": [
+            "bay window ceiling",
+            "projector",
+            "coving",
+            "light"
+        ],
+        "walls": [
+            "bay window",
+            "lights",
+            "speakers",
+            "switches and sockets",
+            "radiator",
+            "small window",
+            "door and frame"
+        ],
+        "floor": [
+            "media cabinet",
+            "fire wood boxes",
+            "shelves",
+            "sofa",
+            "plant",
+            "rug",
+            "sub"
+        ],
+        "other": [
+            "fireplace"
+        ]
+    },
+    "bathroom": {
+        "ceiling": [
+            "light and switch",
+            "shower switch"
+        ],
+        "walls": [
+            "heater",
+            "door and frame",
+            "mirror and light",
+            "radiators"
+        ],
+        "sink": [
+            "sink stand",
+            "shelf",
+            "sink tiles"
+        ],
+        "bath": [
+            "shower",
+            "rail and curtain",
+            "window",
+            "tiles",
+            "radiator"
+        ],
+        "floor": [
+            "dehumidifier",
+            "toilet",
+            "bath mat"
+        ],
+        "other": [
+            "shelves"
+        ]
+    },
+    "gym": {
+        "ceiling": [
+            "lights"
+        ],
+        "walls": [
+            "window",
+            "sockets and switches",
+            "door and frame"
+        ],
+        "floor": [
+            "equipment"
+        ]
+    },
+    "landing": {
+        "ceiling": [
+            "lights",
+            "roof light",
+            "fire alarm",
+            "loft hatch"
+        ],
+        "walls": [
+            "doors and frames",
+            "punch bag",
+            "sockets and switches",
+            "radiator"
+        ],
+        "other": [
+            "floor"
+        ]
+        
+    },
+    "stairs": {
+        "other": [
+            "bannister",
+            "wall",
+            "floor",
+            "underside"
+        ]
+    },
+    "back room": {
+        "ceiling": [
+            "lights",
+            "coving"
+        ],
+        "walls": [
+            "sockets and switches",
+            "door and frame",
+            "speakers",
+            "conservatory door",
+            "radiators",
+            "skirting board",
+            "barometer"
+        ],
+        "floor": [
+            "mat",
+            "sofa",
+            "cabinet",
+            "audio cabinet",
+            "book shelf",
+            "lamp"
+        ]
+    },
+    "conservatory": {
+        "roof": [
+            "fans"
+        ],
+        "walls": [
+            "windows",
+            "shelf",
+            "sockets and switches",
+            "french doors",
+            "frencher doors"
+        ],
+        "floor": [
+            "chairs",
+            "table",
+            "fire thingy"
+        ]
+    },
+    "entrance room": {
+        "ceiling": [
+            "light"
+        ],
+        "walls": [
+            "socket and switch",
+            "radiator",
+            "skirting board",
+            "front door",
+            "glass door and frame"
+        ],
+        "floor": [
+            "mat"
+        ]
+    },
+    "downstairs hall": {
+        "ceiling": [
+            "lights",
+            "coving"
+        ],
+        "walls": [
+            "sockets and switches",
+            "glass door and frame",
+            "doors and frames",
+            "door bell",
+            "radiator",
+            "skirrrrrting board"
+        ],
+        "floor": [
+            "cupboards",
+            "sofa",
+            "cat trees",
+            "wooden stand and picture"
+        ]
+    },
+    "cloak room": {
+        "ceiling": [
+            "light"
+        ],
+        "walls": [
+            "doors and frames",
+            "coat racks",
+            "switch",
+            "skirting board"
+        ],
+        "other": [
+            "floor"
+        ]
+    },
+    "downstairs toilet": {
+        "ceiling": [
+            "light"
+        ],
+        "walls": [
+            "radiator",
+            "sockets and switches",
+            "boiler",
+            "skirting board",
+            "door and frame",
+            "external doors"
+        ],
+        "cabinets": [
+            "tops",
+            "fronts",
+            "insides"
+        ],
+        "floor": [
+            "fridge freezer / freezer / combi / and / or / fridge and freezers",
+            "washing machine",
+            "mats and shoe trays"
+        ],
+        "other": [
+            "sink",
+            "tiles"
+        ]
+    }
+}

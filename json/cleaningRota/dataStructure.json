@@ -1,0 +1,28 @@
+{
+    "filename": null,
+    "lastOpened": null,
+    "rooms": {
+        "attributes": ["id","name"],
+        "data": [
+            [null, null]
+        ]
+    },
+    "tasks": {
+        "attributes": ["id","roomId","descriptionId","lastDone","due"],
+        "data": [
+            [null,null,null,null,null]
+        ]
+    },
+    "subTasks": {
+        "attributes": ["id","taskId","parentTaskId"],
+        "data": [
+            [null,null,null]
+        ]
+    },
+    "description": {
+        "attributes": ["id","name","time","interval"],
+        "data": [
+            [null,null,null,null]
+        ]
+    }
+}

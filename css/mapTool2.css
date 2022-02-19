@@ -1,0 +1,111 @@
+﻿@import "global.css";
+
+/* GENERAL */
+
+h1 {
+    margin-bottom: 40px;
+}
+
+h2, h3, h4 {
+    margin: 0px;
+}
+
+h3 {
+    margin-bottom: var(--spacer-1);
+}
+
+button, label, input, textarea, p {
+    padding: 6px;
+}
+
+textarea.readOnlySmall {
+    padding: 6px;
+    height: 28px;
+    text-align: left;
+}
+
+select {
+    width: 100%;
+    height: 100%;
+}
+
+/* GENERAL - ATTRIBUTES H4 / ROUTES H4 */
+
+#attributes > h4, #routes > h4 {
+    border-top: 1px solid var(--colour-4);
+    padding: var(--spacer-1) 0px 0px 0px;
+}
+
+/* LAYOUT */
+
+#grid {
+    margin: auto;
+    display: grid;
+    gap: 20px;
+    max-width: 1000px;
+}
+
+#fileGrid, #attributes, #types, #origins, #routes, #tools {
+    display: grid;
+    gap: var(--spacer-5);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.tableScrollList {
+    grid-column: 1/5;
+}
+
+/* FILE */
+
+#fileGrid {
+    align-items: center;
+}
+
+#fileInputContainer, #fileStatus {
+    grid-column: 2/4;
+}
+
+/* ATTRIBUTES */
+
+#attributes > h4, #attributes > hr {
+    grid-column: 1/5;
+}
+
+/* ORIGINS */
+
+/* ROUTES */
+
+#routes > h4, #routes > hr {
+    grid-column: 1/5;
+}
+
+#routes > h4:first-child {
+    border-top: none;
+    padding-top: 0px;
+}
+
+#routeDescriptionContainer {
+    grid-column: 2/5;
+    height: 100px;
+}
+
+#routeDescription {
+    height: 100%;
+}
+
+/* MAP */
+
+.map {
+    height: 400px;
+    width: 100%;
+    margin-bottom: var(--spacer-5);
+}
+
+/* MAP - TOOLS */
+
+#mapContainer > h4 {
+    grid-column: 1/5;
+    border-top: 1px solid var(--colour-4);
+    padding: var(--spacer-1) 0px 0px 0px;
+    margin-bottom: var(--spacer-5);
+}

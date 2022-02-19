@@ -1,0 +1,108 @@
+﻿@import "global.css";
+
+/* GENERAL */
+
+#bodyContent {
+
+}
+
+h1 {
+    margin-bottom: 40px;
+}
+
+button, label, input, textarea, p {
+    padding: 6px;
+}
+
+textarea.readOnlySmall {
+    padding: 6px;
+    height: 28px;
+    text-align: left;
+}
+
+/* LAYOUT */
+
+#bodyContent {
+    min-height: calc(100vh - var(--navbar-height));
+    display: grid;
+}
+
+#grid {
+    margin: auto;
+    width: 100%;
+    max-width: 930px;
+}
+
+#fileGrid {
+    display: grid;
+    gap: var(--spacer-5);
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
+}
+
+/* FILE GRID*/
+
+#fileGrid > hr {
+    grid-column: 1/4;
+}
+
+/* ROOM - NAV */
+
+#roomNav {
+    display: grid;
+    gap: 1px;
+    grid-template-columns: auto 10fr auto 1fr;
+}
+
+#roomButtons button {
+    width: auto;
+}
+
+/* ROOM - TASK LIST*/
+
+#taskList, .subtaskList {
+    width: 100%;
+    display: grid;
+    gap: var(--spacer-5);
+    grid-template-rows: 100%;
+}
+
+#taskListHeader, .task {
+    width: 100%;
+    display: grid;
+    gap: var(--spacer-5);
+    grid-template-columns: 5fr 2fr 2fr 2.5fr 2.5fr 1fr;
+}
+
+.subtaskListContainer {
+    width: 100%;
+    border-left: solid 1px var(--colour-3);
+    grid-column: 1/7;
+}
+
+.subtaskList {
+    position: relative;
+    left: var(--spacer-5);
+}
+
+.task input[type="radio"] {
+    align-self: center;
+}
+
+.taskButtons, .subtaskButtons {
+    grid-column: 1/7;
+    display: grid;
+    gap: var(--spacer-5);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-bottom: var(--spacer-5);
+    border-bottom: 1px solid var(--colour-3);
+}
+
+/* RESPONSIVE - TABLET */
+
+@media only screen and (max-width: 0px) {
+
+    h1 {
+        display: unset;
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "filename": "filename",
+    "lastOpened": 10000000,
+    "description": "This is an example data file to demonstrate the data structure used by the application.",
+    "trips": [
+        {
+            "id": 0
+        }
+    ],
+    "routes": [
+        {
+            "id": 0,
+            "typeId": 0,
+            "originId": 0,
+            "layerIds": [],
+            "name": "name",
+            "description": "description",
+            "length": 0
+        }
+    ],
+    "features": [
+        {
+            "id": 0,
+            "layerIds": [],
+            "name": "name",
+            "description": "description"
+        }
+    ],
+    "layers": [
+        {
+            "id": 0
+        }
+    ],
+    "types": [
+        {
+            "id": 0,
+            "name": "name",
+            "routes": 0
+        }
+    ],
+    "origins": [
+        {
+            "id": 0,
+            "name": "home",
+            "lat": 99999999,
+            "lon": 99999999,
+            "zoom": 0,
+            "routes": 0
+        }
+    ]
+}

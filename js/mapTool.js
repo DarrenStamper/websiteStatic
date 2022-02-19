@@ -28,6 +28,7 @@ var selectedTypeId = null;
 var selectedRouteId = null;
 
 var map;
+var draw;
 
 window.onload = async function () {
     loadNavbar().then(() => {
@@ -114,8 +115,8 @@ window.onload = async function () {
             })
         ],
         view: new ol.View({
-            center: ol.proj.fromLonLat([3.4360, 55.3781]), //read the function name, it's LON then LAT
-            zoom: 1
+            center: ol.proj.fromLonLat([-122.420958,37.791858]), //read the function name, it's LON then LAT
+            zoom: 18
         })
     });
     //window.map = map;
