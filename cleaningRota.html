@@ -45,18 +45,59 @@
                 <div></div>
             </div>
 
+            <!-- Options -->
+
+            <h3>Options</h3>
+            <div class="section-greyBackground" id="optionsPanel">
+
+                <label for="importMethod">Import Method:</label>
+                <select class="selectDisabled-1" id="importMethod" disabled>
+                    <option value="0">Add</option>
+                    <option value="1">Overwrite</option>
+                </select>
+                <button class="buttonDisabled-1" id="import" disabled>Import...</button>
+                <button class="buttonDisabled-1" id="importFileFormat" disabled>View Import File Format</button>
+
+                <label for="dueUpdateMethod">Due Update Method:</label>
+                <select class="selectDisabled-1" id="dueUpdateMethod" disabled>
+                    <option value="0">Automatic</option>
+                    <option value="1">Manual</option>
+                </select>
+                <div></div>
+                <button class="buttonDisabled-1" id="updateDueDates" disabled>Update Due Dates</button>
+
+                <!-- <hr class="hr-1"> -->
+
+                <label for="displayFormat">Display Format:</label>
+                <select class="selectDisabled-1" id="displayFormat" disabled>
+                    <option value="0">Room Panel</option>
+                    <option value="1">Table</option>
+                    <option value="2">Console</option>
+                </select>
+            </div>
+
             <!-- Rooms -->
 
             <h3>Room</h3>
             <div id="roomPanel">
                 <div id="roomNav">
-                    <button id="left">&lt;</button>
+                    <button class="buttonDisabled-1" id="deleteRoom">Delete</button>
+                    <button class="buttonDisabled-1" id="left">&lt;</button>
                     <div id="roomButtons">
                     </div>
-                    <button id="right">&gt;</button>
-                    <button id="addRoom">+</button>
+                    <button class="buttonDisabled-1" id="right">&gt;</button>
+                    <button class="buttonDisabled-1" id="addRoom">Add</button>
                 </div>
                 <div class="section-greyBackground" id="taskListPanel">
+
+                    <div id="roomNameContainer">
+                        <label for="roomName">Room Name:</label>
+                        <div><input type="text" class="inputDisabled-1" id="roomName" autocomplete="off" disabled></div>
+                        <button class="buttonDisabled-1" id="roomNameApply" disabled>Apply Room Name</button>
+                    </div>
+
+                    <hr class="hr-1">
+
                     <div id="taskListHeader">
                         <h4>Task</h4>
                         <h4>Time</h4>
@@ -66,48 +107,7 @@
                         <div></div>
                     </div>
                     
-                    <div id="taskList">
-                        <div class="task" id="task-0">
-                            <div><input type="text" autocomplete="off" disabled></div>
-                            <div><input type="text" autocomplete="off" disabled></div>
-                            <div><input type="text" autocomplete="off" disabled></div>
-                            <div><input type="text" autocomplete="off" disabled></div>
-                            <div><input type="text" autocomplete="off" disabled></div>
-                            <input type="radio" name="taskSelect" value="0">
-                            <div class="taskButtons">
-                                <button>Apply</button>
-                                <button>Add Task</button>
-                                <button>Delete Task</button>
-                                <button>Add Subtask</button>
-                            </div>
-                            <div class="subtaskListContainer">
-                                <div class="subtaskList">
-                                    <div class="task" id="subTask-0">
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <input type="radio" name="taskSelect" value="0-0">
-                                        <div class="subtaskButtons">
-                                            <button>Apply Changes</button>
-                                            <button>Add Subtask</button>
-                                            <button>Delete Subtask</button>
-                                            <div></div>
-                                        </div>
-                                    </div>
-                                    <div class="task">
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <div><input type="text" autocomplete="off" disabled></div>
-                                        <input type="radio" name="taskSelect" value="0-1">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>       
+                    <div class="taskList"></div>       
                 </div>
             </div>
 

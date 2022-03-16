@@ -61,13 +61,15 @@ select {
     align-items: center;
 }
 
-#fileInputContainer, #fileStatus {
+#fileInputContainer, #fileStatus, #lastOpened {
     grid-column: 2/4;
 }
 
-/* ATTRIBUTES */
+#fileGrid > div {
+    grid-column: 2/4;
+}
 
-#attributes > h4, #attributes > hr {
+#fileGrid > hr {
     grid-column: 1/5;
 }
 

@@ -2,8 +2,12 @@
 
 import { $, loadNavbar, log, navbarDropdown } from "./global.js";
 
+//system
+
 var DISABLE = true;
 var ENABLE = false;
+
+//model
 
 const NO_FILE_LOADED = 0;
 const FILE_LOADED = 1;
@@ -11,223 +15,816 @@ const NEW_FILE_UNSAVED_CHANGES = 2;
 const UNSAVED_CHANGES = 3;
 const SAVED_CHANGES = 4;
 
-var defaultStyle = "";
-var inputChangeStyle = "inputChange-1";
-var inputDisabledStyle = "inputDisabled-1";
-var buttonDisabledStyle = "buttonDisabled-1";
-var selectDisabledStyle = "selectDisabled-1";
-var textareaDisabledStyle = "textareaDisabled-1";
-var tableRowSelectedStyle = "var(--colour-2)";
+const ID = 0;
 
-var fileStatus = NO_FILE_LOADED;
+const TYPES = "types";
+const TYPE_NAME = 1;
+const TYPE_NUM_OF_ROUTES = 2;
 
-var data;
+const ORIGINS = "origins";
+const ORIGIN_NAME = 1;
+const ORIGIN_LATITUDE = 2;
+const ORIGIN_LONGITUDE = 3;
+const ORIGIN_NUM_OF_ROUTES = 4;
 
-var selectedTypeId = null;
-var selectedOriginId = null;
-var selectedRoutesId = null;
-var selectedTripsId = null;
+const ROUTES = "routes";
+const ROUTE_TYPE_ID = 1;
+const ROUTE_ORIGIN_ID = 2;
+const ROUTE_NAME = 3;
+const ROUTE_DESCRIPTION = 4;
+const ROUTE_DISTANCE = 5;
 
-var map;
+const TRIPS = "trips";
 
-window.onload = async function () {
+const LAYERS = "layers";
+
+var model = {
+
+    fileStatus: null,
+
+    description: "save data file for the cleaningRota web applet",
+
+    filename: null,
+    lastOpened: null,
+
+    typesAttributes: ["id","name","numOfRoutes"],
+    types: [],
+    typesSelectedLocation: null,
+
+    originsAttributes: ["id","name","latitude","longitude","numOfRoutes"],
+    origins: [],
+    originSelectedLocation: null,
+
+    routesAttributes: ["id","typeId","originId","name","description","distance"],
+    routes: [],
+    routesSelectedLocation: null,
+
+    tripsAttributes: [],
+    trips: [],
+    tripsSelectedLocation: null,
+
+    layersAttributes: [],
+    layers: [],
+    layersSelectedLocation: null,
+
+    new(filename) {
+
+        this.fileStatus = NEW_FILE_UNSAVED_CHANGES,
+
+        this.filename = filename,
+        this.lastOpened = Date.now(),
+
+        this.types = [],
+        this.typesSelectedLocation = null,
+
+        this.origins = [],
+        this.originSelectedLocation = null,
+
+        this.routes = [];
+        this.routesSelectedLocation = null,
+
+        this.trips = [],
+        this.tripsSelectedLocation = null,
+
+        this.layers = [],
+        this.layersSelectedLocation = null
+    },
+
+    loadFromJsonString(jsonString) {
+
+        var jsonObject = JSON.parse(jsonString);
+
+        this.filename = jsonObject.filename;
+        this.lastOpened = jsonObject.lastOpened;
+
+        this.types = jsonObject.types;
+        this.typesSelectedLocation = null;
+
+        this.origins = jsonObject.origins;
+        this.originSelectedLocation = null;
+
+        this.routes = jsonObject.routes;
+        this.routesSelectedLocation = null;
+
+        this.trips = jsonObject.trips;
+        this.tripsSelectedLocation = null;
+
+        this.layers = jsonObject.layers;
+        this.layersSelectedLocation = null;
+        
+        this.setFileStatus(FILE_LOADED);
+    },
+
+    saveAsJsonString() {
+
+        var data = {};
+
+        data["description"] = this.description;
+        data["filename"] = this.filename;
+        data["lastOpened"] = this.lastOpened;
+        data["types"] = this.types;
+        data["origins"] = this.origins;
+        data["routes"] = this.routes;
+        data["trips"] = this.trips;
+        data["layers"] = this.layers;
+
+        var jsonString = JSON.stringify(
+            data,
+            (k,v)=> {
+                if (v instanceof Array) {
+                    for (const i of v) if (i instanceof Array) return v;
+                    return JSON.stringify(v);
+                }
+                return v;
+            },
+            2
+        ).replace(/\"\[/g,"[")
+         .replace(/\]\"/g,"]")
+         .replace(/\\\"/g,"\"");
+
+        return jsonString;
+    },
+
+    //getter setter
+
+    fileStatus_get() { return this.fileStatus; },
+
+    fileStatus_set(fileStatus) {
+        if (fileStatus === UNSAVED_CHANGES && this.fileStatus === NEW_FILE_UNSAVED_CHANGES) return;
+        this.fileStatus = fileStatus;
+    },
+
+    filename_get() { return this.filename; },
+    
+    filename_set(filename) { this.filename = filename; },
+
+    lastOpened_get() { return this.lastOpened; },
+    
+    lastOpened_set(lastOpened) { return this.lastOpened; },
+
+    types_getAll() { return this.types; },
+
+    type_getAllValuesForAttribute(attribute) { this.getAllValuesForAttribute(this.types,attribute) },
+
+    types_getSelectedTypeId() { return this.typesSelectedId; },
+
+    types_setSelectedType(typeId) { this.typesSelectedLocation = this.locationOf_linear(type,ID,typeId); },
+
+    origins_getAll() { return this.origins; },
+    
+    origins_getAllValuesForAttribute(attribute) { this.getAllValuesForAttribute(this.origins,attribute) },
+
+    routes_getAll() { return this.routes; },
+
+    trips_getAll() { return this.trips; },
+
+    layers_getAll() { return this.layers; },
+
+    //data structure helper functions
+
+    getAll(data) { return this[data]; },
+
+    getAllValuesForAttribute(data,attribute) {
+        var valueList = [];
+        this.data.forEach(entry => { valueList.push(entry[attribute]) });
+        return valueList;
+    },
+
+    getEntry(data,matchAttribute,matchValue) {
+        for (const entry in this[data]) {
+            if (this[data][entry][matchAttribute] === matchValue) {
+                return this[data][entry];
+            }
+        }
+    },
+
+    getValue(data,matchAttribute,matchValue,targetAttribute) {
+        for (const entry in this[data]) {
+            if (this[data][entry][matchAttribute] === matchValue) {
+                return this[data][entry][targetAttribute];
+            }
+        }
+    },
+
+    locationOf_linear(data,attribute,value) {
+        for (var e=0; e<data.length; e++) {
+            if (data[e][attribute] === value) return e; }
+        return null;
+    },
+
+    locationOf_binary(data,attribute,value) {
+
+    }
+}
+
+var view = {
+
+    defaultStyle: "",
+    inputChangeStyle: "inputChange-1",
+    inputDisabledStyle: "inputDisabled-1",
+    buttonDisabledStyle: "buttonDisabled-1",
+    selectDisabledStyle: "selectDisabled-1",
+    textareaDisabledStyle: "textareaDisabled-1",
+    tableRowSelectedStyle: "var(--colour-2)",
+
+    file: {
+
+        fileInputElement: $("fileInput"),
+        fileInputTextElement: $("fileInputText"),
+        fileNewElement: $("fileNew"),
+        fileSaveElement: $("fileSave"),
+        fileStatusElement: $("fileStatus"),
+        filenameElement: $("filename"),
+        filenameApplyElement: $("filenameApply"),
+
+        //fileInputText
+
+        fileInputText_set(fileInputText) { 
+            this.fileInputTextElement.innerHTML = fileInputText; },
+
+        //fileStatus
+
+        fileStatus_set(fileStatus) {
+            if (fileStatus === NO_FILE_LOADED) { this.fileStatusElement.textContent = "No File Loaded"; }
+            else if (fileStatus === FILE_LOADED) { this.fileStatusElement.textContent = "File Loaded"; }
+            else if (fileStatus === NEW_FILE_UNSAVED_CHANGES) { this.fileStatusElement.textContent = "New File, Unsaved Changes"; }
+            else if (fileStatus === UNSAVED_CHANGES) { this.fileStatusElement.textContent = "Unsaved Changes"; }
+            else if (fileStatus === SAVED_CHANGES) { this.fileStatusElement.textContent = "Saved Changes"; }
+        },
+
+        //filename
+
+        filename_get() { return this.filenameElement.value; },
+        filename_set(filename) { this.filenameElement.value = filename; },
+
+        filename_enable(bool) {
+            view.enableOrDisableListOfInputsByElement([this.filenameElement],bool,view.defaultStyle);
+        },
+
+        filename_onChange() {
+            this.filenameElement.parentElement.className = view.inputChangeStyle;
+            view.enableOrDisableListOfInputsByElement([this.filenameApplyElement],ENABLE,defaultStyle);
+        },
+
+        filename_apply() {
+            this.filenameElement.parentElement.className = "";
+            view.enableOrDisableListOfInputsByElement(this.filenameApplyElement,DISABLE,inputDisabledStyle);
+        },
+
+        //lastOpened
+
+        lastOpened_set(lastOpened) { this.lastOpened.value = lastOpened; },
+
+    },
+
+    types: {
+
+        typeListElement: $("#typesList"),
+        typeListDataElement: document.querySelector("#typesList div table"),
+        typeDeleteElement: $("typeDelete"),
+        typeEditElement: $("typeEdit"),
+        typeAddElement: $("typeAdd"),
+
+        constructor() {
+            //poopsicle
+        },
+
+        disable() {
+
+        },
+
+        enable() {
+
+        },
+
+        clear() {
+            view.table_clearTablesByIdList([this.typeListElement.id]);
+            view.enableOrDisableListOfInputsByElement([this.typeDeleteElement,this.typeEditElement],DISABLE,view.buttonDisabledStyle);
+            view.enableOrDisableListOfInputsByElement([this.typeAddElement],ENABLE,view.defaultStyle);
+        },
+
+        populate(types) {
+            types.forEach(type => {
+                view.addTableRow(
+                    this.typeListDataElement,
+                    "type-"+i,
+                    [type[TYPE_NAME],type[TYPE_NUM_OF_ROUTES]]
+                );
+            });
+        },
+
+        delete() {
+
+        },
+
+        edit() {
+
+        },
+
+        add() {
+
+        },
+
+        select(oldSelectedTypeId,newSelectedTypeId) {
+            view.table_selectRowByElementId("type-"+oldSelectedTypeId,"type-"+newSelectedTypeId);
+        }
+    },
+
+    origins: {
+
+        originListElement: $("#originsList"),
+        originListDataElement: document.querySelector("#originsList div table"),
+        originDeleteElement: $("originDelete"),
+        originEditElement: $("originEdit"),
+        originAddElement: $("originAdd"),
+
+        disable() {
+
+        },
+
+        enable() {
+
+        },
+
+        clear() {
+            view.table_clearTablesByIdList([this.originListElement.id]);
+            view.enableOrDisableListOfInputsByElement([this.originDeleteElement,this.originEditElement],DISABLE,view.buttonDisabledStyle);
+            view.enableOrDisableListOfInputsByElement([this.originAddElement],ENABLE,view.defaultStyle);
+        },
+
+        populate(origins) {
+            origins.forEach(origin => {
+                view.addTableRow(
+                    this.originListDataElement,
+                    "type-"+origin[ID],
+                    [origin[ORIGIN_NAME],origin[ORIGIN_LATITUDE],origin[ORIGIN_LONGITUDE],origin[ORIGIN_NUM_OF_ROUTES]]
+                );
+            });
+        },
+
+        delete() {
+
+        },
+
+        edit() {
+
+        },
+
+        add() {
+
+        }
+    },
+
+    routes: {
+
+        routeFilterTypeElement: $("filterType"),
+        routeFilterOriginElement: $("filterOrigin"),
+        routeFilterDescendingOrderElement: $("filterDescendingOrder"),
+        routeFilterApplyElement: $("filterApply"),
+
+        routeListElement: $("routesList"),
+        routeListDataElement: document.querySelector("routesList div table"),
+        routeDeleteElement: $("routeDelete"),
+        routeAddElement: $("routeAdd"),
+
+        routeTypeElement: $("routeType"),
+        routeOriginElement: $("routeOrigin"),
+        routeNameElement: $("routeName"),
+        routeDescriptionElement: $("routeDescription"),
+        routeDetailsApplyElement: $("routeDetailsApply"),
+
+        disable() {
+
+        },
+
+        enable() {
+
+        },
+
+        clear() {
+            view.dropdowns_clearDropdownsByElementIdList([this.routeFilterTypeElement,this.routeFilterOriginElement],2);
+            this.routeFilterDescendingOrderElement.selectedIndex = 0;
+            
+            view.table_clearTablesByIdList([this.originListElement.id]);
+
+            this.routeTypeElement.selectedIndex = 0;
+            this.routeOriginElement.selectedIndex = 0;
+            this.routeNameElement.value = "";
+            this.routeDescriptionElement.value = "";
+            view.enableOrDisableListOfInputsByElement([this.routeTypeElement,this.routeOriginElement],DISABLE,view.selectDisabledStyle);
+            view.enableOrDisableListOfInputsByElement([this.routeNameElement],DISABLE,view.inputDisabledStyle);
+            view.enableOrDisableListOfInputsByElement([this.routeDescriptionElement],DISABLE,view.textareaDisabledStyle);
+        },
+
+        populate(routes, typeNames, typeIds, originNames, originIds) {
+
+            view.addDropdownOptions(this.routeFilterTypeElement, typeNames, typeIds);
+            view,addDropdownOptions(this.routeFilterOriginElement, originNames, originIds);
+
+            routes.forEach(route => {
+                addTableRow(
+                    this.routeListDataElement,
+                    "route-"+route[ID],
+                    [route[ROUTE_TYPE_ID],route[ROUTE_ORIGIN_ID],route[ROUTE_NAME],route[ROUTE_DISTANCE]]
+                );
+            });
+
+            view.addDropdownOptions(this.routeTypeElement, typeNames, typeIds);
+            view,addDropdownOptions(this.routeOriginElement, originNames, originIds);
+        }
+    },
+
+    trips: {
+
+        disable() {
+
+        },
+
+        enable() {
+
+        },
+
+        clear() {
+
+        },
+
+        populate() {
+
+        }
+    },
+
+    layers: {
+
+        disable() {
+
+        },
+
+        enable() {
+
+        },
+
+        clear() {
+
+        },
+
+        populate() {
+
+        }
+    },
+
+    //file
+
+    file_load() {
+        var fileReference = e.target.files[0];
+    
+        var reader = new FileReader();
+        reader.onload = function(e) {
+    
+            model.loadFromJsonString(e.target.result);
+
+            data = JSON.parse(e.target.result);
+
+            view.file.fileInputText_set( data.filename_get() );
+            view.file.fileStatus_set( data.fileStatus_get() );
+            view.file.filename_set( data.filename_get() );
+            view.file.lastOpened_set( data.lastOpened_get() );
+
+            view.types.clear();
+            view.origins.clear();
+            view.routes.clear();
+            view.trips.clear();
+            view.layers.clear();
+    
+            view.types.populate( data.types_getAll() );
+            view.origins.populate( data.origins_getAll() );
+            view.routes.populate( 
+                data.routes_getAll(),
+                data.types_getAllValuesForAttribute(ID),
+                data.types_getAllValuesForAttribute(TYPE_NAME),
+                data.origins_getAllValuesForAttribute(ID),
+                data.origins_getAllValuesForAttribute(ORIGIN_NAME)
+            );
+            view.trips.populate( data.trips_getAll() );
+            view.layers.populate( data.layers_getAll() );
+        }
+        reader.readAsText(fileReference);
+    
+        setFileStatus(FILE_LOADED);
+    },
+
+    file_save() {
+
+        if (model.fileStatus_get === NO_FILE_LOADED) {
+            await view.customAlertPromise("Cannot save file, no file loaded.");
+        }
+        else {
+            var data = model.saveAsJsonString();
+            view.save(data,model.filename_get());
+    
+            model.fileStatus_set(SAVED_CHANGES);
+            view.file.fileStatus_set(SAVED_CHANGES);
+        }
+    },
+
+    file_new() {
+        var fileStatus = model.fileStatus_get();
+        if (fileStatus === NEW_FILE_UNSAVED_CHANGES || fileStatus === UNSAVED_CHANGES) {
+            var confirm = await view.customConfirmPromise("The current file has unsaved changes.");
+            if (confirm === false) return;
+        }
+    
+        try
+        {
+            var filename = await view.customPromptPromise("Please enter a file name.");
+    
+            model.new(filename);
+
+            view.file.fileStatus_set( model.fileStatus_get() );
+            view.file.filename_set( model.filename_get() );
+            view.file.lastOpened_set( model.lastOpened_get() );
+    
+            view.types.clear();
+            view.origins.clear();
+            view.routes.clear();
+            view.trips.clear();
+            view.layers.clear();
+
+            model.fileStatus_set(NEW_FILE_UNSAVED_CHANGES);
+            view.file.fileStatus_set(NEW_FILE_UNSAVED_CHANGES);
+        }
+        catch(e) { console.log(e); }
+    },
+
+    filename_apply() {
+        var filename = view.file.filename_get();
+        model.filename_set(filename);
+        view.file.filename_apply();
+
+        model.fileStatus_set(UNSAVED_CHANGES);
+        view.file.fileStatus_set(UNSAVED_CHANGES);
+    },
+
+    //type
+
+    type_select() {
+        if (this.target.tagName === "TD") {
+            var oldSelectedTypeId = model.types_getSelectedTypeId();
+            var newSelectedTypeId = this.target.parentElement.id.split("-")[1];
+            view.types.select(oldSelectedTypeId,newSelectedTypeId);
+            model.types_setSelectedTypeId(newSelectedTypeId);
+        }
+    },
+
+    type_delete() {
+
+        var confirm = true;
+        if (model.getValue(TYPES,ID,))
+
+        if (data.types[selectedTypeId].routes > 0) {
+            confirm = await customConfirmPromise("This will delete this type from all associated routes.");
+        }
+    
+        if (confirm === true) {
+            document.getElementById("type-"+selectedTypeId).remove();
+            for (var i=0; i<data.routes.length; i++) {
+                if (data.routes[i].typeId === selectedTypeId) data.routes[i].typeId = -1;
+            }
+            data.types.splice(selectedTypeId, 1);
+            selectedTypeId = null;
+    
+            //update route list table
+        }
+
+        model.fileStatus_set(UNSAVED_CHANGES);
+        view.file.fileStatus_set(UNSAVED_CHANGES);
+    },
+
+    type_edit() {
+
+        model.fileStatus_set(UNSAVED_CHANGES);
+        view.file.fileStatus_set(UNSAVED_CHANGES);
+    },
+
+    type_add() {
+        
+        model.fileStatus_set(UNSAVED_CHANGES);
+        view.file.fileStatus_set(UNSAVED_CHANGES);
+    },
+
+    //generic helper functions
+
+    customAlertPromise(message) {
+        var customAlertContainer = $("customAlertContainer");
+        var customAlert = $("customAlert");
+    
+        customAlert.querySelector(".message").innerHTML = message;
+        customAlertContainer.style.display = "grid";
+    
+        return new Promise(function(resolve) {
+            customAlert.addEventListener("click", function click(e) {
+                if (e.target.tagName === "BUTTON") {
+                    customAlert.removeEventListener("click", click);
+                    customAlertContainer.style.display = "";
+                    resolve();
+                }
+            });
+        });
+    },
+    
+    customConfirmPromise(message) {
+        var customConfirmContainer = $("customConfirmContainer");
+        var customConfirm = $("customConfirm");
+    
+        customConfirm.querySelector(".message").innerHTML = message;
+        customConfirmContainer.style.display = "grid";
+    
+        return new Promise(function(resolve) {
+            customConfirm.addEventListener("click", function click (e) { //click bubbles up
+                if (e.target.tagName === "BUTTON") {
+                    customConfirm.removeEventListener("click", click);
+                    customConfirmContainer.style.display = "";
+                    if (e.target.className === "cancel") resolve(false);
+                    else if (e.target.className === "ok") resolve(true);
+                }
+            });
+        });
+    },
+    
+    customPromptPromise(message) {
+        var customPromptContainer = $("customPromptContainer");
+        var customPrompt = $("customPrompt");
+        var customPromptInput = customPrompt.querySelector("input");
+    
+        customPrompt.querySelector(".message").innerHTML = message;
+        customPromptContainer.style.display = "grid";
+    
+        return new Promise(function(resolve, reject) {
+            customPrompt.addEventListener("click", function click (e) {
+                if (e.target.tagName === "BUTTON") {
+                    customPrompt.removeEventListener("click", click);
+                    customPromptContainer.style.display = "";
+                    if (e.target.className === "cancel") reject();
+                    else if (e.target.className === "ok") resolve(customPromptInput.value);
+                    customPromptInput.value = "";
+                }
+            });
+        });
+    },
+
+    dropdowns_clearDropdownsByElementIdList(idList, startIndex) {
+        for (var i=0; i<idList.length; i++) {
+            var numOfChildren = $(idList[i]).childElementCount;
+            for (var j=startIndex; j<numOfChildren; j++) {
+                $(idList[i]).children[startIndex].remove();
+            }
+        }
+    },
+
+    enableOrDisableListOfInputsByElement(inputList, disabled, inputStyle) {
+        for (var i=0; i<inputList.length; i++) {
+            inputList[i].disabled = disabled;
+            inputList[i].className = inputStyle;
+        }
+    },
+
+    enableOrDisableListOfInputsByElementId(inputIdList, disabled, inputStyle) {
+        for (var i=0; i<inputIdList.length; i++) {
+            $(inputIdList[i]).disabled = disabled;
+            $(inputIdList[i]).className = inputStyle;
+        }
+    },
+
+    multiPromptPromise(message, inputList, inputValueList) {
+        var multiPromptContainer = $("multiPromptContainer");
+        var multiPrompt = $("multiPrompt");
+    
+        while(multiPrompt.children[1].nodeName !== "BUTTON") {
+            multiPrompt.children[1].remove();
+        }
+    
+        var insertIndex = 1;
+        for(var i=0; i<inputList.length; i++){
+            var label = document.createElement("LABEL");
+            var textNode = document.createTextNode(inputList[i] + ":");
+            label.appendChild(textNode);
+            multiPrompt.insertBefore(label, multiPrompt.children[insertIndex]);
+            insertIndex++;
+    
+            var input = document.createElement("INPUT");
+            input.id = inputList[i];
+            input.type = "text";
+            if(inputValueList !== null) input.value = inputValueList[i];
+            multiPrompt.insertBefore(input, multiPrompt.children[insertIndex]);
+            insertIndex++;
+        }
+    
+        var inputElementList = [];
+        for (var i=0; i<inputList.length; i++) {
+            inputElementList[i] = $(inputList[i]);
+        }
+    
+        multiPrompt.querySelector(".message").innerHTML = message;
+        multiPromptContainer.style.display = "grid";
+    
+        return new Promise(function(resolve, reject) {
+            multiPrompt.addEventListener("click", function click (e) {
+                if (e.target.tagName === "BUTTON") {
+                    multiPrompt.removeEventListener("click", click);
+                    multiPromptContainer.style.display = "";
+                    if (e.target.className === "cancel") reject();
+                    else if (e.target.className === "ok") {
+                        var inputValues = [];
+                        for (var i=0; i<inputElementList.length; i++) {
+                            inputValues[i] = inputElementList[i].value;
+                        }
+                        resolve(inputValues);
+                    }
+                    multiPromptContainer.value = "";
+                }
+            });
+        });
+    },
+
+    save(filename,data) {
+        var element = document.createElement("a");
+        element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(data));
+        element.setAttribute("download", filename + ".json");
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    },
+
+    table_selectRowByElementId(oldSelectedRowId, newSelectedRowId) {
+        if (oldSelectedRowId !== null) {
+            var tr = document.getElementById(oldSelectedRowId);
+            for (var i = 0; i < tr.children.length; i++) {
+                tr.children[i].style.backgroundColor = "";
+            }
+        }
+        if (newSelectedRowId === null) { 
+            var tr = document.getElementById(newSelectedRowId);
+            for (var i = 0; i < tr.children.length; i++) {
+                tr.children[i].style.backgroundColor = view.tableRowSelectedStyle;
+            } 
+        }
+    },
+
+    table_clearTablesByIdList(idList) {
+        for (var i=0; i<idList.length; i++) {
+            var table = document.querySelector("#" + idList[i] + " div table");
+            var numOfRows = table.childElementCount;
+            for (var j=0; j<numOfRows; j++) { table.deleteRow(0); }
+        }
+    }
+}
+
+window.onload = async () => {
+
+    //check browser functionality
+
+    if (window.File && window.FileReader && window.FileList && window.Blob);
+    else alert('The File APIs are not fully supported in this browser.');
+
+    //build html
+
     loadNavbar().then(() => {
         document.getElementById("navbarIcon").addEventListener("click", navbarDropdown);
         document.getElementById("mapTool").className = "active";
     });
 
-    //file
+    //set event listeners
 
-    if (window.File && window.FileReader && window.FileList && window.Blob);
-    else alert('The File APIs are not fully supported in this browser.');
+    view.file.fileInputElement.addEventListener("change",view.file_load);
+    view.file.fileSaveElement.addEventListener("click",view.file_save);
+    view.file.fileNewElement.addEventListener("click",view.file_new);
+    view.file.filenameElement.addEventListener("keyup",view.file.filename_onChange);
+    view.file.filenameApplyElement.addEventListener("click",view.filename_apply);
 
-    $("fileInput").addEventListener("change", loadFile);
-    $("saveFile").addEventListener("click", saveFile);
-    $("newFile").addEventListener("click", newFile);
-
-    //attributes
-
-    $("fileName").addEventListener("keyup", e => {
-        e.target.parentElement.className = inputChangeStyle;
-        enableOrDisableListOfInputs(["update"],ENABLE,defaultStyle);
-    });
-    $("fileNameUpdate").addEventListener("click", () => {
-        data["fileName"] = $("fileName").value;
-        $("fileName").parentElement.className = "";
-        enableOrDisableListOfInputs(["update"],DISABLE,inputDisabledStyle);
-    });
-
-    //types
-
-    document.querySelector("#typesList div").addEventListener("click", e => {
-        if (e.target.tagName === "TD") {
-            var oldSelectedRowId = null;
-            if (selectedTypeId !== null) oldSelectedRowId = "type-"+selectedTypeId;
-            selectedTypeId = parseInt(selectTableRowById(oldSelectedRowId, e.target.parentElement.id).split("-")[1]);
-            enableOrDisableListOfInputs(["deleteType","editType"],ENABLE,defaultStyle);
-        }
-    });
-    $("deleteType").addEventListener("click", deleteType);
-    $("editType").addEventListener("click", editType);
-    $("addType").addEventListener("click", addType);
+    view.type.typeListDataElement.addEventListener("click",view.type_select);
+    view.type.typeDeleteElement.addEventListener("click",view.type_delete);
+    view.type.typeEditElement.addEventListener("click",view.type_edit);
+    view.type.typeAddElement.addEventListener("click",view.type_add);
 }
 
-//user input event
-
-async function newFile() {
-
-    if (fileStatus === NEW_FILE_UNSAVED_CHANGES || fileStatus === UNSAVED_CHANGES) {
-        var userOption = await customConfirmPromise("The current file has unsaved changes.");
-        if (userOption === false) return;
-    }
-
-    try
-    {
-        var fn = await customPromptPromise("Please enter a file name.");
-
-        createNewDataObject();
-        data["fileName"] = fn;
-        $("fileName").value = data["fileName"];
 
 
-        //reset form
-        clearTables(["typesList","originsList","routeList"]);
-        clearDropdowns(["filterType","filterOrigin","routeType","routeOrigin"],2);
-        clearRouteDetails();
-        enableOrDisableListOfInputs(["deleteOrigin","editOrigin","deleteType","editType"],DISABLE,buttonDisabledStyle);
-        enableOrDisableListOfInputs(["routeType","routeOrigin"],DISABLE,selectDisabledStyle);
-        enableOrDisableListOfInputs(["routeName"],DISABLE,inputDisabledStyle);
-        enableOrDisableListOfInputs(["routeDescription"],DISABLE,textareaDisabledStyle);
 
-        setFileStatus(NEW_FILE_UNSAVED_CHANGES);
-    }
-    catch(e) { console.log(e); }
-}
 
-function loadFile(e) {
-    var fileReference = e.target.files[0];
-    $("fileInputText").innerHTML = fileReference.name;
 
-    var reader = new FileReader();
-    reader.onload = function(e) {
 
-        //reset form
-        clearTables(["typesList","originsList","routeList"]);
-        clearDropdowns(["filterType","filterOrigin","routeType","routeOrigin"],2);
-        clearRouteDetails();
-        enableOrDisableListOfInputs(["deleteOrigin","editOrigin","deleteType","editType"],DISABLE,buttonDisabledStyle);
-        enableOrDisableListOfInputs(["routeType","routeOrigin"],DISABLE,selectDisabledStyle);
-        enableOrDisableListOfInputs(["routeName"],DISABLE,inputDisabledStyle);
-        enableOrDisableListOfInputs(["routeDescription"],DISABLE,textareaDisabledStyle);
 
-        data = JSON.parse(e.target.result);
 
-        $("fileName").value = data["fileName"];
-        $("lastOpened").value = data["lastOpened"];
 
-        //types
 
-        for (var i=0; i<data.typeList.length; i++) {
-            addTableRow(
-                document.querySelector("#typesList div table"),
-                "type-"+i,
-                [data.typeList[i].name,data.typeList[i].routeIdList.length]
-            );
-        }
 
-        //origins
-        for (var i=0; i<data.homeList.length; i++) {
-            addTableRow(
-                document.querySelector("#originsList div table"),
-                "home-"+i,
-                [data.homeList[i].name,data.homeList[i].latitude,data.homeList[i].longitude,data.homeList[i].routeIdList.length]
-            );
-        }
 
-        //dropdowns
 
-        var textList = [];
-        var valueList = [];
-        for (var i=0; i<data.origins.length; i++) {
-            textList.push(data.origins[i].name);
-            valueList.push(i);
-        }
-        addDropdownOptions($("filterOrigin"),textList,valueList);
-        addDropdownOptions($("routeOrigin"),textList,valueList);
 
-        textList = [];
-        valueList = [];
-        for (var i=0; i<data.typeList.length; i++) {
-            textList.push(data.typeList[i].name);
-            valueList.push(i);
-        }
-        addDropdownOptions($("filterType"),textList,valueList);
-        addDropdownOptions($("routeType"),textList,valueList);
 
-        //load homes
-
-        // var homeTable = document.querySelector("#currentHomeList div table");
-        // for(var i=0; i<data["currentHomeIdList"].length; i++){
-        //     var homeId = data["currentHomeIdList"][i];
-        //     var home = data["homeList"][homeId];
-        //     addTableRow(
-        //         homeTable,
-        //         "home-"+homeId,
-        //         [home.name, home.latitude, home.longitude]
-        //     );
-        // }
-        // var newSelectedRowId = null;
-        // if (data["currentHomeId"] !== null) newSelectedRowId = "home-" + data["currentHomeId"];
-        // selectTableRowById(null, newSelectedRowId);
-
-        // if(data["currentHomeId"] !== null) {
-        //     $("deleteHome").disabled = false;
-        //     $("deleteHome").className = "";
-        //     var lat = data.homeList[data["currentHomeId"]].latitude;
-        //     var lon = data.homeList[data["currentHomeId"]].longitude;
-        //     map.getView().setCenter(ol.proj.fromLonLat([lon, lat]));
-        // }
-    }
-    reader.readAsText(fileReference);
-
-    setFileStatus(FILE_LOADED);
-}
-
-async function saveFile() {
-    if (fileStatus === NO_FILE_LOADED) {
-        await customAlertPromise("Cannot save file, no file loaded.");
-    }
-    else {
-        var dataString = JSON.stringify(data, null, 2);
-
-        var element = document.createElement("a");
-        element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(dataString));
-        element.setAttribute("download", data["fileName"] + ".json");
-        element.style.display = "none";
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-
-        setFileStatus(SAVED_CHANGES);
-    }
-}
 
 async function deleteType() {
-    var confirm = true;
-    if (data.types[selectedTypeId].routes > 0) {
-        confirm = await customConfirmPromise("This will delete this type from all associated routes.");
-    }
 
-    if (confirm === true) {
-        document.getElementById("type-"+selectedTypeId).remove();
-        for (var i=0; i<data.routes.length; i++) {
-            if (data.routes[i].typeId === selectedTypeId) data.routes[i].typeId = -1;
-        }
-        data.types.splice(selectedTypeId, 1);
-        selectedTypeId = null;
-
-        //update route list table
-    }
 }
 
 async function editType() {
@@ -427,158 +1024,9 @@ function routeApply() {
 }
 
 
-
-function createNewDataObject() {
-    data = {
-        "filename": null,
-        "lastOpened": null,
-        "description": null,
-        "trips": [],
-        "routes": [],
-        "features": [],
-        "layers": [],
-        "types": [],
-        "origins": []
-    }
-}
-
 function setFileStatus(fs) {
     if (fs === UNSAVED_CHANGES && fileStatus === NEW_FILE_UNSAVED_CHANGES) return;
     fileStatus = fs;
-}
-
-
-
-function customAlertPromise(message) {
-    var customAlertContainer = $("customAlertContainer");
-    var customAlert = $("customAlert");
-
-    customAlert.querySelector(".message").innerHTML = message;
-    customAlertContainer.style.display = "grid";
-
-    return new Promise(function(resolve) {
-        customAlert.addEventListener("click", function click(e) {
-            if (e.target.tagName === "BUTTON") {
-                customAlert.removeEventListener("click", click);
-                customAlertContainer.style.display = "";
-                resolve();
-            }
-        });
-    });
-}
-
-function customConfirmPromise(message) {
-    var customConfirmContainer = $("customConfirmContainer");
-    var customConfirm = $("customConfirm");
-
-    customConfirm.querySelector(".message").innerHTML = message;
-    customConfirmContainer.style.display = "grid";
-
-    return new Promise(function(resolve) {
-        customConfirm.addEventListener("click", function click (e) { //click bubbles up
-            if (e.target.tagName === "BUTTON") {
-                customConfirm.removeEventListener("click", click);
-                customConfirmContainer.style.display = "";
-                if (e.target.className === "cancel") resolve(false);
-                else if (e.target.className === "ok") resolve(true);
-            }
-        });
-    });
-}
-
-function customPromptPromise(message) {
-    var customPromptContainer = $("customPromptContainer");
-    var customPrompt = $("customPrompt");
-    var customPromptInput = customPrompt.querySelector("input");
-
-    customPrompt.querySelector(".message").innerHTML = message;
-    customPromptContainer.style.display = "grid";
-
-    return new Promise(function(resolve, reject) {
-        customPrompt.addEventListener("click", function click (e) {
-            if (e.target.tagName === "BUTTON") {
-                customPrompt.removeEventListener("click", click);
-                customPromptContainer.style.display = "";
-                if (e.target.className === "cancel") reject();
-                else if (e.target.className === "ok") resolve(customPromptInput.value);
-                customPromptInput.value = "";
-            }
-        });
-    });
-}
-
-function multiPromptPromise(message, inputList, inputValueList) {
-    var multiPromptContainer = $("multiPromptContainer");
-    var multiPrompt = $("multiPrompt");
-
-    while(multiPrompt.children[1].nodeName !== "BUTTON") {
-        multiPrompt.children[1].remove();
-    }
-
-    var insertIndex = 1;
-    for(var i=0; i<inputList.length; i++){
-        var label = document.createElement("LABEL");
-        var textNode = document.createTextNode(inputList[i] + ":");
-        label.appendChild(textNode);
-        multiPrompt.insertBefore(label, multiPrompt.children[insertIndex]);
-        insertIndex++;
-
-        var input = document.createElement("INPUT");
-        input.id = inputList[i];
-        input.type = "text";
-        if(inputValueList !== null) input.value = inputValueList[i];
-        multiPrompt.insertBefore(input, multiPrompt.children[insertIndex]);
-        insertIndex++;
-    }
-
-    var inputElementList = [];
-    for (var i=0; i<inputList.length; i++) {
-        inputElementList[i] = $(inputList[i]);
-    }
-
-    multiPrompt.querySelector(".message").innerHTML = message;
-    multiPromptContainer.style.display = "grid";
-
-    return new Promise(function(resolve, reject) {
-        multiPrompt.addEventListener("click", function click (e) {
-            if (e.target.tagName === "BUTTON") {
-                multiPrompt.removeEventListener("click", click);
-                multiPromptContainer.style.display = "";
-                if (e.target.className === "cancel") reject();
-                else if (e.target.className === "ok") {
-                    var inputValues = [];
-                    for (var i=0; i<inputElementList.length; i++) {
-                        inputValues[i] = inputElementList[i].value;
-                    }
-                    resolve(inputValues);
-                }
-                multiPromptContainer.value = "";
-            }
-        });
-    });
-}
-
-function displayFileStatus() {
-    if (fs === FILE_LOADED) { $("fileStatus").textContent = "File Loaded"; }
-    else if (fs === NEW_FILE_UNSAVED_CHANGES) { $("fileStatus").textContent = "New File, Unsaved Changes"; }
-    else if (fs === UNSAVED_CHANGES) { $("fileStatus").textContent = "Unsaved Changes"; }
-    else if (fs === SAVED_CHANGES) { $("fileStatus").textContent = "Saved Changes"; }
-}
-
-function enableOrDisableListOfInputs(inputList, disabled, inputStyle) {
-    for (var i=0; i<inputList.length; i++) {
-        $(inputList[i]).disabled = disabled;
-        $(inputList[i]).className = inputStyle;
-    }
-}
-
-function clearDropdowns(idList, startIndex) {
-    for (var i=0; i<idList.length; i++) {
-        var numOfChildren = $(idList[i]).childElementCount;
-        for (var j=startIndex; j<numOfChildren; j++) {
-            $(idList[i]).children[startIndex].remove();
-        }
-    }
 }
 
 function addDropdownOptions(dropdown, textList, valueList) {
@@ -601,14 +1049,6 @@ function removeDropdownOptionsByValue(dropdown, valueList) {
     }
 }
 
-function clearTables(idList) {
-    for (var i=0; i<idList.length; i++) {
-        var table = document.querySelector("#" + idList[i] + " div table");
-        var numOfRows = table.childElementCount;
-        for (var j=0; j<numOfRows; j++) { table.deleteRow(0); }
-    }
-}
-
 function addTableRow(table, rowId, rowDataList) {
     var tr = document.createElement("TR");
     tr.id = rowId;
@@ -621,32 +1061,13 @@ function addTableRow(table, rowId, rowDataList) {
     table.appendChild(tr);
 }
 
-function selectTableRowById(oldSelectedRowId, newSelectedRowId) {
-    if (newSelectedRowId === oldSelectedRowId) { return oldSelectedRowId; }
-    if (oldSelectedRowId !== null) {
-        var tr = document.getElementById(oldSelectedRowId);
-        for (var i = 0; i < tr.children.length; i++) {
-            tr.children[i].style.backgroundColor = "";
-        }
-    }
-    if (newSelectedRowId === null) { return null; }
-    var tr = document.getElementById(newSelectedRowId);
-    for (var i = 0; i < tr.children.length; i++) {
-        tr.children[i].style.backgroundColor = tableRowSelectedStyle;
-    }
-    return newSelectedRowId;
-}
-
 function routeChange(e) {
     e.target.parentElement.className = inputChangeStyle;
     enableOrDisableListOfInputs(["updateDetails"],false,"");
 }
 
 function clearRouteDetails() {
-    $("routeType").selectedIndex = 0;
-    $("routeOrigin").selectedIndex = 0;
-    $("routeName").value = "";
-    $("routeDescription").value = "";
+
 }
 
 function home(id) {
