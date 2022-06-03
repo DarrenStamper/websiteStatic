@@ -1,6 +1,6 @@
 'use strict';
 
-import { $, loadNavbar, log, navbarDropdown } from "./global.js";
+import { $, loadNavbar, navbarDropdown } from "./global.js";
 
 //system
 
@@ -15,121 +15,203 @@ const NEW_FILE_UNSAVED_CHANGES = 2;
 const UNSAVED_CHANGES = 3;
 const SAVED_CHANGES = 4;
 
+const ATTRIBUTES = "attributes";
+const TYPES = "types";
+const ORIGINS = "origins";
+const ROUTES = "routes";
+const TRIPS = "trips";
+const LAYERS = "layers";
+
 const ID = 0;
 
-const TYPES = "types";
 const TYPE_NAME = 1;
 const TYPE_NUM_OF_ROUTES = 2;
 
-const ORIGINS = "origins";
 const ORIGIN_NAME = 1;
 const ORIGIN_LATITUDE = 2;
 const ORIGIN_LONGITUDE = 3;
 const ORIGIN_NUM_OF_ROUTES = 4;
 
-const ROUTES = "routes";
 const ROUTE_TYPE_ID = 1;
 const ROUTE_ORIGIN_ID = 2;
 const ROUTE_NAME = 3;
 const ROUTE_DESCRIPTION = 4;
 const ROUTE_DISTANCE = 5;
 
-const TRIPS = "trips";
-
-const LAYERS = "layers";
-
 var model = {
 
-    fileStatus: null,
+    attributes: {
 
-    description: "save data file for the cleaningRota web applet",
+        description: "save data file for the mapTool web applet",
 
-    filename: null,
-    lastOpened: null,
+        fileStatus: null,
+        filename: null,
+        lastOpened: null,
 
-    typesAttributes: ["id","name","numOfRoutes"],
-    types: [],
-    typesSelectedLocation: null,
+        fileStatus_get() { return this.fileStatus; },
 
-    originsAttributes: ["id","name","latitude","longitude","numOfRoutes"],
-    origins: [],
-    originSelectedLocation: null,
+        status_set(fileStatus) {
+            if (fileStatus === UNSAVED_CHANGES && this.fileStatus === NEW_FILE_UNSAVED_CHANGES) return;
+            this.fileStatus = fileStatus;
+        },
+    
+        name_get() { return this.filename; },
+        
+        name_set(filename) { this.filename = filename; },
+    
+        lastOpened_get() { return this.lastOpened; },
+        
+        lastOpened_set(lastOpened) { return this.lastOpened; },
+    },
 
-    routesAttributes: ["id","typeId","originId","name","description","distance"],
-    routes: [],
-    routesSelectedLocation: null,
+    types: {
+        attributes: ["id","name","numOfRoutes"],
+        rows: [],
+        selected: null
+    },
 
-    tripsAttributes: [],
-    trips: [],
-    tripsSelectedLocation: null,
+    origins: {
+        attributes: ["id","name","latitude","longitude","numOfRoutes"],
+        rows: [],
+        selected: null
+    },
 
-    layersAttributes: [],
-    layers: [],
-    layersSelectedLocation: null,
+    routes: {
+        attributes: ["id","typeId","originId","name","description","distance"],
+        rows: [],
+        selected: null
+    },
+
+    trips: {
+        attributes: [],
+        rows: [],
+        selected: null
+    },
+
+    layers: {
+        attributes: [],
+        rows: [],
+        selected: null
+    },
+
+    //constructors
 
     new(filename) {
 
-        this.fileStatus = NEW_FILE_UNSAVED_CHANGES,
+        this.attributes.status_set(NEW_FILE_UNSAVED_CHANGES);
+        this.attributes.name_set(filename);
+        this.attributes.lastOpened = Date.now();
 
-        this.filename = filename,
-        this.lastOpened = Date.now(),
+        this.rows_set(TYPES,[]);
+        this.selected_set(TYPES,null);
 
-        this.types = [],
-        this.typesSelectedLocation = null,
+        this.rows_set(ORIGINS,[]);
+        this.selected_set(ORIGINS,null);
 
-        this.origins = [],
-        this.originSelectedLocation = null,
+        this.rows_set(ROUTES,[]);
+        this.selected_set(ROUTES,null);
 
-        this.routes = [];
-        this.routesSelectedLocation = null,
+        this.rows_set(TRIPS,[]);
+        this.selected_set(TRIPS,null);
 
-        this.trips = [],
-        this.tripsSelectedLocation = null,
-
-        this.layers = [],
-        this.layersSelectedLocation = null
+        this.rows_set(LAYERS,[]);
+        this.selected_set(LAYERS,null);
     },
 
-    loadFromJsonString(jsonString) {
+    fromJsonString(jsonString) {
 
         var jsonObject = JSON.parse(jsonString);
 
-        this.filename = jsonObject.filename;
-        this.lastOpened = jsonObject.lastOpened;
+        this.attributes.status_set(FILE_LOADED);
+        this.attributes.name_set(jsonObject.attributes.filename);
+        this.attributes.lastOpened_set(jsonObject.attributes.lastOpened);
 
-        this.types = jsonObject.types;
-        this.typesSelectedLocation = null;
+        this.list_set(TYPES,jsonObject.types.list);
+        this.selected_set(TYPES,null);
 
-        this.origins = jsonObject.origins;
-        this.originSelectedLocation = null;
+        this.list_set(ORIGINS,jsonObject.origins.list);
+        this.selected_set(ORIGINS,null);
 
-        this.routes = jsonObject.routes;
-        this.routesSelectedLocation = null;
+        this.list_set(ROUTES,jsonObject.routes.list);
+        this.selected_set(ROUTES,null);
 
-        this.trips = jsonObject.trips;
-        this.tripsSelectedLocation = null;
+        this.list_set(TRIPS,jsonObject.trips.list);
+        this.selected_set(TRIPS,null);
 
-        this.layers = jsonObject.layers;
-        this.layersSelectedLocation = null;
-        
-        this.setFileStatus(FILE_LOADED);
+        this.list_set(LAYERS,jsonObject.layers.list);
+        this.selected_set(LAYERS,null);
     },
 
-    saveAsJsonString() {
+    //get set
 
-        var data = {};
+    list_get(listName) { return this[listName].list; },
 
-        data["description"] = this.description;
-        data["filename"] = this.filename;
-        data["lastOpened"] = this.lastOpened;
-        data["types"] = this.types;
-        data["origins"] = this.origins;
-        data["routes"] = this.routes;
-        data["trips"] = this.trips;
-        data["layers"] = this.layers;
+    list_getRow(listName,attribute,value) {
+        for (const row in this[listName].rows) {
+            if (this[listName].rows[row][attribute] === value) {
+                return this[listName].rows[row]; }}
+    },
+
+    list_getValue(listName,atribute,value,returnAttribute) {
+        for (const row in this[listName].rows) {
+            if (this[listName].rows[row][attribute] === value) {
+                return this[listName].rows[row][returnAttribute];
+            }
+        }
+    },
+
+    list_set(listName,data) { this[listName].list = data; },
+
+    attributes_get(listName) { return this[listName].attributes; },
+
+    selected_get(listName) { return this[listName].selected; },
+
+    selected_set(listName,id) { 
+        var selectedLocation = this.locationOf_linear(this[listName].rows,ID,id);
+        this[listName].selected = this[listName].list[selectedLocation];
+    },
+
+    //functions
+
+    getAllValuesForAttribute(listName, attribute) { return this[listName].rows.map(row => row[attribute]); },
+
+    //helper functions
+
+    locationOf_binary() {},
+
+    locationOf_linear(rows,attribute,value) {
+        for (var row=0; row<rows.length; row++) {
+            if (rows[row][attribute] === value) return row; }
+        return null;
+    },
+
+    //to
+
+    toJsonString() {
+
+        var jsonData = {};
+
+        data["attributes"]["description"] = this.attributes.description;
+        data["attributes"]["filename"] = this.attributes.filename;
+        data["attributes"]["lastOpened"] = this.attributes.lastOpened;
+
+        data["types"] = this.types.attributes;
+        data["types"] = this.types.rows;
+
+        data["origins"] = this.origins.attributes;
+        data["origins"] = this.types.rows;
+
+        data["routes"] = this.routes.attributes;
+        data["routes"] = this.types.rows;
+
+        data["trips"] = this.trips.attributes;
+        data["trips"] = this.types.rows;
+
+        data["layers"] = this.layers.attributes;
+        data["layers"] = this.types.rows;
 
         var jsonString = JSON.stringify(
-            data,
+            jsonData,
             (k,v)=> {
                 if (v instanceof Array) {
                     for (const i of v) if (i instanceof Array) return v;
@@ -145,76 +227,6 @@ var model = {
         return jsonString;
     },
 
-    //getter setter
-
-    fileStatus_get() { return this.fileStatus; },
-
-    fileStatus_set(fileStatus) {
-        if (fileStatus === UNSAVED_CHANGES && this.fileStatus === NEW_FILE_UNSAVED_CHANGES) return;
-        this.fileStatus = fileStatus;
-    },
-
-    filename_get() { return this.filename; },
-    
-    filename_set(filename) { this.filename = filename; },
-
-    lastOpened_get() { return this.lastOpened; },
-    
-    lastOpened_set(lastOpened) { return this.lastOpened; },
-
-    types_getAll() { return this.types; },
-
-    type_getAllValuesForAttribute(attribute) { this.getAllValuesForAttribute(this.types,attribute) },
-
-    types_getSelectedTypeId() { return this.typesSelectedId; },
-
-    types_setSelectedType(typeId) { this.typesSelectedLocation = this.locationOf_linear(type,ID,typeId); },
-
-    origins_getAll() { return this.origins; },
-    
-    origins_getAllValuesForAttribute(attribute) { this.getAllValuesForAttribute(this.origins,attribute) },
-
-    routes_getAll() { return this.routes; },
-
-    trips_getAll() { return this.trips; },
-
-    layers_getAll() { return this.layers; },
-
-    //data structure helper functions
-
-    getAll(data) { return this[data]; },
-
-    getAllValuesForAttribute(data,attribute) {
-        var valueList = [];
-        this.data.forEach(entry => { valueList.push(entry[attribute]) });
-        return valueList;
-    },
-
-    getEntry(data,matchAttribute,matchValue) {
-        for (const entry in this[data]) {
-            if (this[data][entry][matchAttribute] === matchValue) {
-                return this[data][entry];
-            }
-        }
-    },
-
-    getValue(data,matchAttribute,matchValue,targetAttribute) {
-        for (const entry in this[data]) {
-            if (this[data][entry][matchAttribute] === matchValue) {
-                return this[data][entry][targetAttribute];
-            }
-        }
-    },
-
-    locationOf_linear(data,attribute,value) {
-        for (var e=0; e<data.length; e++) {
-            if (data[e][attribute] === value) return e; }
-        return null;
-    },
-
-    locationOf_binary(data,attribute,value) {
-
-    }
 }
 
 var view = {
@@ -229,49 +241,38 @@ var view = {
 
     file: {
 
-        fileInputElement: $("fileInput"),
-        fileInputTextElement: $("fileInputText"),
-        fileNewElement: $("fileNew"),
-        fileSaveElement: $("fileSave"),
-        fileStatusElement: $("fileStatus"),
-        filenameElement: $("filename"),
-        filenameApplyElement: $("filenameApply"),
+        inputElement: $("fileInput"),
+        inputTextElement: $("fileInputText"),
+        newElement: $("fileNew"),
+        saveElement: $("fileSave"),
+        statusElement: $("fileStatus"),
+        nameElement: $("filename"),
+        nameApplyElement: $("filenameApply"),
 
-        //fileInputText
+        inputText_set(fileInputText) { this.inputTextElement.innerHTML = fileInputText; },
 
-        fileInputText_set(fileInputText) { 
-            this.fileInputTextElement.innerHTML = fileInputText; },
-
-        //fileStatus
-
-        fileStatus_set(fileStatus) {
-            if (fileStatus === NO_FILE_LOADED) { this.fileStatusElement.textContent = "No File Loaded"; }
-            else if (fileStatus === FILE_LOADED) { this.fileStatusElement.textContent = "File Loaded"; }
-            else if (fileStatus === NEW_FILE_UNSAVED_CHANGES) { this.fileStatusElement.textContent = "New File, Unsaved Changes"; }
-            else if (fileStatus === UNSAVED_CHANGES) { this.fileStatusElement.textContent = "Unsaved Changes"; }
-            else if (fileStatus === SAVED_CHANGES) { this.fileStatusElement.textContent = "Saved Changes"; }
+        status_set(fileStatus) {
+            if (fileStatus === NO_FILE_LOADED) { this.statusElement.textContent = "No File Loaded"; }
+            else if (fileStatus === FILE_LOADED) { this.statusElement.textContent = "File Loaded"; }
+            else if (fileStatus === NEW_FILE_UNSAVED_CHANGES) { this.statusElement.textContent = "New File, Unsaved Changes"; }
+            else if (fileStatus === UNSAVED_CHANGES) { this.statusElement.textContent = "Unsaved Changes"; }
+            else if (fileStatus === SAVED_CHANGES) { this.statusElement.textContent = "Saved Changes"; } 
         },
 
-        //filename
+        name_get() { return this.nameElement.value; },
+        name_set(filename) { this.nameElement.value = filename; },
 
-        filename_get() { return this.filenameElement.value; },
-        filename_set(filename) { this.filenameElement.value = filename; },
+        name_enable(bool) { view.enableOrDisableListOfInputsByElement([this.nameElement],bool,view.defaultStyle); },
 
-        filename_enable(bool) {
-            view.enableOrDisableListOfInputsByElement([this.filenameElement],bool,view.defaultStyle);
+        name_onChange() {
+            this.nameElement.parentElement.className = view.inputChangeStyle;
+            view.enableOrDisableListOfInputsByElement([this.nameApplyElement],ENABLE,defaultStyle);
         },
 
-        filename_onChange() {
-            this.filenameElement.parentElement.className = view.inputChangeStyle;
-            view.enableOrDisableListOfInputsByElement([this.filenameApplyElement],ENABLE,defaultStyle);
+        name_apply() {
+            this.nameElement.parentElement.className = "";
+            view.enableOrDisableListOfInputsByElement(this.nameApplyElement,DISABLE,inputDisabledStyle);
         },
-
-        filename_apply() {
-            this.filenameElement.parentElement.className = "";
-            view.enableOrDisableListOfInputsByElement(this.filenameApplyElement,DISABLE,inputDisabledStyle);
-        },
-
-        //lastOpened
 
         lastOpened_set(lastOpened) { this.lastOpened.value = lastOpened; },
 
@@ -284,10 +285,6 @@ var view = {
         typeDeleteElement: $("typeDelete"),
         typeEditElement: $("typeEdit"),
         typeAddElement: $("typeAdd"),
-
-        constructor() {
-            //poopsicle
-        },
 
         disable() {
 
@@ -318,6 +315,10 @@ var view = {
         },
 
         edit() {
+
+        },
+
+        update() {
 
         },
 
@@ -370,7 +371,15 @@ var view = {
 
         },
 
+        update() {
+
+        },
+
         add() {
+
+        },
+
+        select() {
 
         }
     },
@@ -431,6 +440,26 @@ var view = {
 
             view.addDropdownOptions(this.routeTypeElement, typeNames, typeIds);
             view,addDropdownOptions(this.routeOriginElement, originNames, originIds);
+        },
+
+        delete() {
+
+        },
+
+        edit() {
+
+        },
+
+        update() {
+
+        },
+
+        add() {
+
+        },
+
+        select() {
+
         }
     },
 
@@ -449,6 +478,26 @@ var view = {
         },
 
         populate() {
+
+        },
+
+        delete() {
+
+        },
+
+        edit() {
+
+        },
+
+        update() {
+
+        },
+
+        add() {
+
+        },
+
+        select() {
 
         }
     },
@@ -469,149 +518,30 @@ var view = {
 
         populate() {
 
+        },
+
+        delete() {
+
+        },
+
+        edit() {
+
+        },
+
+        update() {
+
+        },
+
+        add() {
+
+        },
+
+        select() {
+
         }
     },
 
-    //file
-
-    file_load() {
-        var fileReference = e.target.files[0];
-    
-        var reader = new FileReader();
-        reader.onload = function(e) {
-    
-            model.loadFromJsonString(e.target.result);
-
-            data = JSON.parse(e.target.result);
-
-            view.file.fileInputText_set( data.filename_get() );
-            view.file.fileStatus_set( data.fileStatus_get() );
-            view.file.filename_set( data.filename_get() );
-            view.file.lastOpened_set( data.lastOpened_get() );
-
-            view.types.clear();
-            view.origins.clear();
-            view.routes.clear();
-            view.trips.clear();
-            view.layers.clear();
-    
-            view.types.populate( data.types_getAll() );
-            view.origins.populate( data.origins_getAll() );
-            view.routes.populate( 
-                data.routes_getAll(),
-                data.types_getAllValuesForAttribute(ID),
-                data.types_getAllValuesForAttribute(TYPE_NAME),
-                data.origins_getAllValuesForAttribute(ID),
-                data.origins_getAllValuesForAttribute(ORIGIN_NAME)
-            );
-            view.trips.populate( data.trips_getAll() );
-            view.layers.populate( data.layers_getAll() );
-        }
-        reader.readAsText(fileReference);
-    
-        setFileStatus(FILE_LOADED);
-    },
-
-    file_save() {
-
-        if (model.fileStatus_get === NO_FILE_LOADED) {
-            await view.customAlertPromise("Cannot save file, no file loaded.");
-        }
-        else {
-            var data = model.saveAsJsonString();
-            view.save(data,model.filename_get());
-    
-            model.fileStatus_set(SAVED_CHANGES);
-            view.file.fileStatus_set(SAVED_CHANGES);
-        }
-    },
-
-    file_new() {
-        var fileStatus = model.fileStatus_get();
-        if (fileStatus === NEW_FILE_UNSAVED_CHANGES || fileStatus === UNSAVED_CHANGES) {
-            var confirm = await view.customConfirmPromise("The current file has unsaved changes.");
-            if (confirm === false) return;
-        }
-    
-        try
-        {
-            var filename = await view.customPromptPromise("Please enter a file name.");
-    
-            model.new(filename);
-
-            view.file.fileStatus_set( model.fileStatus_get() );
-            view.file.filename_set( model.filename_get() );
-            view.file.lastOpened_set( model.lastOpened_get() );
-    
-            view.types.clear();
-            view.origins.clear();
-            view.routes.clear();
-            view.trips.clear();
-            view.layers.clear();
-
-            model.fileStatus_set(NEW_FILE_UNSAVED_CHANGES);
-            view.file.fileStatus_set(NEW_FILE_UNSAVED_CHANGES);
-        }
-        catch(e) { console.log(e); }
-    },
-
-    filename_apply() {
-        var filename = view.file.filename_get();
-        model.filename_set(filename);
-        view.file.filename_apply();
-
-        model.fileStatus_set(UNSAVED_CHANGES);
-        view.file.fileStatus_set(UNSAVED_CHANGES);
-    },
-
-    //type
-
-    type_select() {
-        if (this.target.tagName === "TD") {
-            var oldSelectedTypeId = model.types_getSelectedTypeId();
-            var newSelectedTypeId = this.target.parentElement.id.split("-")[1];
-            view.types.select(oldSelectedTypeId,newSelectedTypeId);
-            model.types_setSelectedTypeId(newSelectedTypeId);
-        }
-    },
-
-    type_delete() {
-
-        var confirm = true;
-        if (model.getValue(TYPES,ID,))
-
-        if (data.types[selectedTypeId].routes > 0) {
-            confirm = await customConfirmPromise("This will delete this type from all associated routes.");
-        }
-    
-        if (confirm === true) {
-            document.getElementById("type-"+selectedTypeId).remove();
-            for (var i=0; i<data.routes.length; i++) {
-                if (data.routes[i].typeId === selectedTypeId) data.routes[i].typeId = -1;
-            }
-            data.types.splice(selectedTypeId, 1);
-            selectedTypeId = null;
-    
-            //update route list table
-        }
-
-        model.fileStatus_set(UNSAVED_CHANGES);
-        view.file.fileStatus_set(UNSAVED_CHANGES);
-    },
-
-    type_edit() {
-
-        model.fileStatus_set(UNSAVED_CHANGES);
-        view.file.fileStatus_set(UNSAVED_CHANGES);
-    },
-
-    type_add() {
-        
-        model.fileStatus_set(UNSAVED_CHANGES);
-        view.file.fileStatus_set(UNSAVED_CHANGES);
-    },
-
-    //generic helper functions
+    //helper functions
 
     customAlertPromise(message) {
         var customAlertContainer = $("customAlertContainer");
@@ -779,6 +709,149 @@ var view = {
     }
 }
 
+var controller = {
+
+    file: {
+
+        load() {
+            var fileReference = e.target.files[0];
+        
+            var reader = new FileReader();
+            reader.onload = function(e) {
+        
+                model.loadFromJsonString(e.target.result);
+    
+                data = JSON.parse(e.target.result);
+    
+                view.file.inputText_set( data.name_get() );
+                view.file.status_set( data.fileStatus_get() );
+                view.file.name_set( data.name_get() );
+                view.file.lastOpened_set( data.lastOpened_get() );
+    
+                view.types.clear();
+                view.origins.clear();
+                view.routes.clear();
+                view.trips.clear();
+                view.layers.clear();
+        
+                view.types.populate( data.types_getAll() );
+                view.origins.populate( data.origins_getAll() );
+                view.routes.populate( 
+                    data.routes_getAll(),
+                    data.types_getAllValuesForAttribute(ID),
+                    data.types_getAllValuesForAttribute(TYPE_NAME),
+                    data.origins_getAllValuesForAttribute(ID),
+                    data.origins_getAllValuesForAttribute(ORIGIN_NAME)
+                );
+                view.trips.populate( data.trips_getAll() );
+                view.layers.populate( data.layers_getAll() );
+            }
+            reader.readAsText(fileReference);
+        
+            setFileStatus(FILE_LOADED);
+        },
+    
+        save() {
+    
+            if (model.fileStatus_get === NO_FILE_LOADED) {
+                await view.customAlertPromise("Cannot save file, no file loaded.");
+            }
+            else {
+                var data = model.saveAsJsonString();
+                view.save(data,model.name_get());
+        
+                model.status_set(SAVED_CHANGES);
+                view.file.status_set(SAVED_CHANGES);
+            }
+        },
+    
+        new() {
+            var fileStatus = model.fileStatus_get();
+            if (fileStatus === NEW_FILE_UNSAVED_CHANGES || fileStatus === UNSAVED_CHANGES) {
+                var confirm = await view.customConfirmPromise("The current file has unsaved changes.");
+                if (confirm === false) return;
+            }
+        
+            try
+            {
+                var filename = await view.customPromptPromise("Please enter a file name.");
+        
+                model.new(filename);
+    
+                view.file.status_set( model.fileStatus_get() );
+                view.file.name_set( model.name_get() );
+                view.file.lastOpened_set( model.lastOpened_get() );
+        
+                view.types.clear();
+                view.origins.clear();
+                view.routes.clear();
+                view.trips.clear();
+                view.layers.clear();
+    
+                model.status_set(NEW_FILE_UNSAVED_CHANGES);
+                view.file.status_set(NEW_FILE_UNSAVED_CHANGES);
+            }
+            catch(e) { console.log(e); }
+        },
+    
+        name_apply() {
+            var filename = view.file.name_get();
+            model.name_set(filename);
+            view.file.name_apply();
+    
+            model.status_set(UNSAVED_CHANGES);
+            view.file.status_set(UNSAVED_CHANGES);
+        },
+    },
+
+    type: {
+        select() {
+            if (this.target.tagName === "TD") {
+                var oldSelectedTypeId = model.types_getSelectedTypeId();
+                var newSelectedTypeId = this.target.parentElement.id.split("-")[1];
+                view.types.select(oldSelectedTypeId,newSelectedTypeId);
+                model.types_setSelectedTypeId(newSelectedTypeId);
+            }
+        },
+    
+        delete() {
+    
+            var confirm = true;
+            if (model.getValue(TYPES,ID,))
+    
+            if (data.types[selectedTypeId].routes > 0) {
+                confirm = await customConfirmPromise("This will delete this type from all associated routes.");
+            }
+        
+            if (confirm === true) {
+                document.getElementById("type-"+selectedTypeId).remove();
+                for (var i=0; i<data.routes.length; i++) {
+                    if (data.routes[i].typeId === selectedTypeId) data.routes[i].typeId = -1;
+                }
+                data.types.splice(selectedTypeId, 1);
+                selectedTypeId = null;
+        
+                //update route list table
+            }
+    
+            model.status_set(UNSAVED_CHANGES);
+            view.file.status_set(UNSAVED_CHANGES);
+        },
+    
+        edit() {
+    
+            model.status_set(UNSAVED_CHANGES);
+            view.file.status_set(UNSAVED_CHANGES);
+        },
+    
+        add() {
+            
+            model.status_set(UNSAVED_CHANGES);
+            view.file.status_set(UNSAVED_CHANGES);
+        },
+    }
+}
+
 window.onload = async () => {
 
     //check browser functionality
@@ -795,11 +868,11 @@ window.onload = async () => {
 
     //set event listeners
 
-    view.file.fileInputElement.addEventListener("change",view.file_load);
-    view.file.fileSaveElement.addEventListener("click",view.file_save);
-    view.file.fileNewElement.addEventListener("click",view.file_new);
-    view.file.filenameElement.addEventListener("keyup",view.file.filename_onChange);
-    view.file.filenameApplyElement.addEventListener("click",view.filename_apply);
+    view.file.inputElement.addEventListener("change",controller.file.load);
+    view.file.saveElement.addEventListener("click",controller.file.save);
+    view.file.newElement.addEventListener("click",controller.file.new);
+    view.file.nameElement.addEventListener("keyup",view.file.name_onChange);
+    view.file.nameApplyElement.addEventListener("click",view.name_apply);
 
     view.type.typeListDataElement.addEventListener("click",view.type_select);
     view.type.typeDeleteElement.addEventListener("click",view.type_delete);

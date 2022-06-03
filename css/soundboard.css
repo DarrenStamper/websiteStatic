@@ -1,1 +1,12 @@
 ﻿@import "global.css";
+
+#grid {
+    margin: auto;
+    display: grid;
+    gap: 20px;
+    max-width: 1000px;
+}
+
+#soundboard > button {
+    text-transform: uppercase;
+}
