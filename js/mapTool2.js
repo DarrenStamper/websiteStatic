@@ -2,213 +2,296 @@
 
 import { $, loadNavbar, navbarDropdown } from "./global.js";
 
-//system
-
 var DISABLE = true;
 var ENABLE = false;
 
-//model
+var NO_FILE_LOADED = 0;
+var FILE_LOADED = 1;
+var NEW_FILE_UNSAVED_CHANGES = 2;
+var UNSAVED_CHANGES = 3;
+var SAVED_CHANGES = 4;
 
-const NO_FILE_LOADED = 0;
-const FILE_LOADED = 1;
-const NEW_FILE_UNSAVED_CHANGES = 2;
-const UNSAVED_CHANGES = 3;
-const SAVED_CHANGES = 4;
+var ID = 0;
 
-const ATTRIBUTES = "attributes";
-const TYPES = "types";
-const ORIGINS = "origins";
-const ROUTES = "routes";
-const TRIPS = "trips";
-const LAYERS = "layers";
+var TYPE_NAME = 1;
+var TYPE_NUM_OF_ROUTES = 2;
 
-const ID = 0;
+var ORIGIN_NAME = 1;
+var ORIGIN_LATITUDE = 2;
+var ORIGIN_LONGITUDE = 3;
+var ORIGIN_NUM_OF_ROUTES = 4;
 
-const TYPE_NAME = 1;
-const TYPE_NUM_OF_ROUTES = 2;
+var ROUTE_TYPE_ID = 1;
+var ROUTE_ORIGIN_ID = 2;
+var ROUTE_NAME = 3;
+var ROUTE_DESCRIPTION = 4;
+var ROUTE_DISTANCE = 5;
 
-const ORIGIN_NAME = 1;
-const ORIGIN_LATITUDE = 2;
-const ORIGIN_LONGITUDE = 3;
-const ORIGIN_NUM_OF_ROUTES = 4;
+class List {
+    rows = [];
+    selected = null;
 
-const ROUTE_TYPE_ID = 1;
-const ROUTE_ORIGIN_ID = 2;
-const ROUTE_NAME = 3;
-const ROUTE_DESCRIPTION = 4;
-const ROUTE_DISTANCE = 5;
+    constructor(rows,selected) {
+        this.rows = rows;
+        this.selected = selected;
+    }
+
+    rows_get() { return this.rows; }
+
+    rows_getAllValuesForAttribute(attribute) { return this.rows.map(row => row[attribute]); }
+
+    rows_getLength() { return this.rows.length; }
+
+    rows_getRow(attribute, value) { for (const row in this.rows) if (row[attribute] === value) return row; }
+
+    rows_getRowValue(attribute, value, returnAttribute) { for (const row in this.rows) if (row[attribute] === value) return row[returnAttribute]; }
+
+    rows_setAllValuesForAttributeWhere(whereAttribute,whereValue,attribute,value) { this.rows.forEach(row => { if(row[whereAttribute] === whereValue) row[attribute] === value; }); }
+
+    selected_delete() {
+        var id = this.selected.id;
+        this.rows.splice(id,1);
+        this.selected = null;
+    }
+
+    selected_get() { return this.selected; }
+
+    selected_getValue(attribute) { return this.selected[attribute]; }
+
+    selected_set(id) { this.selected = this.rows.find(row => row.id); }
+
+    selected_setValue(attribute,value) { this.selected[attribute] = value; }
+}
+
+class Types extends List {
+
+    constructor(rows,selected) { super(rows,selected); }
+
+    rows_FromListOfStringList(rows) {
+        rows.forEach(row => this.rows.push({
+            id: parseInt(row[ID]),
+            name: row[TYPE_NAME],
+            numOfRoutes: parseInt(row[TYPE_NUM_OF_ROUTES])
+        }));
+    }
+
+    rows_addRowAndCreateId(name,numOfRoutes) {
+        var numOfRows = this.rows.length;
+        var id = 0;
+        if (numOfRows > 0) id = this.rows[listLength-1].id++;
+
+        this.rows.push({
+            id: id,
+            name: name,
+            numOfRoutes: numOfRoutes
+        });
+    }
+
+    rows_toListOfStringList() {
+        var list = [];
+        this.rows.forEach (row => list.push([row.id, row.name, row.numOfRoutes]));
+        return list;
+    }
+
+    selected_delete() {
+        var id = this.selected.id;
+        this.rows.splice(id,1);
+        this.list_setAllValuesForAttributeWhere("typeId",id,"typeId",-1);
+        this.selected = null;
+    }
+}
+
+class Origins extends List {
+
+    constructor(rows,selected) { super(rows,selected); }
+
+    rows_FromListOfStringList(rows) {
+        rows.forEach(row => this.rows.push({
+            id: parseInt(row[ID]),
+            name: row[ORIGIN_NAME],
+            latitude: parseFloat(row[ORIGIN_LATITUDE]),
+            longitude: parseFloat(row[ORIGIN_LONGITUDE]),
+            numOfRoutes: parseInt(row[TYPE_NUM_OF_ROUTES])
+        }));
+    }
+
+    rows_addRowAndCreateId(name, latitude, longitude, numOfRoutes) {
+
+        var numOfRows = this.rows.length;
+        var id = 0;
+        if (numOfRows > 0) id = this.rows[listLength-1].id++;
+
+        this.rows.push({
+            id: id,
+            name: name,
+            latitude: latitude,
+            longitude: longitude,
+            numOfRoutes: numOfRoutes
+        });
+    }
+
+    rows_toListOfStringList() {
+        var list = [];
+        this.rows.forEach (row => list.push([row.id, row.name, row.latitude, row.longitude, row.numOfRoutes]));
+        return list;
+    }
+
+    selected_delete() {
+        var id = this.selected.id;
+        this.rows.splice(id,1);
+        this.list_setAllValuesForAttributeWhere("originId",id,"originId",-1);
+        this.selected = null;
+    }
+}
+
+class Routes extends List {
+
+    constructor(rows,selected) { super(rows,selected); }
+
+    rows_FromListOfStringList(rows) {
+        rows.forEach(row => this.rows.push({
+            id: parseInt(row[ID]),
+            typeId: parseInt(row[ROUTE_TYPE_ID]),
+            originId: parseInt(row[ROUTE_ORIGIN_ID]),
+            name: row[ROUTE_NAME],
+            description: row[ROUTE_DESCRIPTION],
+            distance: parseFloat(row[ROUTE_DISTANCE])
+        }));
+    }
+
+    rows_addRowAndCreateId(typeId, originId, name, description, distance) {
+
+        var numOfRows = this.rows.length;
+        var id = 0;
+        if (numOfRows > 0) id = this.rows[listLength-1].id++;
+
+        this.rows.push({
+            id: id,
+            typeId: typeId,
+            originId: originId,
+            name: name,
+            description: description,
+            distance: distance
+        });
+    }
+
+    rows_toListOfStringList() {
+        var list = [];
+        this.rows.forEach(row => list.push([row.id, row.typeId, row.originId, row.name, row.description, row.distance]));
+        return list;
+    }
+}
+
+class Trips extends List {
+
+    constructor(rows,selected) { super(rows,selected); }
+}
+
+class Layers extends List {
+
+    constructor(rows,selected) { super(rows,selected); }
+}
 
 var model = {
 
-    attributes: {
+    rowFormat: "array",
 
-        description: "save data file for the mapTool web applet",
+    fileStatus: null,
+    filename: null,
+    lastOpened: null,
 
-        fileStatus: null,
-        filename: null,
-        lastOpened: null,
+    types: null,
+    origins: null,
+    routes: null,
+    trips: null,
+    layers: null,
 
-        fileStatus_get() { return this.fileStatus; },
-
-        status_set(fileStatus) {
-            if (fileStatus === UNSAVED_CHANGES && this.fileStatus === NEW_FILE_UNSAVED_CHANGES) return;
-            this.fileStatus = fileStatus;
-        },
-    
-        name_get() { return this.filename; },
-        
-        name_set(filename) { this.filename = filename; },
-    
-        lastOpened_get() { return this.lastOpened; },
-        
-        lastOpened_set(lastOpened) { return this.lastOpened; },
+    fileStatus_set(fileStatus) {
+        if (this.fileStatus === NEW_FILE_UNSAVED_CHANGES && fileStatus === UNSAVED_CHANGES) return;
+        else this.fileStatus = fileStatus;
     },
-
-    types: {
-        attributes: ["id","name","numOfRoutes"],
-        rows: [],
-        selected: null
-    },
-
-    origins: {
-        attributes: ["id","name","latitude","longitude","numOfRoutes"],
-        rows: [],
-        selected: null
-    },
-
-    routes: {
-        attributes: ["id","typeId","originId","name","description","distance"],
-        rows: [],
-        selected: null
-    },
-
-    trips: {
-        attributes: [],
-        rows: [],
-        selected: null
-    },
-
-    layers: {
-        attributes: [],
-        rows: [],
-        selected: null
-    },
-
-    //constructors
 
     new(filename) {
 
-        this.attributes.status_set(NEW_FILE_UNSAVED_CHANGES);
-        this.attributes.name_set(filename);
+        this.attributes.fileStatus = NEW_FILE_UNSAVED_CHANGES;
+        this.attributes.filename = filename;
         this.attributes.lastOpened = Date.now();
+        this.attributes.rowFormat = "array";
 
-        this.rows_set(TYPES,[]);
-        this.selected_set(TYPES,null);
-
-        this.rows_set(ORIGINS,[]);
-        this.selected_set(ORIGINS,null);
-
-        this.rows_set(ROUTES,[]);
-        this.selected_set(ROUTES,null);
-
-        this.rows_set(TRIPS,[]);
-        this.selected_set(TRIPS,null);
-
-        this.rows_set(LAYERS,[]);
-        this.selected_set(LAYERS,null);
+        this.types = new Types([],null);
+        this.origins = new Origins([],null);
+        this.routes = new Routes([],null);
+        this.trips = new Trips([],null);
+        this.layers = new Layers([],null);
     },
 
     fromJsonString(jsonString) {
 
         var jsonObject = JSON.parse(jsonString);
 
-        this.attributes.status_set(FILE_LOADED);
-        this.attributes.name_set(jsonObject.attributes.filename);
-        this.attributes.lastOpened_set(jsonObject.attributes.lastOpened);
+        this.attributes.fileStatus = FILE_LOADED;
+        this.attributes.filename = jsonObject.attributes.filename;
+        this.attributes.lastOpened = jsonObject.attributes.lastOpened;
+        this.attributes.rowFormat = jsonObject.attribute.rowFormat;
 
-        this.list_set(TYPES,jsonObject.types.list);
-        this.selected_set(TYPES,null);
+        if (this.attributes.rowFormat === "array") {
+            this.types = new Types([],null);
+            this.origins = new Origins([],null);
+            this.routes = new Routes([],null);
+            this.trips = new Trips([],null);
+            this.layers = new Layers([],null);
 
-        this.list_set(ORIGINS,jsonObject.origins.list);
-        this.selected_set(ORIGINS,null);
+            this.types.rows_setFromListOfStringList(jsonObject.types.rows);
+            this.origins.rows_setFromListOfStringList(jsonObject.origins.rows);
+            this.routes.rows_setFromListOfStringList(jsonObject.routes.rows);
+            this.trips.rows_setFromListOfStringList(jsonObject.trips.rows);
+            this.layers.rows_setFromListOfStringList(jsonObject.layers.rows);
+        }
 
-        this.list_set(ROUTES,jsonObject.routes.list);
-        this.selected_set(ROUTES,null);
-
-        this.list_set(TRIPS,jsonObject.trips.list);
-        this.selected_set(TRIPS,null);
-
-        this.list_set(LAYERS,jsonObject.layers.list);
-        this.selected_set(LAYERS,null);
-    },
-
-    //get set
-
-    list_get(listName) { return this[listName].list; },
-
-    list_getRow(listName,attribute,value) {
-        for (const row in this[listName].rows) {
-            if (this[listName].rows[row][attribute] === value) {
-                return this[listName].rows[row]; }}
-    },
-
-    list_getValue(listName,atribute,value,returnAttribute) {
-        for (const row in this[listName].rows) {
-            if (this[listName].rows[row][attribute] === value) {
-                return this[listName].rows[row][returnAttribute];
-            }
+        else if (this.attributes.rowFormat === "object") {
+            this.types = new Types(this.jsonObject.types.rows,null);
+            this.origins = new Origins(this.jsonObject.origins.rows,null);
+            this.routes = new Routes(this.jsonObject.routes.rows,null);
+            this.trips = new Trips(this.jsonObject.trips.rows,null);
+            this.layers = new Layers(this.jsonObject.layers.rows,null);
         }
     },
-
-    list_set(listName,data) { this[listName].list = data; },
-
-    attributes_get(listName) { return this[listName].attributes; },
-
-    selected_get(listName) { return this[listName].selected; },
-
-    selected_set(listName,id) { 
-        var selectedLocation = this.locationOf_linear(this[listName].rows,ID,id);
-        this[listName].selected = this[listName].list[selectedLocation];
-    },
-
-    //functions
-
-    getAllValuesForAttribute(listName, attribute) { return this[listName].rows.map(row => row[attribute]); },
-
-    //helper functions
-
-    locationOf_binary() {},
-
-    locationOf_linear(rows,attribute,value) {
-        for (var row=0; row<rows.length; row++) {
-            if (rows[row][attribute] === value) return row; }
-        return null;
-    },
-
-    //to
 
     toJsonString() {
 
         var jsonData = {};
 
-        data["attributes"]["description"] = this.attributes.description;
-        data["attributes"]["filename"] = this.attributes.filename;
-        data["attributes"]["lastOpened"] = this.attributes.lastOpened;
+        jsonData.attributes.description = "json save data file for mapTool2 web app";
+        jsonData.attributes.filename = this.attributes.filename;
+        jsonData.attributes.lastOpened = this.attributes.lastOpened;
+        jsonData.attributes.rowFormat = this.attributes.rowFormat;
 
-        data["types"] = this.types.attributes;
-        data["types"] = this.types.rows;
+        if (this.attributes.rowFormat === "array") {
+            
+            jsonData.types.attributes = ["id","name","numOfRoutes"];
+            jsonData.types.rows = this.types.rows_toListOfStringList();
 
-        data["origins"] = this.origins.attributes;
-        data["origins"] = this.types.rows;
+            jsonData.origins.attributes = ["id","name","latitude","longitude","numOfRoutes"];
+            jsonData.origins.rows = this.origins.rows_toListOfStringList();
 
-        data["routes"] = this.routes.attributes;
-        data["routes"] = this.types.rows;
+            jsonData.routes.attributes = ["id","typeId","originId","name","description","distance"];
+            jsonData.routes.rows = this.routes.rows_toListOfStringList();
 
-        data["trips"] = this.trips.attributes;
-        data["trips"] = this.types.rows;
+            jsonData.trips.attributes = [];
+            jsonData.trips.rows = this.trips.rows_toListOfStringList();
 
-        data["layers"] = this.layers.attributes;
-        data["layers"] = this.types.rows;
+            jsonData.layers.attributes = [];
+            jsonData.layers.rows = this.layers.rows_toListOfStringList();
+        }
+
+        else if (this.attributes.rowFormat === "object") {
+
+            jsonData.types = this.types.rows;
+            jsonData.origins = this.origins.rows;
+            jsonData.routes = this.routes.rows;
+            jsonData.trips = this.trips.rows;
+            jsonData.layers = this.layers.rows;
+        }
 
         var jsonString = JSON.stringify(
             jsonData,
@@ -225,7 +308,7 @@ var model = {
          .replace(/\\\"/g,"\"");
 
         return jsonString;
-    },
+    }
 
 }
 
@@ -286,6 +369,8 @@ var view = {
         typeEditElement: $("typeEdit"),
         typeAddElement: $("typeAdd"),
 
+        selectedId: null,
+
         disable() {
 
         },
@@ -310,9 +395,7 @@ var view = {
             });
         },
 
-        delete() {
-
-        },
+        delete(id) {  },
 
         edit() {
 
@@ -322,12 +405,22 @@ var view = {
 
         },
 
-        add() {
-
+        add(name) {
+            addTableRow(
+                document.querySelector("#typesList div table"),
+                "type-"+id,
+                [name, 0]  
+            );
         },
 
-        select(oldSelectedTypeId,newSelectedTypeId) {
-            view.table_selectRowByElementId("type-"+oldSelectedTypeId,"type-"+newSelectedTypeId);
+        select(oldSelectedId, event) {
+
+            if (event.target.tagName === "TD") {
+                var newSelectedId = event.target.parentElement.id.split("-")[1];
+                view.types.select(oldSelectedId,newSelectedTypeId);
+                view.table_selectRowByElementId("type-"+oldSelectedId,"type-"+newSelectedId);
+                return newSelectedId;
+            }
         }
     },
 
@@ -338,6 +431,8 @@ var view = {
         originDeleteElement: $("originDelete"),
         originEditElement: $("originEdit"),
         originAddElement: $("originAdd"),
+
+        selectedId: null,
 
         disable() {
 
@@ -363,16 +458,20 @@ var view = {
             });
         },
 
-        delete() {
-
+        delete(id) { 
+            document.getElementById("origin-"+id).remove();
+            view.enableOrDisableListOfInputs(["deleteHome","editHome"],true, buttonDisabledStyle);
         },
 
         edit() {
 
         },
 
-        update() {
-
+        update(id,name,latitude,longitude) {
+            var tableRow = document.getElementById("home-"+id);
+            tableRow.children[0].innerText = name;
+            tableRow.children[1].innerText = latitude;
+            tableRow.children[2].innerText = longitude;
         },
 
         add() {
@@ -401,6 +500,8 @@ var view = {
         routeNameElement: $("routeName"),
         routeDescriptionElement: $("routeDescription"),
         routeDetailsApplyElement: $("routeDetailsApply"),
+
+        selectedId: null,
 
         disable() {
 
@@ -465,6 +566,8 @@ var view = {
 
     trips: {
 
+        selectedId: null,
+
         disable() {
 
         },
@@ -503,6 +606,8 @@ var view = {
     },
 
     layers: {
+
+        selectedId: null,
 
         disable() {
 
@@ -711,7 +816,7 @@ var view = {
 
 var controller = {
 
-    file: {
+    files: {
 
         load() {
             var fileReference = e.target.files[0];
@@ -738,35 +843,36 @@ var controller = {
                 view.origins.populate( data.origins_getAll() );
                 view.routes.populate( 
                     data.routes_getAll(),
-                    data.types_getAllValuesForAttribute(ID),
-                    data.types_getAllValuesForAttribute(TYPE_NAME),
-                    data.origins_getAllValuesForAttribute(ID),
-                    data.origins_getAllValuesForAttribute(ORIGIN_NAME)
+                    data.types_list_getAllValuesForAttribute(ID),
+                    data.types_list_getAllValuesForAttribute(TYPE_NAME),
+                    data.origins_list_getAllValuesForAttribute(ID),
+                    data.origins_list_getAllValuesForAttribute(ORIGIN_NAME)
                 );
                 view.trips.populate( data.trips_getAll() );
                 view.layers.populate( data.layers_getAll() );
             }
             reader.readAsText(fileReference);
         
-            setFileStatus(FILE_LOADED);
+            model.fileStatus_set(FILE_LOADED);
+            view.file.status_set(FILE_LOADED);
         },
     
-        save() {
+        async save() {
     
-            if (model.fileStatus_get === NO_FILE_LOADED) {
+            if (model.fileStatus === NO_FILE_LOADED) {
                 await view.customAlertPromise("Cannot save file, no file loaded.");
             }
             else {
-                var data = model.saveAsJsonString();
-                view.save(data,model.name_get());
+                var data = model.toJsonString();
+                view.save(data,model.filename);
         
-                model.status_set(SAVED_CHANGES);
+                model.fileStatus_set(SAVED_CHANGES);
                 view.file.status_set(SAVED_CHANGES);
             }
         },
     
         new() {
-            var fileStatus = model.fileStatus_get();
+            var fileStatus = model.fileStatus;
             if (fileStatus === NEW_FILE_UNSAVED_CHANGES || fileStatus === UNSAVED_CHANGES) {
                 var confirm = await view.customConfirmPromise("The current file has unsaved changes.");
                 if (confirm === false) return;
@@ -778,9 +884,9 @@ var controller = {
         
                 model.new(filename);
     
-                view.file.status_set( model.fileStatus_get() );
-                view.file.name_set( model.name_get() );
-                view.file.lastOpened_set( model.lastOpened_get() );
+                view.file.status_set( model.fileStatus );
+                view.file.name_set( model.filename );
+                view.file.lastOpened_set( model.lastOpened );
         
                 view.types.clear();
                 view.origins.clear();
@@ -788,67 +894,157 @@ var controller = {
                 view.trips.clear();
                 view.layers.clear();
     
-                model.status_set(NEW_FILE_UNSAVED_CHANGES);
+                model.fileStatus_set(NEW_FILE_UNSAVED_CHANGES);
                 view.file.status_set(NEW_FILE_UNSAVED_CHANGES);
             }
             catch(e) { console.log(e); }
         },
     
+        name_onChange() { view.file.name_onChange(); },
+
         name_apply() {
-            var filename = view.file.name_get();
-            model.name_set(filename);
+            model.filename = view.file.name_get();
             view.file.name_apply();
     
-            model.status_set(UNSAVED_CHANGES);
+            model.fileStatus_set(UNSAVED_CHANGES);
             view.file.status_set(UNSAVED_CHANGES);
         },
     },
 
-    type: {
+    types: {
         select() {
-            if (this.target.tagName === "TD") {
-                var oldSelectedTypeId = model.types_getSelectedTypeId();
-                var newSelectedTypeId = this.target.parentElement.id.split("-")[1];
-                view.types.select(oldSelectedTypeId,newSelectedTypeId);
-                model.types_setSelectedTypeId(newSelectedTypeId);
-            }
+            var oldSelectedId = model.types.selected.id;
+            var newSelectedId = view.types.select(oldSelectedId, this);
+            model.types.selected_set(newSelectedId);
         },
     
         delete() {
-    
-            var confirm = true;
-            if (model.getValue(TYPES,ID,))
-    
-            if (data.types[selectedTypeId].routes > 0) {
-                confirm = await customConfirmPromise("This will delete this type from all associated routes.");
+
+            if (model.types.selected.routes > 0) {
+                var confirm = await view.customConfirmPromise("This will delete this type from all associated routes.");
+                if (!confirm) return;
             }
-        
-            if (confirm === true) {
-                document.getElementById("type-"+selectedTypeId).remove();
-                for (var i=0; i<data.routes.length; i++) {
-                    if (data.routes[i].typeId === selectedTypeId) data.routes[i].typeId = -1;
-                }
-                data.types.splice(selectedTypeId, 1);
-                selectedTypeId = null;
-        
-                //update route list table
-            }
+
+            model.routes.rows_setAllValuesForAttributeWhere("typeId",model.types.selected.id,"typeId",-1);
+
+            view.type.delete(model.types.selected.id)
+            
+            model.routes.selected_delete();
+
+            //update route view - list, selected route
     
-            model.status_set(UNSAVED_CHANGES);
+            model.fileStatus_set(UNSAVED_CHANGES);
             view.file.status_set(UNSAVED_CHANGES);
         },
     
         edit() {
-    
-            model.status_set(UNSAVED_CHANGES);
-            view.file.status_set(UNSAVED_CHANGES);
+            try {
+                var name = await view.customPromptPromise("Please enter updated type name.");
+                model.selected_setValue(name);
+        
+
+
+                var tableRow = document.getElementById("type-"+model.selected_getValue(listName,ID));
+                tableRow.children[0].innerText = name;
+        
+                //update route list table
+        
+                model.file.status_set(UNSAVED_CHANGES);
+                view.file.status_set(UNSAVED_CHANGES);
+            }
+            catch(e){}
         },
     
-        add() {
+        async add() {
             
+            try {
+                var name = await view.customPromptPromise("Please enter new type name.");
+
+                model.list_addRow(TYPES,{
+                    name: name,
+                    routes: 0
+                });
+
+                view.types.add(name);
+        
+                model.status_set(UNSAVED_CHANGES);
+                view.file.status_set(UNSAVED_CHANGES);
+            }
+            catch(e){}
+        },
+    
+    },
+
+    origins: {
+
+        async add() {
+            try {
+                var newHomeDetails = await view.multiPromptPromise("Please enter new home details.", ["name","latitude","longitude"],null);
+        
+                model.list_addRow({
+                    name: newHomeDetails[0],
+                    latitude: 
+                });
+
+                data["homeList"].push({
+                    name: newHomeDetails[0],
+                    latitude: newHomeDetails[1],
+                    longitude: newHomeDetails[2],
+                    routeIdList: []
+                });
+                var newHomeId = data["homeList"].length-1;
+                // data["currentHomeIdList"].push(newHomeId);
+        
+                addTableRow(
+                    document.querySelector("#homeList div table"),
+                    "home-"+newHomeId,
+                    [newHomeDetails[0],newHomeDetails[1],newHomeDetails[2],0]  
+                );
+        
+                // var oldSelectedRowId = null;
+                // if (data["currentHomeId"] !== null) oldSelectedRowId = "home-"+data["currentHomeId"];
+                // data["currentHomeId"] = parseInt(selectTableRowById(oldSelectedRowId, "home-"+newHomeId).split("-")[1]);
+        
+                // $("deleteHome").disabled = false;
+                // $("deleteHome").className = "";
+            }
+            catch(e){}
+        },
+
+        async delete() {
+
+            if (model.selected_getValue(ORIGINS,ORIGIN_NUM_OF_ROUTES) > 0) {
+                var confirm = await view.customPromptPromise("This home has routes assigned. Deleting it will remove the home from those routes.");
+                if (confirm === false) { return; }
+            }
+            
+            view.origins.delete( model.origins.selected[ID] );
+
+            model.origins.selected_delete();
+
             model.status_set(UNSAVED_CHANGES);
             view.file.status_set(UNSAVED_CHANGES);
         },
+
+        async edit() {
+            try {
+                var updatedOriginDetails = await multiPromptPromise(
+                    "Please enter updated home details.", 
+                    ["name","latitude","longitude"],
+                    [mode.origins.selected[ORIGIN_NAME], mode.origins.selected[ORIGIN_LATITUDE], mode.origins.selected[ORIGIN_LONGITUDE]]
+                );
+
+                model.selected_setValue(ORIGINS,ORIGIN_NAME,updatedOriginDetails[0]);
+                model.selected_setValue(ORIGINS,ORIGIN_LATITUDE,updatedOriginDetails[1]);
+                model.selected_setValue(ORIGINS,ORIGIN_LONGITUDE,updatedOriginDetails[2]);
+
+                view.origins.update( model.origins.selected[ID], updatedOriginDetails[0], updatedOriginDetails[1], updatedOriginDetails[2] );
+
+                model.status_set(UNSAVED_CHANGES);
+                view.file.status_set(UNSAVED_CHANGES);
+            }
+            catch(e){}
+        }
     }
 }
 
@@ -868,161 +1064,22 @@ window.onload = async () => {
 
     //set event listeners
 
-    view.file.inputElement.addEventListener("change",controller.file.load);
-    view.file.saveElement.addEventListener("click",controller.file.save);
-    view.file.newElement.addEventListener("click",controller.file.new);
-    view.file.nameElement.addEventListener("keyup",view.file.name_onChange);
-    view.file.nameApplyElement.addEventListener("click",view.name_apply);
+    view.file.inputElement.addEventListener("change",controller.files.load);
+    view.file.saveElement.addEventListener("click",controller.files.save);
+    view.file.newElement.addEventListener("click",controller.files.new);
+    view.file.nameElement.addEventListener("keyup",controller.files.name_onChange);
+    view.file.nameApplyElement.addEventListener("click",controller.files.name_apply);
 
-    view.type.typeListDataElement.addEventListener("click",view.type_select);
-    view.type.typeDeleteElement.addEventListener("click",view.type_delete);
-    view.type.typeEditElement.addEventListener("click",view.type_edit);
-    view.type.typeAddElement.addEventListener("click",view.type_add);
+    view.types.typeListDataElement.addEventListener("click",controller.types.select);
+    view.types.typeDeleteElement.addEventListener("click",controller.types.delete);
+    view.types.typeEditElement.addEventListener("click",controller.types.edit);
+    view.types.typeAddElement.addEventListener("click",controller.types.add);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-async function deleteType() {
-
-}
-
-async function editType() {
-    try {
-        var name = await customPromptPromise("Please enter updated type name.");
-        data.types[selectedTypeId].name = name;
-
-        var tableRow = document.getElementById("type-"+selectedTypeId);
-        tableRow.children[0].innerText = name;
-
-        //update route list table
-
-        setFileStatus(UNSAVED_CHANGES);
-    }
-    catch(e){}
-}
-
-async function addType() {
-    try {
-        var name = await customPromptPromise("Please enter new type name.");
-
-        var id = 0;
-        if (data.types.length > 0) { id = data.types[data.types.length-1].id++; }
-
-        data.types.push({
-            id: id,
-            name: name,
-            routes: 0
-        });
-
-        addTableRow(
-            document.querySelector("#typesList div table"),
-            "type-"+id,
-            [name, 0]  
-        );
-
-        setFileStatus(UNSAVED_CHANGES);
-    }
-    catch(e){}
-}
-
-async function deleteOrigin() {
-
-    if (data.homeList[selectedHomeId].routeIdList.length > 0) {
-        var confirm = await customPromptPromise("This home has routes assigned. Deleting it will remove the home from those routes.");
-        if (confirm === false) { return; }
-    }
-    
-    document.getElementById("home-"+selectedHomeId).remove();
-
-    for (var i=0; i<data.homeList[selectedHomeId].routeIdList.length; i++) {
-        var routeId = data.homeList[selectedHomeId].routeIdList[i];
-        data.routeList[routeId].homeId = -1;
-    }
-
-    data.homeList.splice(selectedHomeId,1);
-
-    selectedHomeId = null;
-    enableOrDisableListOfInputs(["deleteHome","editHome"],true, buttonDisabledStyle);
-
-    // for(var i=0; i<data.currentHomeIdList.length; i++) {
-    //     if (data.currentHomeIdList[i] === data.currentHomeId) {
-    //         data.currentHomeIdList.splice(i,1);
-    //     }
-    // }
-    // if (data.homeList[data.currentHomeId].routeIdList.length === 0) {
-    //     data.homeList.splice(data.currentHomeId,1);
-    // }
-    // data.currentHomeId = null;
-    // if (data.currentHomeIdList.length>0) {
-    //     data.currentHomeId = data.currentHomeIdList[0];
-    //     selectTableRowById(null,"home-"+data.currentHomeId);
-    // }
-    // else {
-    //     $("deleteHome").disabled = true;
-    //     $("deleteHome").className = buttonDisabledStyle;
-    // }
-}
-
-async function editOrigin() {
-    try {
-        var home = data.homeList[selectedHomeId];
-        var updatedHomeDetails = await multiPromptPromise(
-            "Please enter updated home details.", ["name","latitude","longitude"],
-            [home.name,home.latitude,home.longitude]
-        );
-        data.homeList[selectedHomeId].name = updatedHomeDetails[0];
-        data.homeList[selectedHomeId].latitude = updatedHomeDetails[1];
-        data.homeList[selectedHomeId].longitude = updatedHomeDetails[2];
-
-        var tableRow = document.getElementById("home-"+selectedHomeId);
-        tableRow.children[0].innerText = updatedHomeDetails[0];
-        tableRow.children[1].innerText = updatedHomeDetails[1];
-        tableRow.children[2].innerText = updatedHomeDetails[2];
-    }
-    catch(e){}
-}
+//*********************************************************************************************************************************************************************************
 
 async function addOrigin(e) {
-    try {
-        var newHomeDetails = await multiPromptPromise("Please enter new home details.", ["name","latitude","longitude"],null);
 
-        data["homeList"].push({
-            name: newHomeDetails[0],
-            latitude: newHomeDetails[1],
-            longitude: newHomeDetails[2],
-            routeIdList: []
-        });
-        var newHomeId = data["homeList"].length-1;
-        // data["currentHomeIdList"].push(newHomeId);
-
-        addTableRow(
-            document.querySelector("#homeList div table"),
-            "home-"+newHomeId,
-            [newHomeDetails[0],newHomeDetails[1],newHomeDetails[2],0]  
-        );
-
-        // var oldSelectedRowId = null;
-        // if (data["currentHomeId"] !== null) oldSelectedRowId = "home-"+data["currentHomeId"];
-        // data["currentHomeId"] = parseInt(selectTableRowById(oldSelectedRowId, "home-"+newHomeId).split("-")[1]);
-
-        // $("deleteHome").disabled = false;
-        // $("deleteHome").className = "";
-    }
-    catch(e){}
 }
 
 function filterChange(e) {

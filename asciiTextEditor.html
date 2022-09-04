@@ -1,23 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
-    <link rel="stylesheet" href="css/index.css" />
-    <script type="module" src="./js/index.js"></script>
-    <!-- It's pronounced GIF -->
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ascii Text Editor</title>
+        <link rel="stylesheet" href="css/asciiTextEditor.css" />
+        <script type="module" src="./js/asciiTextEditor.js"></script>
+        <!-- It's pronounced GIF -->
+    </head>
 
-<body>
-    <div class="collapsed" id="navbar"></div>
-    <div id="bodyContent">
-        <div>
-            <h1>Welcome</h1>
-            <h2>Work in progress</h2>
+    <body>
+        <div class="collapsed" id="navbar"></div>
+        <div id="bodyContent">
+            
+            <h1>Ascii Text Editor</h1>
+
+            <h3>File</h3>
+            <div class="section-greyBackground" id="fileGrid">
+                <label for="fileInput">Load File:</label>
+                <div class="customFileInput" id="fileInputContainer">
+                    <input type="file" id="fileInput" autocomplete="off">
+                    <label for="fileInput">Browse...</label>
+                    <span id="fileInputText">No file selected.</span>
+                </div>
+                <button id="fileNew">New File</button>
+
+                <label for="fileStatus">File Status:</label>
+                <textarea class="readOnlySmall" id="fileStatus" name="fileStatus" spellcheck="false"
+                    autocomplete="off" disabled>No File Loaded</textarea>
+                <button id="fileSave">Save File</button>
+
+                <hr class="hr-1">
+
+                <label for="filename">File Name:</label>
+                <div><input type="text" class="inputDisabled-1" id="filename" autocomplete="off" disabled></div>
+                <button class="buttonDisabled-1" id="filenameApply" disabled>Apply Filename</button>
+                
+                <label for="lastModified">Last Modified:</label>
+                <textarea class="readOnlySmall" id="lastModified" name="lastModified" spellcheck="false"
+                    autocomplete="off" disabled></textarea>
+                <div></div>
+            </div>
+            
+            <h3>Editor</h3>
+            <textarea class="textareaDisabled-1" id="docTextarea" wrap="off" autocomplete="off" disabled></textarea>
+
         </div>
-    </div>
-</body>
-
+    </body>
 </html>

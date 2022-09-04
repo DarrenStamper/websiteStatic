@@ -1,19 +1,24 @@
 ﻿/*
-  grey original - 0, 30, 34, 37, 48, 60, 71, 82         
+  grey original scheme - 0; 30; 34; 37; 48; 60; 71; 82
   green - 127, 255, 127
   pink - 229, 190, 209 - goes better on dark backgrounds
 
+  breakpoint width tablet 1300
+  breakpoint width mobile 800
+
   to do:
-  > padding variables
   > border style variables ?
 
 */
+
+/* ROOT ----------------------------------------------------------------------------------- */
+
 :root {
 
     /* font */
 
     font-size: 16px;
-    font-family: monospace, Arial, Helvetica, sans-serif;
+    font-family: monospace, Arial, Helvetica, sans-serif; /* h4 needs to be set manually for some reason */
     font-weight: 100;
     color: var(--colour-1-1);
 
@@ -47,51 +52,55 @@
 
     --z-index-pop-ups: 200;
     --z-index-navbar: 100;
-    --z-index-rotating-boder-child: 11;
+    --z-index-rotating-border-child: 11;
     --z-index-rotating-border: 10;
     --z-index-rotating-border-after: 9;
     --z-index-rotating-border-before: 8;
 
     /* theme */
-    /*                                    element                                              | disabled               | hover                                                | selected   */
+    /*                                    element                                                     | disabled               | hover                                                | selected   */
 
-    --colour-0-0: rgb(0,0,0);        /* body, input field, select, textarea                  |                        |                                                      |            */
-    --colour-0-1: rgb(30,30,30);     /* bodyContent                                          |                        |                                                      |            */
-    --colour-0-2: rgb(35,35,35);     /* tab                                                  |                        |                                                      |            */
-    --colour-0-3: rgb(40,40,40);     /* section, nav                                         |                        |                                                      | tab        */ 
-    --colour-0-4: rgb(45,45,45);     /*                                                      |                        |                                                      |            */              
-    --colour-0-5: rgb(50,50,50);     /*                                                      | button                 |                                                      |            */
-    --colour-0-6: rgb(55,55,55);     /*                                                      |                        |                                                      |            */
-    --colour-0-7: rgb(60,60,60);     /* button, li, input field / select / textarea - border |                        | nav                                                  | nav        */
-    --colour-0-8: rgb(65,65,65);     /*                                                      |                        |                                                      |            */
-    --colour-0-9: rgb(70,70,70);     /*                                                      |                        | button, li, input field / select / textarea - border | button, li */
-    --colour-0-10: rgb(75,75,75);    /*                                                      |                        |                                                      |            */
-    --colour-0-11: rgb(80,80,80);    /*                                                      | button / select - text |                                                      |            */
+    --colour-0-0: rgb(0,0,0);        /* body, input field, select, textarea, radio - background     |                        |                                                      |            */
+    --colour-0-1: rgb(30,30,30);     /* bodyContent                                                 |                        |                                                      |            */
+    --colour-0-2: rgb(35,35,35);     /* tab                                                         |                        |                                                      |            */
+    --colour-0-3: rgb(40,40,40);     /* section, nav                                                |                        |                                                      | tab        */ 
+    --colour-0-4: rgb(45,45,45);     /*                                                             |                        |                                                      |            */              
+    --colour-0-5: rgb(50,50,50);     /*                                                             | button                 |                                                      |            */
+    --colour-0-6: rgb(55,55,55);     /*                                                             |                        |                                                      |            */
+    --colour-0-7: rgb(60,60,60);     /* button, li, input field / select / textarea - border, radio |                        | nav                                                  | nav        */
+    --colour-0-8: rgb(65,65,65);     /*                                                             |                        |                                                      |            */
+    --colour-0-9: rgb(70,70,70);     /*                                                             |                        | button, li, input field / select / textarea - border | button, li */
+    --colour-0-10: rgb(75,75,75);    /*                                                             |                        |                                                      |            */
+    --colour-0-11: rgb(80,80,80);    /*                                                             | button / select - text |                                                      |            */
     --colour-0-12: rgb(85,85,85);
     --colour-0-13: rgb(90,90,90);
     --colour-0-14: rgb(95,95,95);
     --colour-0-15: rgb(100,100,100); 
 
-    --colour-1-0: rgb(0,64,0);  /* text faded       */
-    --colour-1-1: rgb(0,128,0); /* text normal      */
-    --colour-1-2: rgb(0,229,0); /* text highlighted */
+    --colour-1-0: rgb(0,64,0);  /* text faded                      */
+    --colour-1-1: rgb(0,128,0); /* text normal, radio - box shadow */
+    --colour-1-2: rgb(0,229,0); /* text highlighted                */
 
     --colour-2-0: rgb(255,0,0); /* input error */
 }
 
+/* STAR ----------------------------------------------------------------------------------- */
+
 *, *:before, *:after {
-    box-sizing: inherit;
+    box-sizing: inherit; /* you can use content-box or padding-box (where supported) at will, without worrying about a universal selector overriding your CSS, children inherit from custom set parent */
     color: inherit;
 }
 
-/* ELEMENT - _COMMON */
+/* ELEMENT -------------------------------------------------------------------------------- */
+
+/* common */
 
 button, label, input, textarea, p {
     width: 100%;
     padding: var(--spacer-3);
 }
 
-/* ELEMENT - _COMMON - BUTTONS */
+/* common - buttons */
 
 input[type="submit"], input[type="reset"], button {
     border: none;
@@ -99,17 +108,17 @@ input[type="submit"], input[type="reset"], button {
 }
 
 input[type="submit"]:hover, input[type="reset"]:hover, button:hover {
-    background-color: var(--colour-9);
+    background-color: var(--colour-0-9);
     cursor: pointer;
 }
 
-/* ELEMENT - _COMMON - HEADING */
+/* common - heading */
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 100;
 }
 
-/* ELEMENT - BODY */
+/* body */
 
 body {
     margin: 0px;
@@ -117,7 +126,7 @@ body {
     position: relative;
 }
 
-/* ELEMENT - FLEX */
+/* flex */
 
 .flex-gap {
     display: inline-flex;
@@ -130,20 +139,20 @@ body {
     margin: var(--flex-gap) 0 0 var(--flex-gap);
 }
 
-/* ELEMENT - HEADING */
+/* heading */
 
 h1, h2 {
     margin: 0px 0px var(--spacer-10) 0px;
     text-align: center;
 }
 
-/* ELEMENT - HTML */
+/* html */
 
 html {
     box-sizing: border-box;
 }
 
-/* ELEMENT - INPUT */
+/* input */
 
 input {
     background-color: var(--colour-0-7);
@@ -168,13 +177,46 @@ input[type="number"]:focus, input[type="text"]:focus {
     outline: none;
 }
 
-/* ELEMENT - LABEL */
+input[type="radio"] {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    appearance: none;
+    /* For iOS < 15 to remove gradient background */
+    background-color: var(--colour-0-0);
+    /* Not removed via appearance */
+    margin: 0px;
+    color: var(--colour-0-7);
+    width: var(--spacer-10);
+    height: var(--spacer-10);
+    border: 1.5px solid var(--colour-0-7);
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+}
+
+input[type="radio"]::before {
+    content: "";
+    width: var(--spacer-4);
+    height: var(--spacer-4);
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset var(--spacer-6) var(--spacer-6) var(--colour-1-1);
+    background-color: CanvasText; /* Windows High Contrast Mode doggery */
+}
+
+input[type="radio"]:checked::before {
+    transform: scale(1);
+}
+
+/* label */
 
 label {
     text-align: right;
 }
 
-/* ELEMENT - UNORDERED LIST */
+/* unordered list */
 
 .ul-options {
     list-style-type: none;
@@ -182,7 +224,7 @@ label {
     padding: 0px;
 }
 .ul-options li {
-    background-color: var(--colour-0-7);
+    background-color: var(--colour-0-3);
     margin-bottom: 1px;
     padding: var(--spacer-3);
 }
@@ -193,10 +235,10 @@ label {
     background-color: var(--colour-0-9);
 }
 .ul-options li:active {
-    background-color: var(--colour-0-9);
+    background-color: var(--colour-0-7);
 }
 
-/* ELEMENT - SELECT */
+/* select */
 
 select {
     display: block;
@@ -228,7 +270,7 @@ select > option {
     background-color: var(--colour-0-0);
 }
 
-/* ELEMENT - TEXT AREA */
+/* text area */
 
 textarea {
     resize: none;
@@ -254,22 +296,12 @@ textarea.readOnlySmall {
     border: none;
     height: var(--control-height);
     padding: var(--spacer-3);
-    text-align: center;
+    text-align: left;
 }
 
-/* CLASS - _COMMON - BUTTON DISABLED */
+/* CLASS ---------------------------------------------------------------------------------- */
 
-.buttonDisabled-1 {
-    color: var(--colour-0-11);
-    background-color: var(--colour-0-5);
-}
-
-.buttonDisabled-1:hover {
-    background-color: var(--colour-0-5);
-    cursor: default;
-}
-
-/* CLASS - _COMMON - ROTATING BORDER */
+/* border rotating */
 
 @keyframes spin {
     from {transform: translate(-50%, -50%) rotate(0);}
@@ -310,14 +342,26 @@ textarea.readOnlySmall {
 .rotating-border *, .inputChange-1 * {
     position: relative;
     border: none !important;
-    z-index: var(--z-index-rotating-boder-child);
+    z-index: var(--z-index-rotating-border-child);
 }
 
 .rotating-border select:hover {
     border: none;
 }
 
-/* CLASS - CONTAINER - POP UPS */
+/* button disabled */
+
+.buttonDisabled-1 {
+    color: var(--colour-0-11);
+    background-color: var(--colour-0-5);
+}
+
+.buttonDisabled-1:hover {
+    background-color: var(--colour-0-5);
+    cursor: default;
+}
+
+/* container pop up */
 
 .container-popUp {
     display: none;
@@ -330,13 +374,13 @@ textarea.readOnlySmall {
     background-color: rgba(0,0,0,0.2);
 }
 
-/* CLASS - CUSTOM FILE INPUT */
+/* file input */
 
 .customFileInput {
     padding: var(--spacer-2);
     background-color: var(--colour-0-0);
     display: grid;
-    gap: var(--spacer-1);
+    gap: var(--spacer-2);
     grid-template-columns: 1fr 3fr;
 }
 
@@ -360,7 +404,7 @@ textarea.readOnlySmall {
     font-size: var(--font-size-file-input);
 }
 
-/* CLASS - HORIZONTAL RULE*/
+/* horizontal rule */
 
 .hr-1 {
     width: 100%;
@@ -370,9 +414,7 @@ textarea.readOnlySmall {
     background: var(--colour-0-9);
 }
 
-/* CLASS - INPUT CHANGE > SEE: CLASS - _COMMON - ROTATING BORDER */
-
-/* CLASS - INPUT DISABLED */
+/* input disabled */
 
 input.inputDisabled-1 {
     background-color: var(--colour-0-3);
@@ -382,20 +424,28 @@ input.inputDisabled-1:hover {
     border-color: var(--colour-0-7);
 }
 
-/* CLASS - INPUT ERROR */
+input.inputDisabled-2 {
+    background-color: var(--colour-0-0);
+}
+
+input.inputDisabled-2:hover {
+    border-color: var(--colour-0-7);
+}
+
+/* input error */
 
 .inputError-1 {
     border-color: var(--colour-2-0);
 }
 
-/* CLASS - SCROLL LIST */
+/* table scroll */
 
 .tableScrollList {
     height: 200px;
     background-color: var(--colour-0-0);
     display: grid;
-    padding: var(--spacer-5);
-    gap: var(--spacer-10);
+    padding: var(--spacer-10);
+    gap: var(--spacer-2);
     grid-template-rows: auto 1fr;
 }
 
@@ -428,7 +478,7 @@ input.inputDisabled-1:hover {
     border-bottom: none;
 }
 
-/* CLASS - SECTION */
+/* section */
 
 .section-greyBackground {
     padding: var(--spacer-10);
@@ -440,7 +490,7 @@ input.inputDisabled-1:hover {
     border: 1px solid var(--colour-1-1);
 }
 
-/* CLASS - SELECT DISABLED */
+/* select disabled */
 
 .selectDisabled-1 {
     color: var(--colour-0-11);
@@ -453,19 +503,22 @@ input.inputDisabled-1:hover {
     background-repeat: no-repeat;
 }
 
-/* CLASS - TABLE */
+/* table */
 
 .tableStyle-1 {
     background-color: var(--colour-0-0);
     padding: var(--spacer-10);
     border-spacing: 0px;
 }
+
 .tableStyle-1 th {
     text-align: left;
 }
+
 .tableStyle-1 thead tr {
     display: block;
 }
+
 .tableStyle-1 tbody {
     display: block;
     height: 200px;
@@ -474,21 +527,35 @@ input.inputDisabled-1:hover {
     scrollbar-width: none;
     overscroll-behavior: contain;
 }
+
 .tableStyle-1 tbody::-webkit-scrollbar {
     display: none;
 }
+
 .tableStyle-1 td {
     border-bottom: 1px solid var(--colour-0-7);
     padding: var(--spacer-2) 0px var(--spacer-2) 0px;
 }
 
-/* CLASS - TEXT AREA DISABLED */
+/* text area disabled */
 
 .textareaDisabled-1 {
     background-color: var(--colour-0-3);
 }
 
-/* ID - _COMMON - CUSTOM POP UPS */
+/* ID ------------------------------------------------------------------------------------- */
+
+/* body content */
+
+#bodyContent {
+    min-height: calc(100vh - var(--navbar-height));
+    background-color: var(--colour-0-1);
+    padding: var(--spacer-10);
+    margin-top: var(--navbar-height);
+    width: 100%;
+}
+
+/* pop ups */
 
 #customAlert, #customConfirm, #customPrompt, #multiPrompt {
     background-color: var(--colour-0-3);
@@ -500,18 +567,6 @@ input.inputDisabled-1:hover {
     display: grid;
     gap: var(--spacer-10);
 }
-
-/* ID - BODY CONTENT */
-
-#bodyContent {
-    min-height: calc(100vh - var(--navbar-height));
-    background-color: var(--colour-0-1);
-    padding: var(--spacer-10);
-    margin-top: var(--navbar-height);
-    width: 100%;
-}
-
-/* ID - CUSTOM POP UPS */
 
 #customConfirm, #multiPrompt {
     grid-template-columns: 1fr 1fr;
@@ -534,7 +589,7 @@ input.inputDisabled-1:hover {
     grid-column: 1/4;
 }
 
-/* ID - NAVBAR */
+/* navbar */
 
 #navbar {
     overflow: hidden;
@@ -549,7 +604,7 @@ input.inputDisabled-1:hover {
 #navbar a {
     float: left;
     display: block;
-    padding: 14px 20px;
+    padding: var(--spacer-7) var(--spacer-10);
     text-decoration: none;
     height: var(--navbar-height);
 }
@@ -566,8 +621,6 @@ input.inputDisabled-1:hover {
     display: none; 
     height: var(--navbar-height);
 }
-
-/* RESPONSIVE - NAVBAR */
 
 @media screen and (max-width: 700px) {
     

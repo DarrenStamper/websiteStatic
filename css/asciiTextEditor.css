@@ -1,0 +1,34 @@
+@import "global2.css";
+
+body {
+    background-color: var(--colour-0-1);
+}
+
+#bodyContent h3:first-of-type, #fileGrid {
+    margin-left: auto;
+    margin-right: auto;;
+    width: 1000px;
+}
+
+#fileGrid {
+    display: grid;
+    gap: var(--spacer-10);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+}
+
+#fileInputContainer, #fileStatus, #lastModified {
+    grid-column: 2/4;
+}
+
+#fileGrid > div {
+    grid-column: 2/4;
+}
+
+#fileGrid > hr {
+    grid-column: 1/5;
+}
+
+#docTextarea {
+    height: calc(100vh - var(--spacer-10) - var(--spacer-10));
+}
