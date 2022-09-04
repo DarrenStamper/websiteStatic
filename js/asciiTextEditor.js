@@ -253,6 +253,10 @@ try {
                 });
             }
 
+            //check browser functionality
+            if (window.File && window.FileReader && window.FileList && window.Blob);
+            else alert('The File APIs are not fully supported in this browser.');
+
             //build html
             
             loadNavbar().then( () => {
