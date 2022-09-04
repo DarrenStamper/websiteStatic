@@ -204,68 +204,71 @@ try {
     }
 
     window.onload = async function () {
-        
-        //logs
-        console.stdlog = console.log.bind(console);
-        console.logs = [];
-        console.log = function() {
-            console.stdlog.apply(console, arguments);
-            console.logs.push(Array.from(arguments));
-            Array.from(arguments).forEach( (string) => {
-                $("consoleLog").value += string + "\n";
-            });
-        }
-        //error
-        console.defaultError = console.error.bind(console);
-        console.errors = [];
-        console.error = function(){
-            // default &  console.error()
-            console.defaultError.apply(console, arguments);
-            // new & array data
-            console.errors.push(Array.from(arguments));
-            Array.from(arguments).forEach( (string) => {
-                $("consoleLog").value += string + "\n";
-            });
-        }
-        //warn
-        console.defaultWarn = console.warn.bind(console);
-        console.warns = [];
-        console.warn = function(){
-            // default &  console.warn()
-            console.defaultWarn.apply(console, arguments);
-            // new & array data
-            console.warns.push(Array.from(arguments));
-            Array.from(arguments).forEach( (string) => {
-                $("consoleLog").value += string + "\n";
-            });
-        }
-        //debug
-        console.defaultDebug = console.debug.bind(console);
-        console.debugs = [];
-        console.debug = function(){
-            // default &  console.debug()
-            console.defaultDebug.apply(console, arguments);
-            // new & array data
-            console.debugs.push(Array.from(arguments));
-            Array.from(arguments).forEach( (string) => {
-                $("consoleLog").value += string + "\n";
-            });
-        }
 
-        //build html
-        
-        loadNavbar().then( () => {
-            document.getElementById("navbarIcon").addEventListener("click", navbarDropdown);
-            document.getElementById("asciiTextEditor").className = "active";
-        });
+        try {
+            //logs
+            console.stdlog = console.log.bind(console);
+            console.logs = [];
+            console.log = function() {
+                console.stdlog.apply(console, arguments);
+                console.logs.push(Array.from(arguments));
+                Array.from(arguments).forEach( (string) => {
+                    $("consoleLog").value += string + "\n";
+                });
+            }
+            //error
+            console.defaultError = console.error.bind(console);
+            console.errors = [];
+            console.error = function(){
+                // default &  console.error()
+                console.defaultError.apply(console, arguments);
+                // new & array data
+                console.errors.push(Array.from(arguments));
+                Array.from(arguments).forEach( (string) => {
+                    $("consoleLog").value += string + "\n";
+                });
+            }
+            //warn
+            console.defaultWarn = console.warn.bind(console);
+            console.warns = [];
+            console.warn = function(){
+                // default &  console.warn()
+                console.defaultWarn.apply(console, arguments);
+                // new & array data
+                console.warns.push(Array.from(arguments));
+                Array.from(arguments).forEach( (string) => {
+                    $("consoleLog").value += string + "\n";
+                });
+            }
+            //debug
+            console.defaultDebug = console.debug.bind(console);
+            console.debugs = [];
+            console.debug = function(){
+                // default &  console.debug()
+                console.defaultDebug.apply(console, arguments);
+                // new & array data
+                console.debugs.push(Array.from(arguments));
+                Array.from(arguments).forEach( (string) => {
+                    $("consoleLog").value += string + "\n";
+                });
+            }
 
-        //set event listeners
+            //build html
+            
+            loadNavbar().then( () => {
+                document.getElementById("navbarIcon").addEventListener("click", navbarDropdown);
+                document.getElementById("asciiTextEditor").className = "active";
+            });
 
-        view.file.inputElement.addEventListener("change",controller.file.load);
-        view.file.saveElement.addEventListener("click",controller.file.save);
-        view.file.newElement.addEventListener("click",controller.file.new);
-        view.file.nameElement.addEventListener("keyup",controller.file.name_onChange);
-        view.file.nameApplyElement.addEventListener("click",controller.file.name_apply);
+            //set event listeners
+
+            view.file.inputElement.addEventListener("change",controller.file.load);
+            view.file.saveElement.addEventListener("click",controller.file.save);
+            view.file.newElement.addEventListener("click",controller.file.new);
+            view.file.nameElement.addEventListener("keyup",controller.file.name_onChange);
+            view.file.nameApplyElement.addEventListener("click",controller.file.name_apply);
+        }
+        catch(e) { alert("asciiTextEditor.js - window.onload: " + e.message); }
     }
 }
 catch(e) {
