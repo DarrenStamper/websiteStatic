@@ -622,7 +622,7 @@ input.inputDisabled-2:hover {
     height: var(--navbar-height);
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 1210px) {
     
     #navbar a:not(:first-child) {
         display: none;
