@@ -107,6 +107,10 @@ input[type="submit"], input[type="reset"], button {
     background-color: var(--colour-0-7);
 }
 
+input[type="submit"] svg, input[type="reset"] svg, button svg {
+    fill: var(--colour-1-1);
+}
+
 input[type="submit"]:hover, input[type="reset"]:hover, button:hover {
     background-color: var(--colour-0-9);
     cursor: pointer;
@@ -356,22 +360,13 @@ textarea.readOnlySmall {
     background-color: var(--colour-0-5);
 }
 
+.buttonDisabled-1 svg {
+    fill: var(--colour-0-10);
+}
+
 .buttonDisabled-1:hover {
     background-color: var(--colour-0-5);
     cursor: default;
-}
-
-/* container pop up */
-
-.container-popUp {
-    display: none;
-    position: fixed;
-    z-index: var(--z-index-pop-ups);
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.2);
 }
 
 /* file input */
@@ -402,16 +397,6 @@ textarea.readOnlySmall {
 .customFileInput > span {
     padding: var(--spacer-1) var(--spacer-2) var(--spacer-1) 0px;
     font-size: var(--font-size-file-input);
-}
-
-/* horizontal rule */
-
-.hr-1 {
-    width: 100%;
-    height: 1px;
-    margin: 0px;
-    border: none;
-    background: var(--colour-0-9);
 }
 
 /* input disabled */
@@ -555,9 +540,24 @@ input.inputDisabled-2:hover {
     width: 100%;
 }
 
-/* pop ups */
+/* ====================================================================================== */
 
-#customAlert, #customConfirm, #customPrompt, #multiPrompt {
+/* CSS rework - grouped by related tags e.g. navbar, dialog */
+
+/* DIALOG */
+
+.dialog {
+    display: none;
+    position: fixed;
+    z-index: var(--z-index-pop-ups);
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.2);
+}
+
+#alert, #confirm, #prompt, #multiPrompt {
     background-color: var(--colour-0-3);
     position: relative;
     height: auto;
@@ -568,28 +568,38 @@ input.inputDisabled-2:hover {
     gap: var(--spacer-10);
 }
 
-#customConfirm, #multiPrompt {
-    grid-template-columns: 1fr 1fr;
-}
+#confirm, #multiPrompt { grid-template-columns: 1fr 1fr; }
 
-#customConfirm > h3, #multiPrompt > h3 {
+#confirm > h3, #multiPrompt > h3 {
     margin: 0px;
     grid-column: 1 / 3;
 }
 
-#multiPrompt {
-    width: 500px;
+#multiPrompt { width: 500px; }
+
+#prompt { grid-template-columns: 1fr 1fr 1fr; }
+
+#prompt > h3, #prompt > input { grid-column: 1/4; }
+
+/* HORIZONTAL RULE */
+
+.hr-1 {
+    width: 100%;
+    height: 1px;
+    margin: 0px;
+    border: none;
+    background: var(--colour-0-9);
 }
 
-#customPrompt {
-    grid-template-columns: 1fr 1fr 1fr;
+.hr-2 {
+    width: 100%;
+    height: 1px;
+    margin: 0px;
+    border: none;
+    background: var(--colour-1-1);
 }
 
-#customPrompt > h3, #customPrompt > input {
-    grid-column: 1/4;
-}
-
-/* navbar */
+/* NAVBAR */
 
 #navbar {
     overflow: hidden;
