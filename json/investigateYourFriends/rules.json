@@ -1,3 +1,19 @@
 {
-    "can you quack": "drink three times if you've ever quacked like duck during sex"
+    "description": "Investigate Your Friends is a drinking game where you get to learn who you're friends really are!",
+
+    "solo": {
+        "can you quack": "drink three times if you've ever quacked like duck during sex",
+        "golden showers" : "drink one for each time you received a golden shower",
+        "lightning mcqueen": "drink three if the heelies stayed on during sex",
+        "rap sheet": "drink one for each law you have broken",
+        "two faced": "drink four if you've ever peed in someones garden"
+    },
+
+    "duo": {
+
+    },
+
+    "group": {
+        "professional": "recount your most awkward moment in the work place, most awkward drinks"
+    }
 }
