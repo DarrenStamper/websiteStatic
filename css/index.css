@@ -27,6 +27,37 @@ p {
     margin: auto;
 }
 
+/* carousel */
+
+.carousel {
+    padding-top: var(--spacer-4);
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+}
+
+.slides {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.slide {
+    padding: 5px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    transition: left 1.8s;
+    position: absolute;
+    z-index: 1;
+}
+
+.carousel a { 
+    display: inline-block;
+    width: 100%;
+}
+
 /* LAYOUT */
 
 /* RESPONSIVE - TABLET */
