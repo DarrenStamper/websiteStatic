@@ -10,16 +10,24 @@ h1 {
     /* display: none; */
 }
 
-/* LAYOUT */
-
-#bodyContent {
-    height: calc(100vh - var(--navbar-height));
-    display: grid;
+pre {
+    display: inline-block;
+    text-align: left;
 }
 
-#bodyContent div {
+p {
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-5);
+    padding: var(--spacer-4);
+    border-radius: 5px;
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    line-height: 30px;
     margin: auto;
 }
+
+/* LAYOUT */
 
 /* RESPONSIVE - TABLET */
 

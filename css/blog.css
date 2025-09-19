@@ -1,1 +1,27 @@
 @import "global.css";
+
+h1,h2 { text-align: left; }
+
+table { border-collapse: collapse; }
+
+/* table */
+table, th, td {
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-5);
+    padding: var(--spacer-2);
+    text-align: left;
+}
+
+/* bullet tree */
+ul, li {
+    list-style-type: square;
+    margin: 0px;
+}
+
+/* code */
+pre {
+    display: inline-block;
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-5);
+    padding: var(--spacer-2);
+}
