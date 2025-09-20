@@ -77,6 +77,11 @@ p {
     border-radius: 5px;
 }
 
+#cyberCastle {
+    display: block;
+    margin: var(--spacer-6) auto 0px auto;
+}
+
 /* RESPONSIVE - TABLET */
 
 @media only screen and (max-width: 0px) {
