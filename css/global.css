@@ -321,6 +321,40 @@ textarea.readOnlySmall {
     cursor: default;
 }
 
+/* CLASS - _COMMON - RAINBOW GLOW */
+
+@keyframes glow-in {
+    0% { opacity: 0.1; }
+    45% { opacity: 0.9; }
+    55% { opacity: 0.9; }
+    100% { opacity: 0.1; }
+}
+
+.rainbow-glow {
+    position: relative;
+    z-index: 0;
+}
+
+.rainbow-glow::after {
+    animation: glow-in 3s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    content: attr(data-text);
+    background: linear-gradient(90deg, rgba(255,86,238,1) 0%, rgba(9,9,121,1) 25%, rgba(0,212,255,1) 49%, rgba(124,209,143,1) 69%, rgba(255,207,0,1) 88%);
+    background-size: 30%;
+    background-repeat: repeat;
+    background-clip: text;
+    color: transparent;
+    filter: blur(.1em);
+    text-shadow: none;
+    font-size: calc(1em + 0.5px);
+    text-align: center;
+    text-wrap: nowrap;
+}
+
 /* CLASS - _COMMON - ROTATING BORDER */
 
 @keyframes spin {
