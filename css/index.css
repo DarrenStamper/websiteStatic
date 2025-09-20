@@ -4,6 +4,7 @@
 
 #bodyContent {
     /* background: repeating-radial-gradient(#a65a08, #326c85 50px); */
+    background: url("../images/index/starField6.gif");
 }
 
 h1 {
@@ -53,12 +54,27 @@ p {
     z-index: 1;
 }
 
+.slide img {
+    display: block;
+    margin: auto;
+}
+
 .carousel a { 
     display: inline-block;
     width: 100%;
 }
 
 /* LAYOUT */
+
+#introduction {
+    margin: auto;
+    position: relative;
+    width: 500px;
+    background-color: var(--colour-1);
+    padding: var(--spacer-4);
+    border: 1px solid var(--colour-5);
+    border-radius: 5px;
+}
 
 /* RESPONSIVE - TABLET */
 

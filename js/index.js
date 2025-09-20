@@ -49,8 +49,7 @@ function carousel_resize() {
     
     //slide count
     for ( const [key, value] of Object.entries(parameters.responsive) ) {
-
-        if ( window.innerWidth > key ) { slideCount = value; }
+        if ( carouselElement.offsetWidth > key ) { slideCount = value; }
     }
 
     //slide width
