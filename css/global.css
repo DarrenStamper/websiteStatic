@@ -355,6 +355,33 @@ textarea.readOnlySmall {
     text-wrap: nowrap;
 }
 
+/* CLASS - _COMMON - ROTATING BACKGROUND GRADIENT */
+@keyframes rotating-background-gradient {
+    from {transform: translate(-50%, -50%) rotate(0);}
+    to   {transform: translate(-50%, -50%) rotate(360deg);}
+}
+.rotating-background-gradient {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+}
+.rotating-background-gradient::before {
+
+    display: block;
+    position: absolute;
+    width: calc(100% * 1.41421356237);
+    padding-bottom: calc(100% * 1.41421356237);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    content:'';
+    background: conic-gradient(purple, red, orange, yellow, green, blue, purple);
+    z-index:-1;
+
+    animation: rotating-background-gradient 3s linear infinite;
+}
+
 /* CLASS - _COMMON - ROTATING BORDER */
 
 @keyframes spin {
