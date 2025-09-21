@@ -43,16 +43,20 @@ pre { display: inline-block; text-align: left; }
 #messageInABottle_left {
     position: absolute;
     top: 50%;
-    left: calc(0% - ((100vw - 100%) / 4));
+    left: calc(0% - ((1000px - 100%) / 4));
     transform: translate(-50%, -50%);
     filter: hue-rotate(-40deg) contrast(150%) brightness(50%);
 }
 #messageInABottle_right {
     position: absolute;
     top: 50%;
-    left: calc(100% + ((100vw - 100%) / 4));
+    left: calc(100% + ((1000px - 100%) / 4));
     transform: translate(-50%, -50%);
     filter: hue-rotate(-40deg) contrast(150%) brightness(50%);
+}
+@media (max-width: 1000px) {
+    #messageInABottle_left { left: calc(0% - ((100vw - 100%) / 4)); }
+    #messageInABottle_right { left: calc(100% + ((100vw - 100%) / 4)); }
 }
 @media (max-width: 900px) { #messageInABottle_left, #messageInABottle_right { display: none; } }
 

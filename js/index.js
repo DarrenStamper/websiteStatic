@@ -10,7 +10,7 @@ var parameters = {
 
     responsive: {
         0: 3,       //minPixels, numOfSlides
-        500: 4,
+        400: 4,
         600: 5,
         700: 7
     }
