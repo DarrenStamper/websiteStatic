@@ -7,26 +7,7 @@
     background: url("../images/index/starField6.gif");
 }
 
-h1 {
-    /* display: none; */
-}
-
-pre {
-    display: inline-block;
-    text-align: left;
-}
-
-p {
-    background-color: var(--colour-0);
-    border: 1px solid var(--colour-5);
-    padding: var(--spacer-4);
-    border-radius: 5px;
-    width: 100%;
-    max-width: 800px;
-    text-align: center;
-    line-height: 30px;
-    margin: auto;
-}
+pre { display: inline-block; text-align: left; }
 
 /* carousel */
 
@@ -54,15 +35,8 @@ p {
     z-index: 1;
 }
 
-.slide img {
-    display: block;
-    margin: auto;
-}
-
-.carousel a { 
-    display: inline-block;
-    width: 100%;
-}
+.carousel a { display: inline-block; width: 100%; }
+.slide img { display: block; margin: auto; }
 
 /* LAYOUT */
 
@@ -76,6 +50,56 @@ p {
     border: 1px solid var(--colour-5);
     border-radius: 5px;
 }
+
+@media (max-width: 500px) { #introduction h2 { font-size: 20px; } }
+
+#introduction > p {
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-5);
+    padding: var(--spacer-4);
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    line-height: 30px;
+    margin: auto;
+}
+
+#about {
+    display: block;
+    margin: var(--spacer-4) auto;
+    max-width: 1000px;
+    width: 100%;
+    background-color: var(--colour-1);
+    padding: var(--spacer-4);
+    border: 1px solid var(--colour-5);
+    border-radius: 5px;
+}
+
+#about > div {
+    background-color: var(--colour-0);
+    border: 1px solid var(--colour-5);
+    padding: var(--spacer-4);
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: var(--spacer-4)
+}
+
+#about > div > h2 { width: 100%; margin: 0px; text-align: left; }
+@media (max-width: 500px) { #about > div > h2 { font-size: 20px; } }
+
+#about > div > p { margin: 0px 0px 5px 0px; padding: 0px; text-align: justify; flex: 1 1 50% } /* bottom margin offsets the top margin on the scrolling code image */
+#about #scrollingCode { 
+    background-image: url("../images/index/scrollingCode.gif");
+    width: 223px;
+    height: 127px;
+    box-shadow: 0 0 10px 10px var(--colour-0) inset;
+    filter: hue-rotate(20deg) brightness(55%);
+    display: block;
+    margin: -5px auto 0px auto; /* -5px makes the top of the image appear inline with the paragraph next to it */
+}
+    
 
 #cyberCastle {
     display: block;

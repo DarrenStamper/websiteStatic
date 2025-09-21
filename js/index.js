@@ -9,7 +9,8 @@ var parameters = {
     timeout: 1800,
 
     responsive: {
-        0: 4,       //minPixels, numOfSlides
+        0: 3,       //minPixels, numOfSlides
+        500: 4,
         600: 5,
         700: 7
     }
